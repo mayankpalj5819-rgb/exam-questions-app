@@ -6,8 +6,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
-  // Include Prisma client in standalone output
-  serverExternalPackages: ["@prisma/client", "bcryptjs"],
 };
 
 export default nextConfig;
