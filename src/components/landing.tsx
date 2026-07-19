@@ -733,34 +733,6 @@ export function Landing() {
         </section>
       )}
 
-      {/* ===== FOOTER ===== */}
-      <footer className="border-t border-border/40 bg-muted/20 dark:bg-muted/5">
-        <div className="container mx-auto px-4 py-10">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-sm">
-                <Zap className="h-3.5 w-3.5 text-white" />
-              </div>
-              <span className="font-bold text-sm tracking-tight">
-                JEE PYQ <span className="text-amber-600 dark:text-amber-400">Vault</span>
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground text-center">
-              Built for JEE aspirants. Practice smarter, not harder.
-            </p>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Star className="h-3.5 w-3.5 text-amber-500" />
-                Free Forever
-              </span>
-              <span className="flex items-center gap-1">
-                <BookOpen className="h-3.5 w-3.5 text-amber-500" />
-                {totalQuestions > 0 ? `${totalQuestions.toLocaleString()}+ Questions` : "10,000+ Questions"}
-              </span>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
