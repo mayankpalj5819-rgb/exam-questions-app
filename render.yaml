@@ -1,15 +1,22 @@
 services:
   - type: web
-    name: exam-questions-app
+    name: jee-pyq-vault
     runtime: node
     plan: free
     branch: main
-    buildCommand: npx prisma generate && npx next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/
-    startCommand: node .next/standalone/server.js
+    buildCommand: npx prisma generate && bun install && bun run build
+    startCommand: bun run start
+    healthCheckPath: /api
     envVars:
-      - key: DATABASE_URL
-        value: file:./db/custom.db
-      - key: NEXTAUTH_SECRET
-        generateValue: true
       - key: NODE_VERSION
         value: "20"
+      - key: DATABASE_URL
+        value: file:./db/custom.db
+        sync: false
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: NEXTAUTH_URL
+        fromService:
+          name: jee-pyq-vault
+          type: web
+          property: hostport

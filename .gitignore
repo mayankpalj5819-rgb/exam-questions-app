@@ -50,5 +50,29 @@ test
 prompt
 
 server.log
+
+# SQLite database files (too large for Git, must be seeded separately)
+db/*.db
+db/*.db-journal
+
+# Temp and scratch files
+/tmp/
+*.raw
+
+# Scraping artifacts
+scrape-*.json
+scrape-*.txt
+examside_*.json
+tool-results/
+
+# Static deploy build output
+/static-deploy/
+
+# Upload artifacts
+/upload/
+
+# Preview screenshots
+preview-*.png
+
 # Skills directory
 /skills/

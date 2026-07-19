@@ -42,6 +42,7 @@ const OPTION_COLORS = [
 interface QuestionCardProps {
   question: QuestionData;
   index: number;
+  onUnsave?: (questionId: string) => void;
 }
 
 function detectQuestionType(question: QuestionData): "MCQ" | "Numerical" {
@@ -90,7 +91,7 @@ function ImageZoomDialog({
   );
 }
 
-export function QuestionCard({ question, index }: QuestionCardProps) {
+export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
   const { data: session } = useSession();
   const {
     savedQuestionIds,
@@ -104,6 +105,8 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [solveLoading, setSolveLoading] = useState(false);
+  const [localSolution, setLocalSolution] = useState<string | null>(null);
+  const [aiSolutionOpen, setAiSolutionOpen] = useState(false);
 
   const isSaved = savedQuestionIds.has(question.id);
   const detectedType = detectQuestionType(question);
@@ -224,16 +227,41 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
     }
   };
 
-  const handleGenerateSolution = useCallback(() => {
+  const handleGenerateSolution = useCallback(async () => {
+    // If already generated, just toggle visibility
+    if (localSolution) {
+      setAiSolutionOpen((prev) => !prev);
+      return;
+    }
+
     setSolveLoading(true);
-    setTimeout(() => {
-      setSolveLoading(false);
-      toast.info("AI solution coming soon!", {
-        description: "We're working on generating step-by-step solutions with AI.",
+    try {
+      const res = await fetch("/api/solve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId: question.id,
+          questionText: question.questionText,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.error || `Request failed (${res.status})`);
+      }
+
+      const data = await res.json();
+      setLocalSolution(data.solution);
+      setAiSolutionOpen(true);
+      toast.success("Solution generated!", {
         icon: <Zap className="h-4 w-4 text-amber-500" />,
       });
-    }, 1200);
-  }, []);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to generate solution");
+    } finally {
+      setSolveLoading(false);
+    }
+  }, [localSolution, question.id, question.questionText]);
 
   const handleImageLoad = (i: number) => {
     setImageLoaded((prev) => ({ ...prev, [i]: true }));
@@ -491,8 +519,37 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                 ) : (
                   <Wand2 className="h-3.5 w-3.5" />
                 )}
-                {solveLoading ? "Generating..." : "Generate AI Solution"}
+                {solveLoading
+                  ? "Generating..."
+                  : localSolution
+                    ? aiSolutionOpen
+                      ? "Hide AI Solution"
+                      : "Show AI Solution"
+                    : "Generate AI Solution"}
               </Button>
+
+              {/* AI-generated solution collapsible */}
+              <AnimatePresence>
+                {localSolution && aiSolutionOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-3 rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-gradient-to-br from-amber-50/70 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10 p-4">
+                      <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3 flex items-center gap-1.5">
+                        <Wand2 className="h-3 w-3" />
+                        AI-Generated Solution
+                      </p>
+                      <div className="text-sm leading-7">
+                        <MathText text={localSolution} />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 

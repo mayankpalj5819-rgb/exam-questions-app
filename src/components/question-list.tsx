@@ -31,7 +31,6 @@ import {
   ArrowLeft,
   BookMarked,
   SearchX,
-  GraduationCapIcon,
   FlaskConical,
   Calculator,
   FolderSearch,
@@ -42,7 +41,7 @@ import { toast } from "sonner";
 // Subject icon map for illustrations
 function getSubjectIcon(slug: string) {
   if (slug?.includes("physics")) return FlaskConical;
-  if (slug?.includes("chem")) return GraduationCapIcon;
+  if (slug?.includes("chem")) return GraduationCap;
   if (slug?.includes("math")) return Calculator;
   return BookOpen;
 }
