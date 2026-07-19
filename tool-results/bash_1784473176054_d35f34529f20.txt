@@ -1,0 +1,1727 @@
+- banner
+  - link "ExamSIDE (Powered by ExamGOAL) Questions" [ref=e1]
+    - generic
+      - StaticText "ExamSIDE (Powered by ExamGOAL)"
+    - StaticText "Questions"
+  - button "Toggle theme" [ref=e2]
+    - image
+- generic
+  - navigation
+    - StaticText "Joint Entrance Examination"
+    - image
+    - StaticText "JEE Main"
+    - link "Physics" [ref=e158]
+    - link "Chemistry" [ref=e159]
+    - link "Mathematics" [ref=e160]
+    - StaticText "JEE Advanced"
+    - link "Physics" [ref=e161]
+    - link "Chemistry" [ref=e162]
+    - link "Mathematics" [ref=e163]
+    - StaticText "MHT CET"
+    - link "Mathematics" [ref=e164]
+    - link "Physics" [ref=e165]
+    - link "Chemistry" [ref=e166]
+    - StaticText "BITSAT"
+    - link "Physics" [ref=e167]
+    - link "Chemistry" [ref=e168]
+    - link "Mathematics" [ref=e169]
+    - link "English Proficiency" [ref=e170]
+    - link "Logical Reasoning" [ref=e171]
+    - StaticText "COMEDK"
+    - link "Physics" [ref=e172]
+    - link "Chemistry" [ref=e173]
+    - link "Mathematics" [ref=e174]
+    - StaticText "WB JEE"
+    - link "Physics" [ref=e175]
+    - link "Chemistry" [ref=e176]
+    - link "Mathematics" [ref=e177]
+    - StaticText "KCET"
+    - link "Physics" [ref=e178]
+    - link "Chemistry" [ref=e179]
+    - link "Mathematics" [ref=e180]
+    - StaticText "VITEEE"
+    - link "Physics" [ref=e181]
+    - link "Chemistry" [ref=e182]
+    - link "Mathematics" [ref=e183]
+    - link "Aptitude" [ref=e184]
+    - link "English" [ref=e185]
+    - StaticText "AP EAPCET"
+    - link "Physics" [ref=e186]
+    - link "Chemistry" [ref=e187]
+    - link "Mathematics" [ref=e188]
+    - StaticText "TS EAMCET"
+    - link "Physics" [ref=e189]
+    - link "Chemistry" [ref=e190]
+    - link "Mathematics" [ref=e191]
+    - StaticText "IAT (IISER)"
+    - link "Mathematics" [ref=e192]
+    - link "Biology" [ref=e193]
+    - link "Physics" [ref=e194]
+    - link "Chemistry" [ref=e195]
+  - navigation
+    - StaticText "Medical"
+    - image
+    - StaticText "NEET"
+    - link "Physics" [ref=e196]
+    - link "Chemistry" [ref=e197]
+    - link "Biology" [ref=e198]
+    - StaticText "AIIMS"
+    - link "Physics" [ref=e199]
+    - link "Chemistry" [ref=e200]
+    - link "Biology" [ref=e201]
+    - StaticText "MHT CET (Biology)"
+    - link "Physics" [ref=e202]
+    - link "Chemistry" [ref=e203]
+    - link "Biology" [ref=e204]
+  - navigation
+    - StaticText "Graduate Aptitude Test in Engineering"
+    - image
+    - StaticText "GATE CSE"
+    - link "Theory of Computation" [ref=e205]
+    - link "Operating Systems" [ref=e206]
+    - link "Algorithms" [ref=e207]
+    - link "Digital Logic" [ref=e208]
+    - link "Database Management System" [ref=e209]
+    - link "Data Structures" [ref=e210]
+    - link "Computer Networks" [ref=e211]
+    - link "Software Engineering" [ref=e212]
+    - link "Compiler Design" [ref=e213]
+    - link "Web Technologies" [ref=e214]
+    - link "General Aptitude" [ref=e215]
+    - link "Discrete Mathematics" [ref=e216]
+    - link "Programming Languages" [ref=e217]
+    - link "Computer Organization" [ref=e218]
+    - StaticText "GATE ECE"
+    - link "Control Systems" [ref=e219]
+    - link "Engineering Mathematics" [ref=e220]
+    - link "Analog Circuits" [ref=e221]
+    - link "Network Theory" [ref=e222]
+    - link "Electromagnetics" [ref=e223]
+    - link "Electronic Devices and VLSI" [ref=e224]
+    - link "Digital Circuits" [ref=e225]
+    - link "Microprocessors" [ref=e226]
+    - link "Signals and Systems" [ref=e227]
+    - link "Communications" [ref=e228]
+    - link "General Aptitude" [ref=e229]
+    - StaticText "GATE EE"
+    - link "Electric Circuits" [ref=e230]
+    - link "Electrical Machines" [ref=e231]
+    - link "Engineering Mathematics" [ref=e232]
+    - link "Signals and Systems" [ref=e233]
+    - link "Power Electronics" [ref=e234]
+    - link "Power System Analysis" [ref=e235]
+    - link "Digital Electronics" [ref=e236]
+    - link "Analog Electronics" [ref=e237]
+    - link "Electromagnetic Fields" [ref=e238]
+    - link "Control Systems" [ref=e239]
+    - link "Electrical and Electronics Measurement" [ref=e240]
+    - link "General Aptitude" [ref=e241]
+    - StaticText "GATE ME"
+    - link "Theory of Machines" [ref=e242]
+    - link "Engineering Mechanics" [ref=e243]
+    - link "Production Engineering" [ref=e244]
+    - link "Strength of Materials" [ref=e245]
+    - link "Turbo Machinery" [ref=e246]
+    - link "Engineering Mathematics" [ref=e247]
+    - link "Machine Design" [ref=e248]
+    - link "Heat Transfer" [ref=e249]
+    - link "Industrial Engineering" [ref=e250]
+    - link "Thermodynamics" [ref=e251]
+    - link "General Aptitude" [ref=e252]
+    - link "Fluid Mechanics" [ref=e253]
+    - StaticText "GATE CE"
+    - link "Structural Analysis" [ref=e254]
+    - link "Fluid Mechanics and Hydraulic Machines" [ref=e255]
+    - link "Strength of Materials Or Solid Mechanics" [ref=e256]
+    - link "Reinforced Cement Concrete" [ref=e257]
+    - link "Construction Material and Management" [ref=e258]
+    - link "Geotechnical Engineering" [ref=e259]
+    - link "General Aptitude" [ref=e260]
+    - link "Environmental Engineering" [ref=e261]
+    - link "Steel Structures" [ref=e262]
+    - link "Hydrology" [ref=e263]
+    - link "Transportation Engineering" [ref=e264]
+    - link "Engineering Mathematics" [ref=e265]
+    - link "Irrigation" [ref=e266]
+    - link "Engineering Mechanics" [ref=e267]
+    - link "Geomatics Engineering Or Surveying" [ref=e268]
+    - StaticText "GATE PI"
+    - link "Engineering Mechanics" [ref=e269]
+    - link "Theory of Machines" [ref=e270]
+    - link "Thermodynamics" [ref=e271]
+    - link "Machine Tools and Machining" [ref=e272]
+    - link "Metrology" [ref=e273]
+    - link "Joining of Materials" [ref=e274]
+    - link "Casting" [ref=e275]
+    - link "Engineering Mathematics" [ref=e276]
+    - link "Industrial Engineering" [ref=e277]
+    - link "Fluid Mechanics" [ref=e278]
+    - link "Strength of Materials" [ref=e279]
+    - link "Machine Design" [ref=e280]
+    - link "Heat Transfer" [ref=e281]
+    - link "Metal Forming" [ref=e282]
+    - StaticText "GATE IN"
+    - link "Engineering Mathematics" [ref=e283]
+    - StaticText "GATE Data Science and Artificial Intelligence"
+    - link "General Aptitude" [ref=e284]
+    - link "Discrete Mathematics" [ref=e285]
+    - link "Artificial Intelligence" [ref=e286]
+    - link "Machine Learning" [ref=e287]
+    - link "Database Management System and Warehousing" [ref=e288]
+    - link "Python Programming" [ref=e289]
+    - link "Data Structures" [ref=e290]
+    - link "Algorithms" [ref=e291]
+  - navigation
+    - StaticText "Civil Services"
+    - image
+    - StaticText "UPSC Civil Service"
+    - link "History of India" [ref=e292]
+    - link "Science and Technology" [ref=e293]
+    - link "Geography" [ref=e294]
+    - link "Ecology and Environment" [ref=e295]
+    - link "Indian Polity and Governance" [ref=e296]
+    - link "Economy" [ref=e297]
+    - link "Current Affairs" [ref=e298]
+    - link "Comprehension" [ref=e299]
+    - link "Basic Numeracy" [ref=e300]
+    - link "Logical Reasoning and General Mental Ability" [ref=e301]
+    - link "Data Interpretation and Sufficiency" [ref=e302]
+  - navigation
+    - StaticText "Defence"
+    - image
+    - StaticText "NDA"
+    - link "Mathematics" [ref=e303]
+    - link "English" [ref=e304]
+    - link "General Science" [ref=e305]
+    - link "General Studies" [ref=e306]
+  - navigation
+    - StaticText "Staff Selection Commission"
+    - image
+    - StaticText "SSC CGL Tier I"
+    - link "Quantitative Aptitude" [ref=e307]
+    - link "General Intelligence and Reasoning" [ref=e308]
+    - link "English Comprehension" [ref=e309]
+    - link "General Awareness" [ref=e310]
+  - navigation
+    - StaticText "CBSE"
+    - image
+    - StaticText "Class 12"
+    - link "Physics" [ref=e311]
+    - link "Chemistry" [ref=e312]
+    - link "Mathematics" [ref=e313]
+- main
+  - heading "Physical Chemistry" [level=2, ref=e124]
+  - link "Some Basic Concepts of Chemistry" [ref=e125]
+  - link "Structure of Atom" [ref=e126]
+  - link "Redox Reactions" [ref=e127]
+  - link "Gaseous State" [ref=e128]
+  - link "Chemical Equilibrium" [ref=e129]
+  - link "Ionic Equilibrium" [ref=e130]
+  - link "Solutions" [ref=e131]
+  - link "Thermodynamics" [ref=e132]
+  - link "Chemical Kinetics and Nuclear Chemistry" [ref=e133]
+  - link "Electrochemistry" [ref=e134]
+  - link "Solid State" [ref=e135]
+  - link "Surface Chemistry" [ref=e136]
+  - heading "Inorganic Chemistry" [level=2, ref=e137]
+  - link "Periodic Table & Periodicity" [ref=e138]
+  - link "Chemical Bonding & Molecular Structure" [ref=e139]
+  - link "Isolation of Elements" [ref=e140]
+  - link "Hydrogen" [ref=e141]
+  - link "s-Block Elements" [ref=e142]
+  - link "p-Block Elements" [ref=e143]
+  - link "d and f Block Elements" [ref=e144]
+  - link "Coordination Compounds" [ref=e145]
+  - link "Salt Analysis" [ref=e146]
+  - heading "Organic Chemistry" [level=2, ref=e147]
+  - link "Basics of Organic Chemistry" [ref=e148]
+  - link "Hydrocarbons" [ref=e149]
+  - link "Haloalkanes and Haloarenes" [ref=e150]
+  - link "Alcohols, Phenols and Ethers" [ref=e151]
+  - link "Aldehydes, Ketones and Carboxylic Acids" [ref=e152]
+  - link "Compounds Containing Nitrogen" [ref=e153]
+  - link "Polymers" [ref=e154]
+  - link "Biomolecules" [ref=e155]
+  - link "Chemistry in Everyday Life" [ref=e156]
+  - link "Practical Organic Chemistry" [ref=e157]
+  - heading "Some Basic Concepts of Chemistry · Chemistry · JEE Advanced" [level=1, ref=e3]
+    - StaticText "Some Basic Concepts of Chemistry · Chemistry · JEE Advanced"
+  - link "Numerical 15" [ref=e4]
+    - StaticText "Numerical"
+    - StaticText "15"
+  - link "MCQ (More than One Correct Answer) 1" [ref=e5]
+    - StaticText "MCQ (More than One Correct Answer)"
+    - StaticText "1"
+  - link "MCQ (Single Correct Answer) 19" [ref=e6]
+    - StaticText "MCQ (Single Correct Answer)"
+    - StaticText "19"
+  - link "Subjective 40" [ref=e7]
+    - StaticText "Subjective"
+    - StaticText "40"
+  - link "Fill in the Blanks 5" [ref=e8]
+    - StaticText "Fill in the Blanks"
+    - StaticText "5"
+  - link "Start Practice" [ref=e9]
+  - button "2022 to 2026 PYQ Statistics" [ref=e10]
+    - generic
+      - StaticText "2022 to 2026 PYQ Statistics"
+    - image
+  - heading "Numerical" [level=2, ref=e11]
+  - link "1 (5 moles) reacts completely with acidified aqueous potassium permanganate solution. In this reaction, the number of moles of water produced is , and the number of moles of electrons involved is . The value of is ________. JEE Advanced 2023 Paper 2 Online" [ref=e12]
+    - StaticText "1"
+    - generic
+      - generic
+        - MathMLMath
+          - MathMLSub
+            - MathMLRow
+              - MathMLIdentifier
+                - StaticText "H"
+            - MathMLNumber
+              - StaticText "2"
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "S"
+      - StaticText " (5 moles) reacts completely with acidified aqueous potassium permanganate solution. In this reaction, the number of moles of water produced is "
+      - generic
+        - MathMLMath
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "𝑥"
+      - StaticText ", and the number of moles of electrons involved is "
+      - generic
+        - MathMLMath
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "𝑦"
+      - StaticText ". The value of "
+      - generic
+        - MathMLMath
+          - MathMLOperator
+            - StaticText "("
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "𝑥"
+          - MathMLOperator
+            - StaticText "+"
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "𝑦"
+          - MathMLOperator
+            - StaticText ")"
+      - StaticText " is ________."
+    - StaticText "JEE Advanced 2023 Paper 2 Online"
+  - link "2 The stoichiometric reaction of of dimethyldichlorosilane with water results in a tetrameric cyclic product in yield. The weight (in g) of obtained is _______. [Use, molar mass ] JEE Advanced 2023 Paper 1 Online" [ref=e13]
+    - StaticText "2"
+    - generic
+      - StaticText "The stoichiometric reaction of "
+      - generic
+        - MathMLMath
+          - MathMLNumber
+            - StaticText "516"
+          - MathMLRow
+            - MathMLText
+            - MathMLIdentifier
+              - StaticText "g"
+      - StaticText " of dimethyldichlorosilane with water results in a tetrameric cyclic product "
+      - generic
+        - MathMLMath
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "𝑋"
+      - StaticText " in "
+      - generic
+        - MathMLMath
+          - MathMLNumber
+            - StaticText "75"
+          - MathMLIdentifier
+            - StaticText "%"
+      - StaticText " yield. The weight (in g) of "
+      - generic
+        - MathMLMath
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "𝑋"
+      - StaticText " obtained is _______."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "[Use, molar mass "
+      - generic
+        - MathMLMath
+          - MathMLRow
+            - MathMLOperator
+              - StaticText "("
+            - MathMLRow
+              - MathMLIdentifier
+                - StaticText "g"
+            - MathMLText
+            - MathMLSup
+              - MathMLRow
+                - MathMLIdentifier
+                  - StaticText "mol"
+              - MathMLRow
+                - MathMLOperator
+                  - StaticText "−"
+                - MathMLNumber
+                  - StaticText "1"
+            - MathMLOperator
+              - StaticText ")"
+          - MathMLOperator
+            - StaticText ":"
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "H"
+          - MathMLOperator
+            - StaticText "="
+          - MathMLNumber
+            - StaticText "1"
+          - MathMLOperator
+            - StaticText ","
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "C"
+          - MathMLOperator
+            - StaticText "="
+          - MathMLNumber
+            - StaticText "12"
+          - MathMLOperator
+            - StaticText ","
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "O"
+          - MathMLOperator
+            - StaticText "="
+          - MathMLNumber
+            - StaticText "16"
+          - MathMLOperator
+            - StaticText ","
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "Si"
+          - MathMLOperator
+            - StaticText "="
+          - MathMLNumber
+            - StaticText "28"
+          - MathMLOperator
+            - StaticText ","
+          - MathMLRow
+            - MathMLIdentifier
+              - StaticText "Cl"
+          - MathMLOperator
+            - StaticText "="
+          - MathMLNumber
+            - StaticText "35.5"
+      - StaticText " ]"
+    - StaticText "JEE Advanced 2023 Paper 1 Online"
+  - link "3 The treatment of an aqueous solution of $3.74 \\mathrm{~g}$ of $\\mathrm{Cu}\\left(\\mathrm{NO}_{3}\\right)_{2}$ with excess KI results in a brown solution along with the formation of a precipitate. Passing $\\mathrm{H}_{2} \\mathrm{~S}$ through this brown solution gives another precipitate $\\mathbf{X}$. The amount of $\\mathbf{X}$ (in $g$ ) is ___________. [Given: Atomic mass of $\\mathrm{H}=1, \\mathrm{~N}=14, \\mathrm{O}=16, \\mathrm{~S}=32, \\mathrm{~K}=39, \\mathrm{Cu}=63, \\mathrm{I}=127$ ] JEE Advanced 2022 Paper 1 Online" [ref=e14]
+    - StaticText "3"
+    - paragraph
+      - StaticText "The treatment of an aqueous solution of $3.74 \\mathrm{~g}$ of $\\mathrm{Cu}\\left(\\mathrm{NO}_{3}\\right)_{2}$ with excess KI results in a brown solution along with the formation of a precipitate. Passing $\\mathrm{H}_{2} \\mathrm{~S}$ through this brown solution gives another precipitate $\\mathbf{X}$. The amount of $\\mathbf{X}$ (in $g$ ) is ___________."
+    - paragraph
+      - StaticText "[Given: Atomic mass of $\\mathrm{H}=1, \\mathrm{~N}=14, \\mathrm{O}=16, \\mathrm{~S}=32, \\mathrm{~K}=39, \\mathrm{Cu}=63, \\mathrm{I}=127$ ]"
+    - StaticText "JEE Advanced 2022 Paper 1 Online"
+  - link "4 In the chemical reaction between stoichiometric quantities of KMnO4 and KI in weakly basic solution, what is the number of moles of I2 released for 4 moles of KMnO4 consumed? JEE Advanced 2020 Paper 2 Offline" [ref=e15]
+    - StaticText "4"
+    - generic
+      - StaticText "In the chemical reaction between stoichiometric quantities of KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " and KI in weakly basic solution, what is the number of moles of I"
+      - subscript
+        - StaticText "2"
+      - StaticText " released for 4 moles of KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " consumed?"
+    - StaticText "JEE Advanced 2020 Paper 2 Offline"
+  - link "5 5.00 mL of 0.10 M oxalic acid solution taken in a conical flask is titrated against NaOH from a burette using phenolphthalein indicator. The volume of NaOH required for the appearance of permanent faint pink color is tabulated below for five experiments. What is the concentration, in molarity, of the NaOH solution? JEE Advanced 2020 Paper 1 Offline" [ref=e16]
+    - StaticText "5"
+    - generic
+      - StaticText "5.00 mL of 0.10 M oxalic acid solution taken in a conical flask is titrated against NaOH from a burette using phenolphthalein indicator. The volume of NaOH required for the appearance of permanent faint pink color is tabulated below for five experiments. What is the concentration, in molarity, of the NaOH solution?"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - table
+        - rowgroup
+          - row
+            - columnheader "Exp. No." [ref=e333]
+            - columnheader "Vol. of NaOH (mL)" [ref=e334]
+        - row
+          - cell "1" [ref=e314]
+          - cell "12.5" [ref=e315]
+        - row
+          - cell "2" [ref=e316]
+          - cell "10.5" [ref=e317]
+        - row
+          - cell "3" [ref=e318]
+          - cell "9.0" [ref=e319]
+        - row
+          - cell "4" [ref=e320]
+          - cell "9.0" [ref=e321]
+        - row
+          - cell "5" [ref=e322]
+          - cell "9.0" [ref=e323]
+    - StaticText "JEE Advanced 2020 Paper 1 Offline"
+  - link "6 The mole fraction of urea in an aqueous urea solution containing 900 g of water is 0.05. If the density of the solution is 1.2 g cm$$-$$3, then molarity of urea solution is ................ (Given data : Molar masses of urea and water are 60 g mol$$-$$1 and 18 g mol$$-$$1, respectively) JEE Advanced 2019 Paper 2 Offline" [ref=e17]
+    - StaticText "6"
+    - generic
+      - StaticText "The mole fraction of urea in an aqueous urea solution containing 900 g of water is 0.05. If the density of the solution is 1.2 g cm"
+      - superscript
+        - StaticText "$$-$$3"
+      - StaticText ", then molarity of urea solution is ................"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(Given data : Molar masses of urea and water are 60 g mol"
+      - superscript
+        - StaticText "$$-$$1"
+      - StaticText " and 18 g mol"
+      - superscript
+        - StaticText "$$-$$1"
+      - StaticText ", respectively)"
+    - StaticText "JEE Advanced 2019 Paper 2 Offline"
+  - link "7 The amount of water produced (in g) in the oxidation of 1 mole of rhombic sulphur by conc. HNO3 to a compound with the highest oxidation state of sulphur is .............. (Given data : Molar mass of water = 18 g mol$$-$$1) JEE Advanced 2019 Paper 2 Offline" [ref=e18]
+    - StaticText "7"
+    - generic
+      - StaticText "The amount of water produced (in g) in the oxidation of 1 mole of rhombic sulphur by conc. HNO"
+      - subscript
+        - StaticText "3"
+      - StaticText " to a compound with the highest oxidation state of sulphur is .............."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(Given data : Molar mass of water = 18 g mol"
+      - superscript
+        - StaticText "$$-$$1"
+      - StaticText ")"
+    - StaticText "JEE Advanced 2019 Paper 2 Offline"
+  - link "8 To measure the quantity of $$MnC{l_2}$$ dissolved in an aqueous solution, it was completely converted to $$KMn{O_4}$$ using the reaction, $$MnC{l_2} + {K_2}{S_2}{O_8} + {H_2}O \\to KMn{O_4} + {H_2}S{O_4} + HCl$$ (equation not balanced). Few drops of concentrated $$HCl$$ were added to this solution and gently warmed. Further, oxalic acid ($$225$$ $$mg$$) was added in portions till the colour of the permanganate ion disappeared. The quantity of $$MnC{l_2}$$ (in mg) present in the initial solution is ____________. (Atomic weights in $$g\\,\\,mo{l^{ - 1}}:Mn = 55,Cl = 35.5$$ ) JEE Advanced 2018 Paper 2 Offline" [ref=e19]
+    - StaticText "8"
+    - generic
+      - StaticText "To measure the quantity of $$MnC{l_2}$$ dissolved in an aqueous solution, it was completely converted to $$KMn{O_4}$$ using the reaction,"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "$$MnC{l_2} + {K_2}{S_2}{O_8} + {H_2}O \\to KMn{O_4} + {H_2}S{O_4} + HCl$$ (equation not balanced)."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "Few drops of concentrated $$HCl$$ were added to this solution and gently warmed. Further, oxalic acid ($$225$$ $$mg$$) was added in portions till the colour of the permanganate ion disappeared. The quantity of $$MnC{l_2}$$ (in mg) present in the initial solution is ____________."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(Atomic weights in $$g\\,\\,mo{l^{ - 1}}:Mn = 55,Cl = 35.5$$ )"
+    - StaticText "JEE Advanced 2018 Paper 2 Offline"
+  - link "9 A compound H2X with molar weight of 80g is dissolved in a solvent having density of 0.4 gml–1 . Assuming no change in volume upon dissolution, the molality of a 3.2 molar solution is JEE Advanced 2014 Paper 1 Offline" [ref=e20]
+    - StaticText "9"
+    - generic
+      - StaticText "A compound H"
+      - subscript
+        - StaticText "2"
+      - StaticText "X with molar weight of 80g is dissolved in a solvent having density of 0.4 gml"
+      - superscript
+        - StaticText "–1"
+      - StaticText " . Assuming no change in volume upon dissolution, the molality of a 3.2 molar solution is"
+    - StaticText "JEE Advanced 2014 Paper 1 Offline"
+  - link "10 If the value of Avogadro number is 6.023 $$\\times$$ 1023 mol-1 and the value of Boltzmann constant is 1.380 $$\\times$$ 10-23 J K-1, then the number of significant digits in the calculated value of the universal gas constant is JEE Advanced 2014 Paper 1 Offline" [ref=e21]
+    - StaticText "10"
+    - generic
+      - StaticText "If the value of Avogadro number is 6.023 $$\\times$$ 10"
+      - superscript
+        - StaticText "23"
+      - StaticText " mol"
+      - superscript
+        - StaticText "-1"
+      - StaticText " and the value of Boltzmann constant is 1.380 $$\\times$$ 10"
+      - superscript
+        - StaticText "-23"
+      - StaticText " J K"
+      - superscript
+        - StaticText "-1"
+      - StaticText ", then the number of significant digits in the calculated value of the universal gas constant is"
+    - StaticText "JEE Advanced 2014 Paper 1 Offline"
+  - link "11 29.2 % (w/w) HCl stock solution has density of 1.25 g mL-1 . The molecular weight of HCl is 36.5 g mol-1 . The volume (mL) of stock solution required to prepare a 200 mL solution of 0.4 M HCl is IIT-JEE 2012 Paper 1 Offline" [ref=e22]
+    - StaticText "11"
+    - generic
+      - StaticText "29.2 % (w/w) HCl stock solution has density of 1.25 g mL"
+      - superscript
+        - StaticText "-1"
+      - StaticText " . The molecular weight of HCl is 36.5 g mol"
+      - superscript
+        - StaticText "-1"
+      - StaticText " . The volume (mL) of stock solution required to prepare a 200 mL solution of 0.4 M HCl is"
+    - StaticText "IIT-JEE 2012 Paper 1 Offline"
+  - link "12 The volume (in mL) of 0.1 M AgNO3 required for complete precipitation of chloride ions present in 30 mL of 0.01 M solution of $$[Cr{({H_2}O)_5}Cl]C{l_2}$$, as silver chloride is close to ____________. IIT-JEE 2011 Paper 2 Offline" [ref=e23]
+    - StaticText "12"
+    - paragraph
+      - StaticText "The volume (in mL) of 0.1 M AgNO"
+      - subscript
+        - StaticText "3"
+      - StaticText " required for complete precipitation of chloride ions present in 30 mL of 0.01 M solution of $$[Cr{({H_2}O)_5}Cl]C{l_2}$$, as silver chloride is close to ____________."
+    - StaticText "IIT-JEE 2011 Paper 2 Offline"
+  - link "13 A student performs a titration with different burettes and finds titre values of 25.2 mL, 25.25 mL, and 25.0 mL. The number of significant figures in the average titre value is IIT-JEE 2010 Paper 1 Offline" [ref=e24]
+    - StaticText "13"
+    - StaticText "A student performs a titration with different burettes and finds titre values of 25.2 mL, 25.25 mL, and 25.0 mL. The number of significant figures in the average titre value is"
+    - StaticText "IIT-JEE 2010 Paper 1 Offline"
+  - link "14 Silver (atomic weight = 108 g mol-1) has a density of 10.5 g.cm-3. The number of silver atoms on a surface of area 10-12 m2 can be expressed in scientific notation as y $$\\times$$ 10x. The value of x is? IIT-JEE 2010 Paper 2 Offline" [ref=e25]
+    - StaticText "14"
+    - generic
+      - StaticText "Silver (atomic weight = 108 g mol"
+      - superscript
+        - StaticText "-1"
+      - StaticText ") has a density of 10.5 g.cm"
+      - superscript
+        - StaticText "-3"
+      - StaticText ". The number of silver atoms on a surface of area 10"
+      - superscript
+        - StaticText "-12"
+      - StaticText " m"
+      - superscript
+        - StaticText "2"
+      - StaticText " can be expressed in scientific notation as y $$\\times$$ 10"
+      - superscript
+        - StaticText "x"
+      - StaticText ". The value of x is?"
+    - StaticText "IIT-JEE 2010 Paper 2 Offline"
+  - link "15 2.68 $$\\times$$ 10-3 moles of a solution containing an ion An+ require 1.61 $$\\times$$ 10-3 moles of $$MnO_4^-$$ for the oxidation of An+ to $$AO_3^-$$ in acid medium. What is the value of n? IIT-JEE 1984" [ref=e26]
+    - StaticText "15"
+    - generic
+      - StaticText "2.68 $$\\times$$ 10"
+      - superscript
+        - StaticText "-3"
+      - StaticText " moles of a solution containing an ion A"
+      - superscript
+        - StaticText "n+"
+      - StaticText " require 1.61 $$\\times$$ 10"
+      - superscript
+        - StaticText "-3"
+      - StaticText " moles of $$MnO_4^-$$ for the oxidation of An"
+      - superscript
+        - StaticText "+"
+      - StaticText " to $$AO_3^-$$ in acid medium. What is the value of n?"
+    - StaticText "IIT-JEE 1984"
+  - heading "MCQ (More than One Correct Answer)" [level=2, ref=e27]
+  - link "1 To check the principle of multiple proportions, a series of pure binary compounds $\\left(\\mathrm{P}_{\\mathrm{m}} \\mathrm{Q}_{\\mathrm{n}}\\right)$ were analyzed and their composition is tabulated below. The correct option(s) is(are) JEE Advanced 2022 Paper 2 Online" [ref=e28]
+    - StaticText "1"
+    - generic
+      - StaticText "To check the principle of multiple proportions, a series of pure binary compounds $\\left(\\mathrm{P}_{\\mathrm{m}} \\mathrm{Q}_{\\mathrm{n}}\\right)$ were analyzed and their composition is tabulated below. The correct option(s) is(are)"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - table
+        - rowgroup
+          - row
+            - columnheader "Compound" [ref=e335]
+            - columnheader "Weight % of $\\mathrm{P}$" [ref=e336]
+            - columnheader "Weight % of $\\mathrm{Q}$" [ref=e337]
+        - row
+          - cell "1" [ref=e324]
+          - cell "50" [ref=e325]
+          - cell "50" [ref=e326]
+        - row
+          - cell "2" [ref=e327]
+          - cell "44.4" [ref=e328]
+          - cell "55.6" [ref=e329]
+        - row
+          - cell "3" [ref=e330]
+          - cell "40" [ref=e331]
+          - cell "60" [ref=e332]
+    - StaticText "JEE Advanced 2022 Paper 2 Online"
+  - heading "MCQ (Single Correct Answer)" [level=2, ref=e29]
+  - link "1 Dissolving 120 g of urea (mol. wt. 60) in 1000 g of water gave a solution of density 1.15 g/mL. The molarity of the solution is IIT-JEE 2011 Paper 1 Offline" [ref=e30]
+    - StaticText "1"
+    - StaticText "Dissolving 120 g of urea (mol. wt. 60) in 1000 g of water gave a solution of density 1.15 g/mL. The molarity of the solution is"
+    - StaticText "IIT-JEE 2011 Paper 1 Offline"
+  - link "2 Given that the abundances of isotopes 54Fe, 56Fe and 57Fe are 5%, 90% and 5%, respectively, the atomic mass of Fe is : IIT-JEE 2009 Paper 1 Offline" [ref=e31]
+    - StaticText "2"
+    - generic
+      - StaticText "Given that the abundances of isotopes "
+      - superscript
+        - StaticText "54"
+      - StaticText "Fe, "
+      - superscript
+        - StaticText "56"
+      - StaticText "Fe and "
+      - superscript
+        - StaticText "57"
+      - StaticText "Fe are 5%, 90% and 5%, respectively, the atomic mass of Fe is :"
+    - StaticText "IIT-JEE 2009 Paper 1 Offline"
+  - link "3 Consider a titration of potassium dichromate solution with acidified Mohr’s salt solution using diphenylamine as indicator. The number of moles of Mohr’s salt required per mole of dichromate is IIT-JEE 2007 Paper 2 Offline" [ref=e32]
+    - StaticText "3"
+    - StaticText "Consider a titration of potassium dichromate solution with acidified Mohr’s salt solution using diphenylamine as indicator. The number of moles of Mohr’s salt required per mole of dichromate is"
+    - StaticText "IIT-JEE 2007 Paper 2 Offline"
+  - link "4 Mixture X = 0.02 mol of [Co(NH3)5SO4]Br and 0.02 mol of [Co(NH3)5Br]SO4 was prepared in 2 litre of solution. 1 litre of mixture X + excess AgNO3 $$ \\to $$ Y. 1 litre of mixture X + excess BaCl2 $$ \\to $$ Z No. of moles of Y and Z are IIT-JEE 2003 Screening" [ref=e33]
+    - StaticText "4"
+    - generic
+      - StaticText "Mixture X = 0.02 mol of [Co(NH"
+      - subscript
+        - StaticText "3"
+      - StaticText ")"
+      - subscript
+        - StaticText "5"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText "]Br and 0.02 mol of [Co(NH"
+      - subscript
+        - StaticText "3"
+      - StaticText ")"
+      - subscript
+        - StaticText "5"
+      - StaticText "Br]SO"
+      - subscript
+        - StaticText "4"
+      - StaticText " was prepared in 2 litre of solution."
+      - LineBreak "\n"
+      - StaticText "1 litre of mixture X + excess AgNO"
+      - subscript
+        - StaticText "3"
+      - StaticText " $$ \\to $$ Y."
+      - LineBreak "\n"
+      - StaticText "1 litre of mixture X + excess BaCl"
+      - subscript
+        - StaticText "2"
+      - StaticText " $$ \\to $$ Z"
+      - LineBreak "\n"
+      - StaticText "No. of moles of Y and Z are"
+    - StaticText "IIT-JEE 2003 Screening"
+  - link "5 Which has maximum number of atoms? IIT-JEE 2003 Screening" [ref=e34]
+    - StaticText "5"
+    - StaticText "Which has maximum number of atoms?"
+    - StaticText "IIT-JEE 2003 Screening"
+  - link "6 How many moles of electron weigh one kilogram? IIT-JEE 2002 Screening" [ref=e35]
+    - StaticText "6"
+    - StaticText "How many moles of electron weigh one kilogram?"
+    - StaticText "IIT-JEE 2002 Screening"
+  - link "7 In the standardization of Na2S2O3 using K2Cr2O7 by iodometry, the equivalent weight of K2Cr2O7 is: IIT-JEE 2001 Screening" [ref=e36]
+    - StaticText "7"
+    - generic
+      - StaticText "In the standardization of Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "S"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "3"
+      - StaticText " using K"
+      - subscript
+        - StaticText "2"
+      - StaticText "Cr"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "7"
+      - StaticText " by iodometry, the equivalent weight of K"
+      - subscript
+        - StaticText "2"
+      - StaticText "Cr"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "7"
+      - StaticText " is:"
+    - StaticText "IIT-JEE 2001 Screening"
+  - link "8 An aqueous solution of 6.3 g oxalic acid dihydrate is made up to 250ml. the volume of 0.1N NaOH required to completely neutralize 10ml of this solution is : IIT-JEE 2001 Screening" [ref=e37]
+    - StaticText "8"
+    - StaticText "An aqueous solution of 6.3 g oxalic acid dihydrate is made up to 250ml. the volume of 0.1N NaOH required to completely neutralize 10ml of this solution is :"
+    - StaticText "IIT-JEE 2001 Screening"
+  - link "9 The oxidation state of the most electronegative element in the products of the reaction. BaO2 with dil. H2SO4 are IIT-JEE 1991" [ref=e38]
+    - StaticText "9"
+    - generic
+      - StaticText "The oxidation state of the most electronegative element in the products of the reaction. BaO"
+      - subscript
+        - StaticText "2"
+      - StaticText " with dil. H"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText " are"
+    - StaticText "IIT-JEE 1991"
+  - link "10 Read the following statement and explanation and answer as per the options given below: STATEMENT (S): In the titration of Na2CO3 with HCl using methyl orange indicator, the volume required at the equivalence point is twice that of the acid required using phenolphthalein indicator. EXPLANATION (E): Two moles of HCl are required for the complete neutralization of one mole of Na2CO3 IIT-JEE 1991" [ref=e39]
+    - StaticText "10"
+    - generic
+      - StaticText "Read the following statement and explanation and answer as per the options given below:"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "STATEMENT (S): In the titration of Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "CO"
+      - subscript
+        - StaticText "3"
+      - StaticText " with HCl using methyl orange indicator, the volume required at the equivalence point is twice that of the acid required using phenolphthalein indicator."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "EXPLANATION (E): Two moles of HCl are required for the complete neutralization of one mole of Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "CO"
+      - subscript
+        - StaticText "3"
+    - StaticText "IIT-JEE 1991"
+  - link "11 In which mode of expression, the concentration of a solution remains independent of temperature? IIT-JEE 1988" [ref=e40]
+    - StaticText "11"
+    - StaticText "In which mode of expression, the concentration of a solution remains independent of temperature?"
+    - StaticText "IIT-JEE 1988"
+  - link "12 A molal solution is one that contains one mole of solute in IIT-JEE 1986" [ref=e41]
+    - StaticText "12"
+    - StaticText "A molal solution is one that contains one mole of solute in"
+    - StaticText "IIT-JEE 1986"
+  - link "13 If 0.50 mol of BaCl2 is mixed with 0.20 mol of Na3PO4, the maximum amount of Ba3(PO4)2 that can be formed is IIT-JEE 1981" [ref=e42]
+    - StaticText "13"
+    - generic
+      - StaticText "If 0.50 mol of BaCl"
+      - subscript
+        - StaticText "2"
+      - StaticText " is mixed with 0.20 mol of Na"
+      - subscript
+        - StaticText "3"
+      - StaticText "PO"
+      - subscript
+        - StaticText "4"
+      - StaticText ", the maximum amount of Ba"
+      - subscript
+        - StaticText "3"
+      - StaticText "(PO"
+      - subscript
+        - StaticText "4"
+      - StaticText ")"
+      - subscript
+        - StaticText "2"
+      - StaticText " that can be formed is"
+    - StaticText "IIT-JEE 1981"
+  - link "14 A gaseous mixture contains oxygen and nitrogen in the ratio of 1 : 4 by weight. Therefore the ratio of their no of molecules is IIT-JEE 1979" [ref=e43]
+    - StaticText "14"
+    - StaticText "A gaseous mixture contains oxygen and nitrogen in the ratio of 1 : 4 by weight. Therefore the ratio of their no of molecules is"
+    - StaticText "IIT-JEE 1979"
+  - link "15 The largest number of molecules is in IIT-JEE 1979" [ref=e44]
+    - StaticText "15"
+    - StaticText "The largest number of molecules is in"
+    - StaticText "IIT-JEE 1979"
+  - link "16 The total number of electrons is one molecule of carbon dioxide is IIT-JEE 1979" [ref=e45]
+    - StaticText "16"
+    - StaticText "The total number of electrons is one molecule of carbon dioxide is"
+    - StaticText "IIT-JEE 1979"
+  - link "17 2.76 g of silver carbonate on being strongly heated yields a residue weighing IIT-JEE 1979" [ref=e46]
+    - StaticText "17"
+    - StaticText "2.76 g of silver carbonate on being strongly heated yields a residue weighing"
+    - StaticText "IIT-JEE 1979"
+  - link "18 A compound was found to contain nitrogen and oxygen in the ratio 28 gm and 80 gm respectively. The formula of compound is IIT-JEE 1978" [ref=e47]
+    - StaticText "18"
+    - StaticText "A compound was found to contain nitrogen and oxygen in the ratio 28 gm and 80 gm respectively. The formula of compound is"
+    - StaticText "IIT-JEE 1978"
+  - link "19 27 g of Al will react completely with how many grams if oxygen? IIT-JEE 1978" [ref=e48]
+    - StaticText "19"
+    - StaticText "27 g of Al will react completely with how many grams if oxygen?"
+    - StaticText "IIT-JEE 1978"
+  - heading "Subjective" [level=2, ref=e49]
+  - link "1 Calculate the molarity of water if it's density is 1000 kg/m3 IIT-JEE 2003" [ref=e50]
+    - StaticText "1"
+    - generic
+      - StaticText "Calculate the molarity of water if it's density is 1000 kg/m"
+      - superscript
+        - StaticText "3"
+    - StaticText "IIT-JEE 2003"
+  - link "2 Hydrogen peroxide solution (20 ml) reacts quantitatively with a solution of KMnO4 solution is just decolourised by 10 ml of MnSO4 in neutral medium simultaneously forming a dark brown precipitate of hydrated MnO2. The brown precipitated is dissolved in 10 ml of 0.2 M sodium oxalate under boiling condition in the presence of dilute H2SO4. Write the balanced equations involved in the reactions and calculate the molarity of H2O2. IIT-JEE 2001" [ref=e51]
+    - StaticText "2"
+    - generic
+      - StaticText "Hydrogen peroxide solution (20 ml) reacts quantitatively with a solution of KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution is just decolourised by 10 ml of MnSO"
+      - subscript
+        - StaticText "4"
+      - StaticText " in neutral medium simultaneously forming a dark brown precipitate of hydrated MnO"
+      - subscript
+        - StaticText "2"
+      - StaticText ". The brown precipitated is dissolved in 10 ml of 0.2 M sodium oxalate under boiling condition in the presence of dilute H"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText ". Write the balanced equations involved in the reactions and calculate the molarity of H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "2"
+      - StaticText "."
+    - StaticText "IIT-JEE 2001"
+  - link "3 How many millilitres of 0.5 M H2SO4 are needed to dissolve 0.5 g of copper(II) carbonate? IIT-JEE 1999" [ref=e52]
+    - StaticText "3"
+    - generic
+      - StaticText "How many millilitres of 0.5 M H"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText " are needed to dissolve 0.5 g of copper(II) carbonate?"
+    - StaticText "IIT-JEE 1999"
+  - link "4 A plant virus is found to consist of uniform cylindrical particles of 150 Å in diameter and 5000 Å long. The specific volume of the virus is 0.75 cm3/g. If the virus is considered to be a single particle, find its molar mass. IIT-JEE 1999" [ref=e53]
+    - StaticText "4"
+    - generic
+      - StaticText "A plant virus is found to consist of uniform cylindrical particles of 150 Å in diameter and 5000 Å long. The specific volume of the virus is 0.75 cm"
+      - superscript
+        - StaticText "3"
+      - StaticText "/g. If the virus is considered to be a single particle, find its molar mass."
+    - StaticText "IIT-JEE 1999"
+  - link "5 An aqueous solution containing 0.10 g KIO3 (formula weight = 214.0) was treated with an excess of KI solution. The solution was acidified with HCl. The liberated I2 consumed 45.0 mL of thiosulphate solution to decolourise the blue strach-iodine complex. Calculate the molarity of the sodium thiosulphate solution. IIT-JEE 1998" [ref=e54]
+    - StaticText "5"
+    - generic
+      - StaticText "An aqueous solution containing 0.10 g KIO"
+      - subscript
+        - StaticText "3"
+      - StaticText " (formula weight = 214.0) was treated with an excess of KI solution. The solution was acidified with HCl. The liberated I"
+      - subscript
+        - StaticText "2"
+      - StaticText " consumed 45.0 mL of thiosulphate solution to decolourise the blue strach-iodine complex. Calculate the molarity of the sodium thiosulphate solution."
+    - StaticText "IIT-JEE 1998"
+  - link "6 A 3.00 g sample containing Fe3O4, Fe2O3 and an inert impure substance is treated with excess of KI solution in presence of dilute H2SO4. The entire iron is converted into Fe2+ along with the liberation of iodine. The resulting solution is diluted to 100 ml, A 20 ml of the diluted solution requires 11.0 ml of 0.5 M Na2S2O3 solution to reduce the iodine present. A 50 ml of the diluted solution, after complete extraction of the iodine requires 12.80 ml of 0.25 M KMnO4 solution in the dilute H2SO4 medium for the oxidation of Fe2+. Calculate the percentages of Fe2O3 and Fe3O4 in the original sample. IIT-JEE 1996" [ref=e55]
+    - StaticText "6"
+    - generic
+      - StaticText "A 3.00 g sample containing Fe"
+      - subscript
+        - StaticText "3"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText ", Fe"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "3"
+      - StaticText " and an inert impure substance is treated with excess of KI solution in presence of dilute H"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText ". The entire iron is converted into Fe"
+      - superscript
+        - StaticText "2+"
+      - StaticText " along with the liberation of iodine. The resulting solution is diluted to 100 ml, A 20 ml of the diluted solution requires 11.0 ml of 0.5 M Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "S"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "3"
+      - StaticText " solution to reduce the iodine present. A 50 ml of the diluted solution, after complete extraction of the iodine requires 12.80 ml of 0.25 M KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution in the dilute H"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText " medium for the oxidation of Fe"
+      - superscript
+        - StaticText "2+"
+      - StaticText ". Calculate the percentages of Fe"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "3"
+      - StaticText " and Fe"
+      - subscript
+        - StaticText "3"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText " in the original sample."
+    - StaticText "IIT-JEE 1996"
+  - link "7 The composition of a sample of Wustite is Fe0.93O1.00 what percentage of the iron is present in the form of Fe(III)? IIT-JEE 1994" [ref=e56]
+    - StaticText "7"
+    - generic
+      - StaticText "The composition of a sample of Wustite is Fe"
+      - subscript
+        - StaticText "0.93"
+      - StaticText "O"
+      - subscript
+        - StaticText "1.00"
+      - StaticText " what percentage of the iron is present in the form of Fe(III)?"
+    - StaticText "IIT-JEE 1994"
+  - link "8 8.0575 $$\\times$$ 10-2 kg of Glauber's salt is dissolved in water to obtain 1 dm3 of a solution of density 1077.2 kg.m-3. Calculate the molarity, molality and mole fraction Na2SO4 in the solution. IIT-JEE 1994" [ref=e57]
+    - StaticText "8"
+    - generic
+      - StaticText "8.0575 $$\\times$$ 10"
+      - superscript
+        - StaticText "-2"
+      - StaticText " kg of Glauber's salt is dissolved in water to obtain 1 dm"
+      - superscript
+        - StaticText "3"
+      - StaticText " of a solution of density 1077.2 kg.m"
+      - superscript
+        - StaticText "-3"
+      - StaticText ". Calculate the molarity, molality and mole fraction Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText " in the solution."
+    - StaticText "IIT-JEE 1994"
+  - link "9 Upon mixing 45.0 ml. of 0.25 M lead nitrate solution with 25.0 ml. of 0.10M chromic sulphate solution, precipitation of lead sulphate takes place. How many moles of lead sulphate are formed? Also, calculate the molar concentrations of the species left behind in the final solution. Assume that lead sulphate is completely insoluble. IIT-JEE 1993" [ref=e58]
+    - StaticText "9"
+    - StaticText "Upon mixing 45.0 ml. of 0.25 M lead nitrate solution with 25.0 ml. of 0.10M chromic sulphate solution, precipitation of lead sulphate takes place. How many moles of lead sulphate are formed? Also, calculate the molar concentrations of the species left behind in the final solution. Assume that lead sulphate is completely insoluble."
+    - StaticText "IIT-JEE 1993"
+  - link "10 A 2.0 g sample of a mixture containing sodium carbonate, sodium bicarbonate and sodium suplphate is gently heated till the evolution of CO2 ceases. The volume of CO2 at 750 mm Hg pressure and at 298K is measured to be 123.9 ml. A 1.5g of the same sample requires 150 ml. of (M/10) HCl for complete neutralisation. Calculate the % composition of the components of the mixture. IIT-JEE 1992" [ref=e59]
+    - StaticText "10"
+    - generic
+      - StaticText "A 2.0 g sample of a mixture containing sodium carbonate, sodium bicarbonate and sodium suplphate is gently heated till the evolution of CO"
+      - subscript
+        - StaticText "2"
+      - StaticText " ceases. The volume of CO"
+      - subscript
+        - StaticText "2"
+      - StaticText " at 750 mm Hg pressure and at 298K is measured to be 123.9 ml. A 1.5g of the same sample requires 150 ml. of (M/10) HCl for complete neutralisation. Calculate the % composition of the components of the mixture."
+    - StaticText "IIT-JEE 1992"
+  - link "11 One gram of commercial AgNO3 is dissolved in 50 ml. of water. It is treated with 50 ml. of a KI solution. The silver iodide thus precipitated is filtered off. Excess of KI in the filterate is titrated with (M/10) KIO3 solution in presence of 6M HCl till all I- ions are converted into ICl. It requires 50 ml. of (M/10) KIO3 solution. 20 ml. of the same stock solution of KI requires 30 ml. of (M/10) KIO3 under similar conditions. Calculate the percentage of AgNO3 in the sample. (Reaction : KIO3 + 2KI + 6HCl $$\\to$$ 3ICl + 3KCl + 3H2O) IIT-JEE 1992" [ref=e60]
+    - StaticText "11"
+    - generic
+      - StaticText "One gram of commercial AgNO"
+      - subscript
+        - StaticText "3"
+      - StaticText " is dissolved in 50 ml. of water. It is treated with 50 ml. of a KI solution. The silver iodide thus precipitated is filtered off. Excess of KI in the filterate is titrated with (M/10) KIO"
+      - subscript
+        - StaticText "3"
+      - StaticText " solution in presence of 6M HCl till all I"
+      - superscript
+        - StaticText "-"
+      - StaticText " ions are converted into ICl. It requires 50 ml. of (M/10) KIO"
+      - subscript
+        - StaticText "3"
+      - StaticText " solution. 20 ml. of the same stock solution of KI requires 30 ml. of (M/10) KIO"
+      - subscript
+        - StaticText "3"
+      - StaticText " under similar conditions. Calculate the percentage of AgNO"
+      - subscript
+        - StaticText "3"
+      - StaticText " in the sample."
+      - LineBreak "\n"
+      - StaticText "(Reaction : KIO"
+      - subscript
+        - StaticText "3"
+      - StaticText " + 2KI + 6HCl $$\\to$$ 3ICl + 3KCl + 3H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O)"
+    - StaticText "IIT-JEE 1992"
+  - link "12 A solution of 0.2 g of a compound containing Cu2+ and $$C_2O_4^{2-}$$ ions on titration with 0.02M $$KMnO_4$$ in presence of $$H_2SO_4$$ consumes 22.6 ml. of the oxidant. The resultant solution in neutralized with Na2CO3, acidified with dil. acetic acid and treated with excess KI. The liberated iodine requires 11.3 ml of 0.05M Na2S2O3 solution for complete reduction. Find out the molar ratio of Cu2+ to $$C_2O_4^{2-}$$ in the compound.Write down the balanced redox reactions involved in the above titrations. IIT-JEE 1991" [ref=e61]
+    - StaticText "12"
+    - generic
+      - StaticText "A solution of 0.2 g of a compound containing Cu"
+      - superscript
+        - StaticText "2+"
+      - StaticText " and $$C_2O_4^{2-}$$ ions on titration with 0.02M $$KMnO_4$$ in presence of $$H_2SO_4$$ consumes 22.6 ml. of the oxidant. The resultant solution in neutralized with Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "CO"
+      - subscript
+        - StaticText "3"
+      - StaticText ", acidified with dil. acetic acid and treated with excess KI. The liberated iodine requires 11.3 ml of 0.05M Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "S"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "3"
+      - StaticText " solution for complete reduction."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "Find out the molar ratio of Cu"
+      - superscript
+        - StaticText "2+"
+      - StaticText " to $$C_2O_4^{2-}$$ in the compound.Write down the balanced redox reactions involved in the above titrations."
+    - StaticText "IIT-JEE 1991"
+  - link "13 A 1.0 g sample of Fe2O3 solid of 55.2% purity is dissolved in acid and reduced by heating the solution with zinc dust. The resultant solution is cooled and made upto 100.0 ml. An aliquot of 25.0 ml of this solution requires 17.0 ml of 0.0167M solution of an oxidant for titration. Calculate the number of electrons taken by the oxidant in the reaction of the above titration. IIT-JEE 1991" [ref=e62]
+    - StaticText "13"
+    - generic
+      - StaticText "A 1.0 g sample of Fe"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "3"
+      - StaticText " solid of 55.2% purity is dissolved in acid and reduced by heating the solution with zinc dust. The resultant solution is cooled and made upto 100.0 ml. An aliquot of 25.0 ml of this solution requires 17.0 ml of 0.0167M solution of an oxidant for titration. Calculate the number of electrons taken by the oxidant in the reaction of the above titration."
+    - StaticText "IIT-JEE 1991"
+  - link "14 A mixture of H2C2O4 (oxalic acid) and NaHC2O4 weighing 2.02 g was dissolved in water and solution made upto one litre. Ten millilitres of the solution required 3.0 ml. of 0.1 N sodium hydroxide solution for complete neutralization. In another experiment, 10.0 ml. of the same solution, in hot dilute sulphuric acid medium. require 4.0 ml. of 0.1 N potassium permanganate solution for complete reaction. Calculate the amount of H2C2O4 and NaHC2O4 in the mixture. IIT-JEE 1990" [ref=e63]
+    - StaticText "14"
+    - generic
+      - StaticText "A mixture of H"
+      - subscript
+        - StaticText "2"
+      - StaticText "C"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText " (oxalic acid) and NaHC"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText " weighing 2.02 g was dissolved in water and solution made upto one litre. Ten millilitres of the solution required 3.0 ml. of 0.1 N sodium hydroxide solution for complete neutralization. In another experiment, 10.0 ml. of the same solution, in hot dilute sulphuric acid medium. require 4.0 ml. of 0.1 N potassium permanganate solution for complete reaction. Calculate the amount of H"
+      - subscript
+        - StaticText "2"
+      - StaticText "C"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText " and NaHC"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText " in the mixture."
+    - StaticText "IIT-JEE 1990"
+  - link "15 A solid mixture (5.0 g) consisting of lead nitrate and sodium nitrate was headed below 600oC until the weight of the residue was constant. If the loss in weight 28.0 percent, find the amount of lead nitrate and sodium nitrate in the mixture. IIT-JEE 1990" [ref=e64]
+    - StaticText "15"
+    - generic
+      - StaticText "A solid mixture (5.0 g) consisting of lead nitrate and sodium nitrate was headed below 600"
+      - superscript
+        - StaticText "o"
+      - StaticText "C until the weight of the residue was constant. If the loss in weight 28.0 percent, find the amount of lead nitrate and sodium nitrate in the mixture."
+    - StaticText "IIT-JEE 1990"
+  - link "16 Calculate the molality of 1 litre solution of 93% H2SO4 (weight/volume). The density of the solution is 1.84 g/ml IIT-JEE 1990" [ref=e65]
+    - StaticText "16"
+    - generic
+      - StaticText "Calculate the molality of 1 litre solution of 93% H"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText " (weight/volume). The density of the solution is 1.84 g/ml"
+    - StaticText "IIT-JEE 1990"
+  - link "17 An equal volume of a reducing agent is titrated separately with 1M KMnO4 in acid neutral and alkaline media. The volumes of KMnO4 required are 20 ml. in acid 33.4 ml. neutral and 100 ml in alkaline media. Find out the oxidation state of manganese in each reduction product. Give the balanced equations for all three half reactions. Find out the volume of 1M K2Cr2O7 consumed; if the same volume of the reducing agent is titrated in acid medium. IIT-JEE 1989" [ref=e66]
+    - StaticText "17"
+    - generic
+      - StaticText "An equal volume of a reducing agent is titrated separately with 1M KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " in acid neutral and alkaline media. The volumes of KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " required are 20 ml. in acid 33.4 ml. neutral and 100 ml in alkaline media. Find out the oxidation state of manganese in each reduction product. Give the balanced equations for all three half reactions. Find out the volume of 1M K"
+      - subscript
+        - StaticText "2"
+      - StaticText "Cr"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "7"
+      - StaticText " consumed; if the same volume of the reducing agent is titrated in acid medium."
+    - StaticText "IIT-JEE 1989"
+  - link "18 A sample of hydrazine sulphate (N2H6SO4) was dissolved in 100 ml. of water, 10 ml of this solution was reacted with excess of ferric chloride solution and warmed to complete the reaction. Ferrous ion formed was estimated and it required 20 ml of M/50 potassium permanganate solution. Estimate the amount of hydrazine sulphate in one litre of the solution. Reaction: 4Fe3+ + N2H4 $$\\to$$ N2 + 4Fe2+ + 4H+ $$MnO_4^-$$ + 4Fe2+ + 8H+ $$\\to$$ Mn2+ + 5Fe3+ + 4H2O IIT-JEE 1988" [ref=e67]
+    - StaticText "18"
+    - generic
+      - StaticText "A sample of hydrazine sulphate (N"
+      - subscript
+        - StaticText "2"
+      - StaticText "H"
+      - subscript
+        - StaticText "6"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText ") was dissolved in 100 ml. of water, 10 ml of this solution was reacted with excess of ferric chloride solution and warmed to complete the reaction. Ferrous ion formed was estimated and it required 20 ml of M/50 potassium permanganate solution. Estimate the amount of hydrazine sulphate in one litre of the solution."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "Reaction:"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "4Fe"
+      - superscript
+        - StaticText "3+"
+      - StaticText " + N"
+      - subscript
+        - StaticText "2"
+      - StaticText "H"
+      - subscript
+        - StaticText "4"
+      - StaticText " $$\\to$$ N"
+      - subscript
+        - StaticText "2"
+      - StaticText " + 4Fe"
+      - superscript
+        - StaticText "2+"
+      - StaticText " + 4H"
+      - superscript
+        - StaticText "+"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "$$MnO_4^-$$ + 4Fe"
+      - superscript
+        - StaticText "2+"
+      - StaticText " + 8H"
+      - superscript
+        - StaticText "+"
+      - StaticText " $$\\to$$ Mn"
+      - superscript
+        - StaticText "2+"
+      - StaticText " + 5Fe"
+      - superscript
+        - StaticText "3+"
+      - StaticText " + 4H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+    - StaticText "IIT-JEE 1988"
+  - link "19 A sugar syrup of weight 214.2 g contains 34.2 g of sugar (C12H22O11). Calculate (i) molal concentration and (ii) mole fraction of sugar in the syrup IIT-JEE 1988" [ref=e68]
+    - StaticText "19"
+    - generic
+      - StaticText "A sugar syrup of weight 214.2 g contains 34.2 g of sugar (C"
+      - subscript
+        - StaticText "12"
+      - StaticText "H"
+      - subscript
+        - StaticText "22"
+      - StaticText "O"
+      - subscript
+        - StaticText "11"
+      - StaticText "). Calculate (i) molal concentration and (ii) mole fraction of sugar in the syrup"
+    - StaticText "IIT-JEE 1988"
+  - link "20 Five ml of 8N nitric acid, 4.8ml of 5N hydrochloric acid and a certain volume of 17M sulphuric acid are mixed together and made upto 2 litre. Thirty ml of this acid mixture neutralise 42.9 ml of sodium carbonate solution containing one gram of Na2CO3.10H2O in 100 ml of water. Calculate the amount in gram of the sulphate ions in solution. IIT-JEE 1985" [ref=e69]
+    - StaticText "20"
+    - generic
+      - StaticText "Five ml of 8N nitric acid, 4.8ml of 5N hydrochloric acid and a certain volume of 17M sulphuric acid are mixed together and made upto 2 litre. Thirty ml of this acid mixture neutralise 42.9 ml of sodium carbonate solution containing one gram of Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "CO"
+      - subscript
+        - StaticText "3"
+      - StaticText ".10H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O in 100 ml of water. Calculate the amount in gram of the sulphate ions in solution."
+    - StaticText "IIT-JEE 1985"
+  - link "21 4.08 g of a mixture of BaO and an unknown carbonate MCO3 was heated strongly. The residue weighed 3.64 g. This was dissolved in 100 ml of 1 N HCl. The excess acid required 16 ml of 2.5 N NaOH solution for complete neutralization. Identify the metal M. (At wt. H = 1, C = 12, O = 16, Cl = 35.5, Ba = 138) IIT-JEE 1983" [ref=e70]
+    - StaticText "21"
+    - generic
+      - StaticText "4.08 g of a mixture of BaO and an unknown carbonate MCO"
+      - subscript
+        - StaticText "3"
+      - StaticText " was heated strongly. The residue weighed 3.64 g. This was dissolved in 100 ml of 1 N HCl. The excess acid required 16 ml of 2.5 N NaOH solution for complete neutralization. Identify the metal M. (At wt. H = 1, C = 12, O = 16, Cl = 35.5, Ba = 138)"
+    - StaticText "IIT-JEE 1983"
+  - link "22 The density of a 3 M Sodium thiosulphate solution (Na2S2O3) is 1.25 g per ml. Calculate (i) the percentage by weight of sodium thiosulphate, (ii) the mole fraction of sodium thiosulphate and (iii) the molalities of Na+ and $$S_2O_3^{-2}$$ ions IIT-JEE 1983" [ref=e71]
+    - StaticText "22"
+    - generic
+      - StaticText "The density of a 3 M Sodium thiosulphate solution (Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "S"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "3"
+      - StaticText ") is 1.25 g per ml. Calculate"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(i) the percentage by weight of sodium thiosulphate,"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(ii) the mole fraction of sodium thiosulphate and"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(iii) the molalities of Na"
+      - superscript
+        - StaticText "+"
+      - StaticText " and $$S_2O_3^{-2}$$ ions"
+    - StaticText "IIT-JEE 1983"
+  - link "23 Hydroxylamine reduces iron (III) according to the equation: 2NH2OH + 4Fe3+ $$\\to$$ N2O(g) $$ \\uparrow $$ + H2O + 4Fe2+ + 4H+ Iron (II) thus produced is estimated by titration with a standard permanganate solution. The reaction is : $$MnO_4^-$$ + 5Fe2+ + 8H+ $$\\to$$ Mn2+ + 5Fe3+ + 4H2O A 10 ml sample of hydroxylamine solution was Diluted to 1 litre. 50 ml of this diluted solution was boiled with an excess of iron (III) solution. The resulting solution required 12 ml of 0.02 M KMnO4 solution for complete oxidation of iron (II). Calculate the weight of hydroxylamine in one litre of the original solution. (H = 1, N = 14, O = 16, K =39, Mn = 55, Fe = 56) IIT-JEE 1982" [ref=e72]
+    - StaticText "23"
+    - generic
+      - StaticText "Hydroxylamine reduces iron (III) according to the equation:"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "2NH"
+      - subscript
+        - StaticText "2"
+      - StaticText "OH + 4Fe"
+      - superscript
+        - StaticText "3+"
+      - StaticText " $$\\to$$ N"
+      - subscript
+        - StaticText "2"
+      - StaticText "O(g) $$ \\uparrow $$ + H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O + 4Fe"
+      - superscript
+        - StaticText "2+"
+      - StaticText " + 4H"
+      - superscript
+        - StaticText "+"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "Iron (II) thus produced is estimated by titration with a standard permanganate solution. The reaction is :"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "$$MnO_4^-$$ + 5Fe"
+      - superscript
+        - StaticText "2+"
+      - StaticText " + 8H"
+      - superscript
+        - StaticText "+"
+      - StaticText " $$\\to$$ Mn"
+      - superscript
+        - StaticText "2+"
+      - StaticText " + 5Fe"
+      - superscript
+        - StaticText "3+"
+      - StaticText " + 4H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "A 10 ml sample of hydroxylamine solution was Diluted to 1 litre. 50 ml of this diluted solution was boiled with an excess of iron (III) solution. The resulting solution required 12 ml of 0.02 M KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution for complete oxidation of iron (II). Calculate the weight of hydroxylamine in one litre of the original solution. (H = 1, N = 14, O = 16, K =39, Mn = 55, Fe = 56)"
+    - StaticText "IIT-JEE 1982"
+  - link "24 A 1.00 gm sample of H2O2 solution containing X percent H2O2 by weight requires X ml of a KMnO4 solution for complete oxidation under acidic conditions. Calculate the normality of the KMnO4 solution. IIT-JEE 1981" [ref=e73]
+    - StaticText "24"
+    - generic
+      - StaticText "A 1.00 gm sample of H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "2"
+      - StaticText " solution containing X percent H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "2"
+      - StaticText " by weight requires X ml of a KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution for complete oxidation under acidic conditions. Calculate the normality of the KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution."
+    - StaticText "IIT-JEE 1981"
+  - link "25 (i). A sample of MnSO4.4H2O is strongly heated in air. The residue is Mn3O4. (ii). The residue is dissolved in 100 ml of 0.1N FeSO4 containing dilute H2SO4. (iii). The solution reacts completely with 50 ml of KMnO4 solution. (iv). 25 ml of the KMnO4 solution used in step (iii) requires 30 ml of 0.1 N FeSO4 solution for complete reaction. Find the amount of MnSO4.4H2O present in the sample. IIT-JEE 1980" [ref=e74]
+    - StaticText "25"
+    - generic
+      - StaticText "(i). A sample of MnSO"
+      - subscript
+        - StaticText "4"
+      - StaticText ".4H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O is strongly heated in air. The residue is Mn"
+      - subscript
+        - StaticText "3"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText "."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(ii). The residue is dissolved in 100 ml of 0.1N FeSO"
+      - subscript
+        - StaticText "4"
+      - StaticText " containing dilute H"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText "."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(iii). The solution reacts completely with 50 ml of KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(iv). 25 ml of the KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution used in step (iii) requires 30 ml of 0.1 N FeSO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution for complete reaction."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "Find the amount of MnSO"
+      - subscript
+        - StaticText "4"
+      - StaticText ".4H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O present in the sample."
+    - StaticText "IIT-JEE 1980"
+  - link "26 A hydrocarbon contains 10.5 g of carbon per gram of hydrogen. 1 litre of the hydrocarbon at 127oC and 1 atmosphere weighs 2.8 g. Find the molecular formula. IIT-JEE 1980" [ref=e75]
+    - StaticText "26"
+    - generic
+      - StaticText "A hydrocarbon contains 10.5 g of carbon per gram of hydrogen. 1 litre of the hydrocarbon at 127"
+      - superscript
+        - StaticText "o"
+      - StaticText "C and 1 atmosphere weighs 2.8 g. Find the molecular formula."
+    - StaticText "IIT-JEE 1980"
+  - link "27 (a) One litre of a sample of hard water contains 1 mg of CaCl2 and 1 mg of MgCl2. Find the total hardness in terms of parts of CaCO3 per 106 parts of water by weight. (b) A sample of hard water contains 20 mg of Ca++ ions per litre. How many milli-equivalent of Na2CO3 would be required to soften 1 litre of the sample? (c) 1 gm of Mg is burnt in a closed vessel which contains 0.5gm of O2.  (i) Which reactant is left in excess?  (ii) Find the weight of the excess reactants.  (iii) How many milliliters of 0.5N H2SO4 will dissolve the residue in the vessel? IIT-JEE 1980" [ref=e76]
+    - StaticText "27"
+    - generic
+      - StaticText "(a) One litre of a sample of hard water contains 1 mg of CaCl"
+      - subscript
+        - StaticText "2"
+      - StaticText " and 1 mg of MgCl"
+      - subscript
+        - StaticText "2"
+      - StaticText ". Find the total hardness in terms of parts of CaCO"
+      - subscript
+        - StaticText "3"
+      - StaticText " per 10"
+      - superscript
+        - StaticText "6"
+      - StaticText " parts of water by weight."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(b) A sample of hard water contains 20 mg of Ca"
+      - superscript
+        - StaticText "++"
+      - StaticText " ions per litre. How many milli-equivalent of Na"
+      - subscript
+        - StaticText "2"
+      - StaticText "CO"
+      - subscript
+        - StaticText "3"
+      - StaticText " would be required to soften 1 litre of the sample?"
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(c) 1 gm of Mg is burnt in a closed vessel which contains 0.5gm of O"
+      - subscript
+        - StaticText "2"
+      - StaticText "."
+      - LineBreak "\n"
+      - StaticText " (i) Which reactant is left in excess?"
+      - LineBreak "\n"
+      - StaticText " (ii) Find the weight of the excess reactants."
+      - LineBreak "\n"
+      - StaticText " (iii) How many milliliters of 0.5N H"
+      - subscript
+        - StaticText "2"
+      - StaticText "SO"
+      - subscript
+        - StaticText "4"
+      - StaticText " will dissolve the residue in the vessel?"
+      - LineBreak "\n"
+    - StaticText "IIT-JEE 1980"
+  - link "28 A mixture contains NaCl and unknown chloride MCl. (i) 1g of this is dissolved in water. Excess of acidified AgNO3 solution is added to it. 2.567 g of white ppt is formed. (ii) 1 g of original mixture is heated to 300oC. Some vapours come out which are absorbed in acidified AgNO3 solution, 1.341 g of white precipitate was obtained. Find the molecular weight of unknown chloride. IIT-JEE 1980" [ref=e77]
+    - StaticText "28"
+    - generic
+      - StaticText "A mixture contains NaCl and unknown chloride MCl."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(i) 1g of this is dissolved in water. Excess of acidified AgNO"
+      - subscript
+        - StaticText "3"
+      - StaticText " solution is added to it. 2.567 g of white ppt is formed."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(ii) 1 g of original mixture is heated to 300"
+      - superscript
+        - StaticText "o"
+      - StaticText "C. Some vapours come out which are absorbed in acidified AgNO"
+      - subscript
+        - StaticText "3"
+      - StaticText " solution, 1.341 g of white precipitate was obtained."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "Find the molecular weight of unknown chloride."
+    - StaticText "IIT-JEE 1980"
+  - link "29 Find (i) The total number of neutrons and (ii) The total mass of neutron in 7 mg of 14C (Assume that mass of neutron = mass of hydrogen atom) IIT-JEE 1980" [ref=e78]
+    - StaticText "29"
+    - generic
+      - StaticText "Find"
+      - LineBreak "\n"
+      - StaticText "(i) The total number of neutrons and"
+      - LineBreak "\n"
+      - StaticText "(ii) The total mass of neutron in 7 mg of "
+      - superscript
+        - StaticText "14"
+      - StaticText "C"
+      - LineBreak "\n"
+      - StaticText "(Assume that mass of neutron = mass of hydrogen atom)"
+    - StaticText "IIT-JEE 1980"
+  - link "30 (a) 1 litre of a mixture of CO and CO2 is taken. This mixture is passed through a tube containing red hot charcoal. The volume now becomes 1.6 litre. The volumes are measured under the same conditions. Find the composition of the mixture by volume. (b) A compound contains 28 percent of nitrogen and 72 percent of metal by weight. 3 atoms of metal combine with 2 atoms of N. Find the atomic weight of metal. IIT-JEE 1980" [ref=e79]
+    - StaticText "30"
+    - paragraph
+      - StaticText "(a) 1 litre of a mixture of CO and CO"
+      - subscript
+        - StaticText "2"
+      - StaticText " is taken. This mixture is passed through a tube containing red hot charcoal. The volume now becomes 1.6 litre. The volumes are measured under the same conditions. Find the composition of the mixture by volume."
+    - paragraph
+      - StaticText "(b) A compound contains 28 percent of nitrogen and 72 percent of metal by weight. 3 atoms of metal combine with 2 atoms of N. Find the atomic weight of metal."
+    - StaticText "IIT-JEE 1980"
+  - link "31 5 ml of a gas containing only carbon and hydrogen were mixed with an excess of oxygen (30 ml) and the mixture exploded by means of an electric spark. After the explosion, the volume of the mixed gases remaining was 25 ml. On adding a concentrated solution of potassium hydroxide, the volume further diminished to 15 ml of the residual gas being pure oxygen. All volumes have been reduced to N.T.P. Calculate the molecular formula of the hydrocarbon gas. IIT-JEE 1979" [ref=e80]
+    - StaticText "31"
+    - StaticText "5 ml of a gas containing only carbon and hydrogen were mixed with an excess of oxygen (30 ml) and the mixture exploded by means of an electric spark. After the explosion, the volume of the mixed gases remaining was 25 ml. On adding a concentrated solution of potassium hydroxide, the volume further diminished to 15 ml of the residual gas being pure oxygen. All volumes have been reduced to N.T.P. Calculate the molecular formula of the hydrocarbon gas."
+    - StaticText "IIT-JEE 1979"
+  - link "32 In the analysis of 0.5 g sample feldspar, a mixture of chlorides of sodium and potassium is obtained which weighs 0.1180g. Subsequent treatment of mixed chlorides with silver nitrate gives 0.2451 g of silver chloride. What is the percentage of sodium oxide and potassium oxide in feldspar. IIT-JEE 1979" [ref=e81]
+    - StaticText "32"
+    - StaticText "In the analysis of 0.5 g sample feldspar, a mixture of chlorides of sodium and potassium is obtained which weighs 0.1180g. Subsequent treatment of mixed chlorides with silver nitrate gives 0.2451 g of silver chloride. What is the percentage of sodium oxide and potassium oxide in feldspar."
+    - StaticText "IIT-JEE 1979"
+  - link "33 4.215 g of a metallic carbonate was heated in a hard glass tube and the CO2 evolved was found to measure 1336 ml at 27oC and 700 mm pressure. What is the equivalent weight of metal? IIT-JEE 1979" [ref=e82]
+    - StaticText "33"
+    - generic
+      - StaticText "4.215 g of a metallic carbonate was heated in a hard glass tube and the CO"
+      - subscript
+        - StaticText "2"
+      - StaticText " evolved was found to measure 1336 ml at 27"
+      - superscript
+        - StaticText "o"
+      - StaticText "C and 700 mm pressure. What is the equivalent weight of metal?"
+    - StaticText "IIT-JEE 1979"
+  - link "34 (a). 5.5 g of a mixture FeSO4.7H2O and Fe2(SO4)3.9H2O requires 5.4 ml of 0.1 N KMnO4 solution for complete oxidation. Calculate the number of gram mole of hydrated ferric sulphate in the mixture. (b). The vapour density (hydrogen = 1) of a mixture consisting of NO2 and N2O4 is 38.3 at 26.7oC. Calculate the number of moles of NO2 in 100 g of the mixure. IIT-JEE 1979" [ref=e83]
+    - StaticText "34"
+    - generic
+      - StaticText "(a). 5.5 g of a mixture FeSO"
+      - subscript
+        - StaticText "4"
+      - StaticText ".7H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O and Fe"
+      - subscript
+        - StaticText "2"
+      - StaticText "(SO"
+      - subscript
+        - StaticText "4"
+      - StaticText ")"
+      - subscript
+        - StaticText "3"
+      - StaticText ".9H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O requires 5.4 ml of 0.1 N KMnO"
+      - subscript
+        - StaticText "4"
+      - StaticText " solution for complete oxidation. Calculate the number of gram mole of hydrated ferric sulphate in the mixture."
+      - LineBreak "\n"
+      - LineBreak "\n"
+      - StaticText "(b). The vapour density (hydrogen = 1) of a mixture consisting of NO"
+      - subscript
+        - StaticText "2"
+      - StaticText " and N"
+      - subscript
+        - StaticText "2"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText " is 38.3 at 26.7"
+      - superscript
+        - StaticText "o"
+      - StaticText "C. Calculate the number of moles of NO"
+      - subscript
+        - StaticText "2"
+      - StaticText " in 100 g of the mixure."
+    - StaticText "IIT-JEE 1979"
+  - link "35 Account for the following : Limit your answer to two sentences. \"Atomic weights of most of the elements are fractional.\" IIT-JEE 1979" [ref=e84]
+    - StaticText "35"
+    - paragraph
+      - StaticText "Account for the following : Limit your answer to two sentences."
+    - paragraph
+      - StaticText "\"Atomic weights of most of the elements are fractional.\""
+    - StaticText "IIT-JEE 1979"
+  - link "36 What weight of AgCl will be precipitated when a solution containing 4.77 g of NaCl is added to a solution of 5.77g of AgNO3? IIT-JEE 1978" [ref=e85]
+    - StaticText "36"
+    - generic
+      - StaticText "What weight of AgCl will be precipitated when a solution containing 4.77 g of NaCl is added to a solution of 5.77g of AgNO"
+      - subscript
+        - StaticText "3"
+      - StaticText "?"
+    - StaticText "IIT-JEE 1978"
+  - link "37 One gram of an alloy of aluminium and magnetism when treated with excess of dil. HCl forms magnesium chloride, aluminium chloride and hydrogen. The evolved hydrogen, collected over mercury at $${0^o}C$$ has a volume of 1.20 litres at 0.92 atm. pressure. Calculate the composition of the alloy. [H = 1, Mg = 24, Al = 27] IIT-JEE 1978" [ref=e86]
+    - StaticText "37"
+    - StaticText "One gram of an alloy of aluminium and magnetism when treated with excess of dil. HCl forms magnesium chloride, aluminium chloride and hydrogen. The evolved hydrogen, collected over mercury at $${0^o}C$$ has a volume of 1.20 litres at 0.92 atm. pressure. Calculate the composition of the alloy. [H = 1, Mg = 24, Al = 27]"
+    - StaticText "IIT-JEE 1978"
+  - link "38 Igniting MnO2 converts it quantitatively to Mn3O4. A sample of pyrolusite is of the following composition : MnO2 80%, SiO2 and other inert constituents 15%, rest being water. The sample is ignited in air to constant weight. What is the percentage of Mn in the ignited sample? [O = 16, Mn = 54.9] IIT-JEE 1978" [ref=e87]
+    - StaticText "38"
+    - generic
+      - StaticText "Igniting MnO"
+      - subscript
+        - StaticText "2"
+      - StaticText " converts it quantitatively to Mn"
+      - subscript
+        - StaticText "3"
+      - StaticText "O"
+      - subscript
+        - StaticText "4"
+      - StaticText ". A sample of pyrolusite is of the following composition : MnO"
+      - subscript
+        - StaticText "2"
+      - StaticText " 80%, SiO"
+      - subscript
+        - StaticText "2"
+      - StaticText " and other inert constituents 15%, rest being water. The sample is ignited in air to constant weight. What is the percentage of Mn in the ignited sample? [O = 16, Mn = 54.9]"
+    - StaticText "IIT-JEE 1978"
+  - link "39 Naturally occurring boron consists of two isotopes whose atomic weighs are 10.01 and 11.01. The atomic weight of natural oron is 10.81. Calculate the percentage of each isotope in natural boron. IIT-JEE 1978" [ref=e88]
+    - StaticText "39"
+    - StaticText "Naturally occurring boron consists of two isotopes whose atomic weighs are 10.01 and 11.01. The atomic weight of natural oron is 10.81. Calculate the percentage of each isotope in natural boron."
+    - StaticText "IIT-JEE 1978"
+  - link "40 What is the molarity and molality of a 13% solution (by weight) of sulphuric acid with a density of 1.02 g/ml? To what volume should 100 ml of this acid be diluted in order to prepare a 1.5 N solution? IIT-JEE 1978" [ref=e89]
+    - StaticText "40"
+    - StaticText "What is the molarity and molality of a 13% solution (by weight) of sulphuric acid with a density of 1.02 g/ml? To what volume should 100 ml of this acid be diluted in order to prepare a 1.5 N solution?"
+    - StaticText "IIT-JEE 1978"
+  - heading "Fill in the Blanks" [level=2, ref=e90]
+  - link "1 The compound YBa2Cu3O7, which shows superconductivity, has copper in oxidation state ______ assume that the rare earth element yttrium is in its usual +3 oxidation state. IIT-JEE 1994" [ref=e91]
+    - StaticText "1"
+    - generic
+      - StaticText "The compound YBa"
+      - subscript
+        - StaticText "2"
+      - StaticText "Cu"
+      - subscript
+        - StaticText "3"
+      - StaticText "O"
+      - subscript
+        - StaticText "7"
+      - StaticText ", which shows superconductivity, has copper in oxidation state ______ assume that the rare earth element yttrium is in its usual +3 oxidation state."
+    - StaticText "IIT-JEE 1994"
+  - link "2 The weight of $$1 \\times 10^{22}$$ molecules of CuSO4.5H2O is ____. IIT-JEE 1991" [ref=e92]
+    - StaticText "2"
+    - generic
+      - StaticText "The weight of $$1 \\times 10^{22}$$ molecules of CuSO"
+      - subscript
+        - StaticText "4"
+      - StaticText ".5H"
+      - subscript
+        - StaticText "2"
+      - StaticText "O is ____."
+    - StaticText "IIT-JEE 1991"
+  - link "3 3 g of a salt of molecular weight 30 is dissolved in 250 g of water. The molality if the solution is _____. IIT-JEE 1983" [ref=e93]
+    - StaticText "3"
+    - StaticText "3 g of a salt of molecular weight 30 is dissolved in 250 g of water. The molality if the solution is _____."
+    - StaticText "IIT-JEE 1983"
+  - link "4 The total no of electron present in 18 ml of water is ______. IIT-JEE 1980" [ref=e94]
+    - StaticText "4"
+    - StaticText "The total no of electron present in 18 ml of water is ______."
+    - StaticText "IIT-JEE 1980"
+  - link "5 The modern atomic unit is based on the mass of ______. IIT-JEE 1980" [ref=e95]
+    - StaticText "5"
+    - StaticText "The modern atomic unit is based on the mass of ______."
+    - StaticText "IIT-JEE 1980"
+  - insertion
+- image
+- StaticText "EXAM MAP"
+- paragraph
+  - StaticText "Browse past year questions by exam & subject"
+- StaticText "Joint Entrance Examination"
+- link "JEE Main" [ref=e96]
+  - image
+  - StaticText "JEE Main"
+- link "JEE Advanced" [ref=e97]
+  - image
+  - StaticText "JEE Advanced"
+- link "MHT CET" [ref=e98]
+  - image
+  - StaticText "MHT CET"
+- link "BITSAT" [ref=e99]
+  - image
+  - StaticText "BITSAT"
+- link "COMEDK" [ref=e100]
+  - image
+  - StaticText "COMEDK"
+- link "WB JEE" [ref=e101]
+  - image
+  - StaticText "WB JEE"
+- link "KCET" [ref=e102]
+  - image
+  - StaticText "KCET"
+- link "VITEEE" [ref=e103]
+  - image
+  - StaticText "VITEEE"
+- link "AP EAPCET" [ref=e104]
+  - image
+  - StaticText "AP EAPCET"
+- link "TS EAMCET" [ref=e105]
+  - image
+  - StaticText "TS EAMCET"
+- link "IAT (IISER)" [ref=e106]
+  - image
+  - StaticText "IAT (IISER)"
+- StaticText "Medical"
+- link "NEET" [ref=e107]
+  - image
+  - StaticText "NEET"
+- link "AIIMS" [ref=e108]
+  - image
+  - StaticText "AIIMS"
+- link "MHT CET (Biology)" [ref=e109]
+  - image
+  - StaticText "MHT CET (Biology)"
+- StaticText "Graduate Aptitude Test in Engineering"
+- link "GATE CSE" [ref=e110]
+  - image
+  - StaticText "GATE CSE"
+- link "GATE ECE" [ref=e111]
+  - image
+  - StaticText "GATE ECE"
+- link "GATE EE" [ref=e112]
+  - image
+  - StaticText "GATE EE"
+- link "GATE ME" [ref=e113]
+  - image
+  - StaticText "GATE ME"
+- link "GATE CE" [ref=e114]
+  - image
+  - StaticText "GATE CE"
+- link "GATE PI" [ref=e115]
+  - image
+  - StaticText "GATE PI"
+- link "GATE IN" [ref=e116]
+  - image
+  - StaticText "GATE IN"
+- link "GATE Data Science and Artificial Intelligence" [ref=e117]
+  - image
+  - StaticText "GATE Data Science and Artificial Intelligence"
+- StaticText "Civil Services"
+- link "UPSC Civil Service" [ref=e118]
+  - image
+  - StaticText "UPSC Civil Service"
+- StaticText "Defence"
+- link "NDA" [ref=e119]
+  - image
+  - StaticText "NDA"
+- StaticText "Staff Selection Commission"
+- link "SSC CGL Tier I" [ref=e120]
+  - image
+  - StaticText "SSC CGL Tier I"
+- StaticText "CBSE"
+- link "Class 12" [ref=e121]
+  - image
+  - StaticText "Class 12"
+- insertion
+- contentinfo
+  - StaticText "ExamSIDE"
+  - paragraph
+    - StaticText "Powered by ExamGOAL · Past Year Questions"
+  - link "Terms of Use" [ref=e122]
+    - image
+    - StaticText "Terms of Use"
+  - link "Privacy Policy" [ref=e123]
+    - image
+    - StaticText "Privacy Policy"
+  - generic
+    - StaticText "© 2026 ExamGOAL. All rights reserved."
