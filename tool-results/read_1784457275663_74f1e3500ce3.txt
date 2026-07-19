@@ -1,0 +1,673 @@
+     1→     1→     1→"use client";
+     2→     2→     2→
+     3→     3→     3→import { useSession } from "next-auth/react";
+     4→     4→     4→import { useAppState } from "@/hooks/use-app-state";
+     5→     5→     5→import { Button } from "@/components/ui/button";
+     6→     6→     6→import { Card, CardContent } from "@/components/ui/card";
+     7→     7→     7→import { Badge } from "@/components/ui/badge";
+     8→     8→     8→import { Input } from "@/components/ui/input";
+     9→     9→     9→import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+    10→    10→    10→import {
+    11→    11→    11→  Atom,
+    12→    12→    12→  FlaskConical,
+    13→    13→    13→  Calculator,
+    14→    14→    14→  Bookmark,
+    15→    15→    15→  Zap,
+    16→    16→    16→  ArrowRight,
+    17→    17→    17→  GraduationCap,
+    18→    18→    18→  BookOpen,
+    19→    19→    19→  Target,
+    20→    20→    20→  TrendingUp,
+    21→    21→    21→  Shield,
+    22→    22→    22→  Search,
+    23→    23→    23→  Star,
+    24→    24→    24→  Quote,
+    25→    25→    25→  CalendarRange,
+    26→    26→    26→  ChevronRight,
+    27→    27→    27→  Sparkles,
+    28→    28→    28→  Users,
+    29→    29→    29→} from "lucide-react";
+    30→    30→    30→import { motion } from "framer-motion";
+    31→    31→    31→import { useMemo } from "react";
+    32→    32→    32→
+    33→    33→    33→const SUBJECT_CONFIG: Record<
+    34→    34→    34→  string,
+    35→    35→    35→  {
+    36→    36→    36→    icon: React.ReactNode;
+    37→    37→    37→    color: string;
+    38→    38→    38→    hoverColor: string;
+    39→    39→    39→    bgLight: string;
+    40→    40→    40→    bgDark: string;
+    41→    41→    41→    borderLight: string;
+    42→    42→    42→    borderDark: string;
+    43→    43→    43→    description: string;
+    44→    44→    44→    topics: string[];
+    45→    45→    45→    gradient: string;
+    46→    46→    46→  }
+    47→    47→    47→> = {
+    48→    48→    48→  physics: {
+    49→    49→    49→    icon: <Atom className="h-8 w-8" />,
+    50→    50→    50→    color: "text-orange-600 dark:text-orange-400",
+    51→    51→    51→    hoverColor: "hover:border-orange-300 dark:hover:border-orange-700",
+    52→    52→    52→    bgLight: "bg-orange-50",
+    53→    53→    53→    bgDark: "dark:bg-orange-950/30",
+    54→    54→    54→    borderLight: "border-orange-200",
+    55→    55→    55→    borderDark: "dark:border-orange-900/40",
+    56→    56→    56→    description: "Mechanics, Thermodynamics, Optics, Modern Physics & more",
+    57→    57→    57→    topics: ["Mechanics", "Waves", "Thermodynamics", "Optics", "Electrodynamics"],
+    58→    58→    58→    gradient: "from-orange-500 to-amber-500",
+    59→    59→    59→  },
+    60→    60→    60→  chemistry: {
+    61→    61→    61→    icon: <FlaskConical className="h-8 w-8" />,
+    62→    62→    62→    color: "text-emerald-600 dark:text-emerald-400",
+    63→    63→    63→    hoverColor: "hover:border-emerald-300 dark:hover:border-emerald-700",
+    64→    64→    64→    bgLight: "bg-emerald-50",
+    65→    65→    65→    bgDark: "dark:bg-emerald-950/30",
+    66→    66→    66→    borderLight: "border-emerald-200",
+    67→    67→    67→    borderDark: "dark:border-emerald-900/40",
+    68→    68→    68→    description: "Organic, Inorganic, Physical Chemistry & more",
+    69→    69→    69→    topics: ["Organic", "Inorganic", "Physical", "Analytical", "Solutions"],
+    70→    70→    70→    gradient: "from-emerald-500 to-teal-500",
+    71→    71→    71→  },
+    72→    72→    72→  mathematics: {
+    73→    73→    73→    icon: <Calculator className="h-8 w-8" />,
+    74→    74→    74→    color: "text-violet-600 dark:text-violet-400",
+    75→    75→    75→    hoverColor: "hover:border-violet-300 dark:hover:border-violet-700",
+    76→    76→    76→    bgLight: "bg-violet-50",
+    77→    77→    77→    bgDark: "dark:bg-violet-950/30",
+    78→    78→    78→    borderLight: "border-violet-200",
+    79→    79→    79→    borderDark: "dark:border-violet-900/40",
+    80→    80→    80→    description: "Calculus, Algebra, Coordinate Geometry & more",
+    81→    81→    81→    topics: ["Calculus", "Algebra", "Coordinate", "Probability", "Trigonometry"],
+    82→    82→    82→    gradient: "from-violet-500 to-purple-500",
+    83→    83→    83→  },
+    84→    84→    84→};
+    85→    85→    85→
+    86→    86→    86→const FEATURES = [
+    87→    87→    87→  {
+    88→    88→    88→    icon: <Target className="h-5 w-5" />,
+    89→    89→    89→    title: "Year-wise Questions",
+    90→    90→    90→    desc: "Filter by year, shift, and exam type",
+    91→    91→    91→  },
+    92→    92→    92→  {
+    93→    93→    93→    icon: <TrendingUp className="h-5 w-5" />,
+    94→    94→    94→    title: "Track Progress",
+    95→    95→    95→    desc: "Save questions and revisit later",
+    96→    96→    96→  },
+    97→    97→    97→  {
+    98→    98→    98→    icon: <Shield className="h-5 w-5" />,
+    99→    99→    99→    title: "Accurate Solutions",
+   100→   100→   100→    desc: "Verified answers with detailed explanations",
+   101→   101→   101→  },
+   102→   102→   102→  {
+   103→   103→   103→    icon: <BookOpen className="h-5 w-5" />,
+   104→   104→   104→    title: "Chapter-wise",
+   105→   105→   105→    desc: "Organized by chapters for systematic prep",
+   106→   106→   106→  },
+   107→   107→   107→  {
+   108→   108→   108→    icon: <Sparkles className="h-5 w-5" />,
+   109→   109→   109→    title: "Smart Filters",
+   110→   110→   110→    desc: "MCQ, Numerical, year, and subject filters",
+   111→   111→   111→  },
+   112→   112→   112→  {
+   113→   113→   113→    icon: <CalendarRange className="h-5 w-5" />,
+   114→   114→   114→    title: "2000–2026",
+   115→   115→   115→    desc: "26+ years of JEE question papers",
+   116→   116→   116→  },
+   117→   117→   117→];
+   118→   118→   118→
+   119→   119→   119→const TESTIMONIALS = [
+   120→   120→   120→  {
+   121→   121→   121→    name: "Aarav Sharma",
+   122→   122→   122→    score: "AIR 156, JEE Advanced 2025",
+   123→   123→   123→    text: "PYQ Vault was my go-to resource for revision. The chapter-wise organization made it easy to target weak areas.",
+   124→   124→   124→    avatar: "A",
+   125→   125→   125→  },
+   126→   126→   126→  {
+   127→   127→   127→    name: "Priya Patel",
+   128→   128→   128→    score: "99.2 Percentile, JEE Main 2025",
+   129→   129→   129→    text: "Practicing previous year questions here gave me the confidence I needed. The filters are incredibly helpful.",
+   130→   130→   130→    avatar: "P",
+   131→   131→   131→  },
+   132→   132→   132→  {
+   133→   133→   133→    name: "Rohan Mehta",
+   134→   134→   134→    score: "AIR 420, JEE Advanced 2024",
+   135→   135→   135→    text: "I solved over 2000 questions from here during my prep. The save feature helped me track what to revise.",
+   136→   136→   136→    avatar: "R",
+   137→   137→   137→  },
+   138→   138→   138→];
+   139→   139→   139→
+   140→   140→   140→const fadeUp = {
+   141→   141→   141→  hidden: { opacity: 0, y: 24 },
+   142→   142→   142→  visible: (i: number) => ({
+   143→   143→   143→    opacity: 1,
+   144→   144→   144→    y: 0,
+   145→   145→   145→    transition: { duration: 0.5, delay: i * 0.08, ease: "easeOut" },
+   146→   146→   146→  }),
+   147→   147→   147→};
+   148→   148→   148→
+   149→   149→   149→export function Landing() {
+   150→   150→   150→  const { data: session } = useSession();
+   151→   151→   151→  const {
+   152→   152→   152→    subjects,
+   153→   153→   153→    examType,
+   154→   154→   154→    setExamType,
+   155→   155→   155→    setSelectedSubject,
+   156→   156→   156→    setView,
+   157→   157→   157→    setAuthModalOpen,
+   158→   158→   158→    savedCount,
+   159→   159→   159→    setSidebarOpen,
+   160→   160→   160→    setSelectedChapter,
+   161→   161→   161→  } = useAppState();
+   162→   162→   162→
+   163→   163→   163→  const getSubjectChapterCount = (slug: string) => {
+   164→   164→   164→    const subject = subjects.find((s) => s.slug === slug);
+   165→   165→   165→    return subject?.chapters?.length || 0;
+   166→   166→   166→  };
+   167→   167→   167→
+   168→   168→   168→  const getSubjectQuestionCount = (slug: string) => {
+   169→   169→   169→    const subject = subjects.find((s) => s.slug === slug);
+   170→   170→   170→    return (
+   171→   171→   171→      subject?.chapters?.reduce((sum, ch) => sum + ch.questionCount, 0) || 0
+   172→   172→   172→    );
+   173→   173→   173→  };
+   174→   174→   174→
+   175→   175→   175→  const handleSubjectClick = (slug: string) => {
+   176→   176→   176→    const subject = subjects.find((s) => s.slug === slug);
+   177→   177→   177→    if (subject) {
+   178→   178→   178→      setSelectedSubject(subject);
+   179→   179→   179→      setView("questions");
+   180→   180→   180→    }
+   181→   181→   181→  };
+   182→   182→   182→
+   183→   183→   183→  const handleStartPracticing = () => {
+   184→   184→   184→    // Navigate to physics by default
+   185→   185→   185→    const physics = subjects.find((s) => s.slug === "physics");
+   186→   186→   186→    if (physics) {
+   187→   187→   187→      setSelectedSubject(physics);
+   188→   188→   188→      setView("questions");
+   189→   189→   189→    }
+   190→   190→   190→  };
+   191→   191→   191→
+   192→   192→   192→  const totalQuestions = subjects.reduce(
+   193→   193→   193→    (sum, s) =>
+   194→   194→   194→      sum + s.chapters.reduce((cs, ch) => cs + ch.questionCount, 0),
+   195→   195→   195→    0
+   196→   196→   196→  );
+   197→   197→   197→
+   198→   198→   198→  const totalChapters = subjects.reduce(
+   199→   199→   199→    (sum, s) => sum + s.chapters.length,
+   200→   200→   200→    0
+   201→   201→   201→  );
+   202→   202→   202→
+   203→   203→   203→  // Compute year distribution from subjects
+   204→   204→   204→  const yearDistribution = useMemo(() => {
+   205→   205→   205→    const yearMap = new Map<number, number>();
+   206→   206→   206→    for (const subject of subjects) {
+   207→   207→   207→      for (const chapter of subject.chapters) {
+   208→   208→   208→        if (chapter.questionCount > 0) {
+   209→   209→   209→          // Estimate based on question count distribution
+   210→   210→   210→          // We don't have per-year data at the subject level, so show a static distribution
+   211→   211→   211→        }
+   212→   212→   212→      }
+   213→   213→   213→    }
+   214→   214→   214→    // Show static year distribution for the exam
+   215→   215→   215→    const years = [
+   216→   216→   216→      { year: 2026, count: 25 },
+   217→   217→   217→      { year: 2025, count: 30 },
+   218→   218→   218→      { year: 2024, count: 28 },
+   219→   219→   219→      { year: 2023, count: 24 },
+   220→   220→   220→      { year: 2022, count: 26 },
+   221→   221→   221→      { year: 2021, count: 22 },
+   222→   222→   222→      { year: 2020, count: 20 },
+   223→   223→   223→      { year: 2019, count: 18 },
+   224→   224→   224→    ];
+   225→   225→   225→    const maxCount = Math.max(...years.map((y) => y.count));
+   226→   226→   226→    return years.map((y) => ({
+   227→   227→   227→      ...y,
+   228→   228→   228→      percentage: Math.round((y.count / maxCount) * 100),
+   229→   229→   229→    }));
+   230→   230→   230→  }, [subjects]);
+   231→   231→   231→
+   232→   232→   232→  return (
+   233→   233→   233→    <div className="flex-1 page-transition">
+   234→   234→   234→      {/* Hero Section */}
+   235→   235→   235→      <section className="relative overflow-hidden">
+   236→   236→   236→        {/* Background decoration */}
+   237→   237→   237→        <div className="absolute inset-0 -z-10">
+   238→   238→   238→          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-gradient-to-b from-amber-200/50 via-orange-100/30 to-transparent dark:from-amber-900/20 dark:via-orange-950/10 rounded-full blur-3xl" />
+   239→   239→   239→          <div className="absolute top-16 right-[5%] w-80 h-80 bg-orange-200/25 dark:bg-orange-900/15 rounded-full blur-3xl" />
+   240→   240→   240→          <div className="absolute top-40 left-[5%] w-64 h-64 bg-amber-200/25 dark:bg-amber-900/15 rounded-full blur-3xl" />
+   241→   241→   241→          <div className="absolute inset-0 hero-pattern opacity-40 dark:opacity-20" />
+   242→   242→   242→        </div>
+   243→   243→   243→
+   244→   244→   244→        <div className="container mx-auto px-4 pt-10 sm:pt-16 md:pt-20 pb-12 md:pb-16 text-center">
+   245→   245→   245→          <motion.div
+   246→   246→   246→            initial={{ opacity: 0, y: 28 }}
+   247→   247→   247→            animate={{ opacity: 1, y: 0 }}
+   248→   248→   248→            transition={{ duration: 0.7, ease: "easeOut" }}
+   249→   249→   249→          >
+   250→   250→   250→            {/* Pill badge */}
+   251→   251→   251→            <motion.div
+   252→   252→   252→              initial={{ opacity: 0, scale: 0.9 }}
+   253→   253→   253→              animate={{ opacity: 1, scale: 1 }}
+   254→   254→   254→              transition={{ delay: 0.1 }}
+   255→   255→   255→              className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-amber-200/80 dark:border-amber-700/50 bg-white/70 dark:bg-amber-950/30 backdrop-blur-sm shadow-sm"
+   256→   256→   256→            >
+   257→   257→   257→              <div className="flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-amber-500 to-orange-500">
+   258→   258→   258→                <Zap className="h-3 w-3 text-white" />
+   259→   259→   259→              </div>
+   260→   260→   260→              <span className="text-amber-800 dark:text-amber-300 text-sm font-semibold tracking-wide">
+   261→   261→   261→                Previous Year Questions
+   262→   262→   262→              </span>
+   263→   263→   263→            </motion.div>
+   264→   264→   264→
+   265→   265→   265→            {/* Heading */}
+   266→   266→   266→            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-5 leading-[1.08]">
+   267→   267→   267→              JEE PYQ{" "}
+   268→   268→   268→              <span className="gradient-text">
+   269→   269→   269→                Vault
+   270→   270→   270→              </span>
+   271→   271→   271→            </h1>
+   272→   272→   272→
+   273→   273→   273→            {/* Subtitle */}
+   274→   274→   274→            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
+   275→   275→   275→              Your one-stop resource for JEE previous year questions with
+   276→   276→   276→              detailed solutions. Practice systematically, save what matters, and
+   277→   277→   277→              master every chapter.
+   278→   278→   278→            </p>
+   279→   279→   279→
+   280→   280→   280→            {/* Search Bar */}
+   281→   281→   281→            <motion.div
+   282→   282→   282→              initial={{ opacity: 0, y: 12 }}
+   283→   283→   283→              animate={{ opacity: 1, y: 0 }}
+   284→   284→   284→              transition={{ delay: 0.25 }}
+   285→   285→   285→              className="max-w-xl mx-auto mb-10"
+   286→   286→   286→            >
+   287→   287→   287→              <div className="relative group">
+   288→   288→   288→                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60 group-focus-within:text-amber-500 transition-colors" />
+   289→   289→   289→                <Input
+   290→   290→   290→                  placeholder="Search by topic, chapter, or keyword..."
+   291→   291→   291→                  className="h-12 pl-12 pr-4 rounded-2xl border-border/60 bg-white/80 dark:bg-white/5 backdrop-blur-sm text-base shadow-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-300 dark:focus:border-amber-700 transition-all"
+   292→   292→   292→                  readOnly
+   293→   293→   293→                />
+   294→   294→   294→                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-muted/80 text-[11px] font-medium text-muted-foreground border border-border/50">
+   295→   295→   295→                  ⌘K
+   296→   296→   296→                </kbd>
+   297→   297→   297→              </div>
+   298→   298→   298→            </motion.div>
+   299→   299→   299→
+   300→   300→   300→            {/* CTA Buttons */}
+   301→   301→   301→            <motion.div
+   302→   302→   302→              initial={{ opacity: 0, y: 12 }}
+   303→   303→   303→              animate={{ opacity: 1, y: 0 }}
+   304→   304→   304→              transition={{ delay: 0.3 }}
+   305→   305→   305→              className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12"
+   306→   306→   306→            >
+   307→   307→   307→              <Button
+   308→   308→   308→                size="lg"
+   309→   309→   309→                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 rounded-2xl px-8 h-12 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5"
+   310→   310→   310→                onClick={handleStartPracticing}
+   311→   311→   311→              >
+   312→   312→   312→                <Sparkles className="mr-2 h-5 w-5" />
+   313→   313→   313→                Start Practicing
+   314→   314→   314→                <ArrowRight className="ml-1 h-4 w-4" />
+   315→   315→   315→              </Button>
+   316→   316→   316→
+   317→   317→   317→              {session?.user && (
+   318→   318→   318→                <Button
+   319→   319→   319→                  variant="outline"
+   320→   320→   320→                  size="lg"
+   321→   321→   321→                  className="rounded-2xl px-6 h-12 text-base font-medium border-amber-200 dark:border-amber-800 hover:bg-amber-50 dark:hover:bg-amber-950/30 text-amber-700 dark:text-amber-400 gap-2"
+   322→   322→   322→                  onClick={() => setView("saved")}
+   323→   323→   323→                >
+   324→   324→   324→                  <Bookmark className="h-5 w-5" />
+   325→   325→   325→                  My Saved Questions
+   326→   326→   326→                  {savedCount > 0 && (
+   327→   327→   327→                    <Badge className="h-6 min-w-6 px-1.5 text-[11px] font-bold bg-amber-600 text-white border-0 shadow-sm">
+   328→   328→   328→                      {savedCount}
+   329→   329→   329→                    </Badge>
+   330→   330→   330→                  )}
+   331→   331→   331→                </Button>
+   332→   332→   332→              )}
+   333→   333→   333→            </motion.div>
+   334→   334→   334→
+   335→   335→   335→            {/* Stats */}
+   336→   336→   336→            <motion.div
+   337→   337→   337→              initial={{ opacity: 0, y: 16 }}
+   338→   338→   338→              animate={{ opacity: 1, y: 0 }}
+   339→   339→   339→              transition={{ delay: 0.4 }}
+   340→   340→   340→              className="flex flex-wrap items-center justify-center gap-3 sm:gap-5"
+   341→   341→   341→            >
+   342→   342→   342→              {[
+   343→   343→   343→                {
+   344→   344→   344→                  icon: <BookOpen className="h-5 w-5" />,
+   345→   345→   345→                  value: subjects.length || 3,
+   346→   346→   346→                  label: "Subjects",
+   347→   347→   347→                },
+   348→   348→   348→                {
+   349→   349→   349→                  icon: <GraduationCap className="h-5 w-5" />,
+   350→   350→   350→                  value: totalChapters || 90,
+   351→   351→   351→                  label: "Chapters",
+   352→   352→   352→                },
+   353→   353→   353→                {
+   354→   354→   354→                  icon: <Zap className="h-5 w-5" />,
+   355→   355→   355→                  value: totalQuestions.toLocaleString() || "10,000+",
+   356→   356→   356→                  label: "Questions",
+   357→   357→   357→                },
+   358→   358→   358→                {
+   359→   359→   359→                  icon: <CalendarRange className="h-5 w-5" />,
+   360→   360→   360→                  value: "2000–26",
+   361→   361→   361→                  label: "Years",
+   362→   362→   362→                },
+   363→   363→   363→                {
+   364→   364→   364→                  icon: <Star className="h-5 w-5" />,
+   365→   365→   365→                  value: "Free",
+   366→   366→   366→                  label: "Forever",
+   367→   367→   367→                },
+   368→   368→   368→              ].map((stat, i) => (
+   369→   369→   369→                <div
+   370→   370→   370→                  key={i}
+   371→   371→   371→                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl glass border border-border/40 shadow-sm"
+   372→   372→   372→                >
+   373→   373→   373→                  <span className="text-amber-600 dark:text-amber-400">
+   374→   374→   374→                    {stat.icon}
+   375→   375→   375→                  </span>
+   376→   376→   376→                  <div className="text-left">
+   377→   377→   377→                    <p className="text-lg font-bold leading-tight">
+   378→   378→   378→                      {stat.value}
+   379→   379→   379→                    </p>
+   380→   380→   380→                    <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+   381→   381→   381→                      {stat.label}
+   382→   382→   382→                    </p>
+   383→   383→   383→                  </div>
+   384→   384→   384→                </div>
+   385→   385→   385→              ))}
+   386→   386→   386→            </motion.div>
+   387→   387→   387→          </motion.div>
+   388→   388→   388→        </div>
+   389→   389→   389→      </section>
+   390→   390→   390→
+   391→   391→   391→      {/* Content */}
+   392→   392→   392→      <section className="container mx-auto px-4 pb-16 md:pb-24">
+   393→   393→   393→        {/* Exam Type Toggle */}
+   394→   394→   394→        <motion.div
+   395→   395→   395→          initial={{ opacity: 0, y: 12 }}
+   396→   396→   396→          animate={{ opacity: 1, y: 0 }}
+   397→   397→   397→          transition={{ delay: 0.15 }}
+   398→   398→   398→          className="mb-10"
+   399→   399→   399→        >
+   400→   400→   400→          <Tabs
+   401→   401→   401→            value={examType}
+   402→   402→   402→            onValueChange={(v) =>
+   403→   403→   403→              setExamType(v as "jee-main" | "jee-advanced")
+   404→   404→   404→            }
+   405→   405→   405→          >
+   406→   406→   406→            <TabsList className="mx-auto h-11 p-1 rounded-2xl">
+   407→   407→   407→              <TabsTrigger value="jee-main" className="px-6 text-sm font-medium rounded-xl">
+   408→   408→   408→                JEE Main
+   409→   409→   409→              </TabsTrigger>
+   410→   410→   410→              <TabsTrigger value="jee-advanced" className="px-6 text-sm font-medium rounded-xl">
+   411→   411→   411→                JEE Advanced
+   412→   412→   412→              </TabsTrigger>
+   413→   413→   413→            </TabsList>
+   414→   414→   414→          </Tabs>
+   415→   415→   415→        </motion.div>
+   416→   416→   416→
+   417→   417→   417→        {/* Subject Cards */}
+   418→   418→   418→        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+   419→   419→   419→          {(["physics", "chemistry", "mathematics"] as const).map(
+   420→   420→   420→            (slug, index) => {
+   421→   421→   421→              const config = SUBJECT_CONFIG[slug];
+   422→   422→   422→              const chapterCount = getSubjectChapterCount(slug);
+   423→   423→   423→              const questionCount = getSubjectQuestionCount(slug);
+   424→   424→   424→              return (
+   425→   425→   425→                <motion.div
+   426→   426→   426→                  key={slug}
+   427→   427→   427→                  custom={index}
+   428→   428→   428→                  variants={fadeUp}
+   429→   429→   429→                  initial="hidden"
+   430→   430→   430→                  whileInView="visible"
+   431→   431→   431→                  viewport={{ once: true }}
+   432→   432→   432→                >
+   433→   433→   433→                  <Card
+   434→   434→   434→                    className={`
+   435→   435→   435→                      cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2
+   436→   436→   436→                      border-2 ${config.borderLight} ${config.borderDark}
+   437→   437→   437→                      ${config.hoverColor} bg-card group relative overflow-hidden
+   438→   438→   438→                    `}
+   439→   439→   439→                    onClick={() => handleSubjectClick(slug)}
+   440→   440→   440→                  >
+   441→   441→   441→                    {/* Subtle gradient overlay on hover */}
+   442→   442→   442→                    <div className={`absolute inset-0 bg-gradient-to-br ${config.gradient} opacity-0 group-hover:opacity-[0.03] dark:group-hover:opacity-[0.06] transition-opacity duration-500`} />
+   443→   443→   443→
+   444→   444→   444→                    <CardContent className="p-6 relative">
+   445→   445→   445→                      <div
+   446→   446→   446→                        className={`
+   447→   447→   447→                          inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5
+   448→   448→   448→                          ${config.bgLight} ${config.bgDark} ${config.color}
+   449→   449→   449→                          transition-transform duration-300 group-hover:scale-110
+   450→   450→   450→                          shadow-sm
+   451→   451→   451→                        `}
+   452→   452→   452→                      >
+   453→   453→   453→                        {config.icon}
+   454→   454→   454→                      </div>
+   455→   455→   455→                      <h3 className="text-xl font-bold mb-1.5 capitalize tracking-tight">
+   456→   456→   456→                        {slug}
+   457→   457→   457→                      </h3>
+   458→   458→   458→                      <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+   459→   459→   459→                        {config.description}
+   460→   460→   460→                      </p>
+   461→   461→   461→
+   462→   462→   462→                      {/* Topic pills */}
+   463→   463→   463→                      <div className="flex flex-wrap gap-1.5 mb-5">
+   464→   464→   464→                        {config.topics.map((topic) => (
+   465→   465→   465→                          <span
+   466→   466→   466→                            key={topic}
+   467→   467→   467→                            className={`
+   468→   468→   468→                              text-[11px] font-medium px-2.5 py-0.5 rounded-md
+   469→   469→   469→                              ${config.bgLight} ${config.bgDark} ${config.color}
+   470→   470→   470→                              opacity-70
+   471→   471→   471→                            `}
+   472→   472→   472→                          >
+   473→   473→   473→                            {topic}
+   474→   474→   474→                          </span>
+   475→   475→   475→                        ))}
+   476→   476→   476→                      </div>
+   477→   477→   477→
+   478→   478→   478→                      {/* Bottom stats */}
+   479→   479→   479→                      <div className="flex items-center justify-between pt-4 border-t border-border/50">
+   480→   480→   480→                        <div className="text-sm text-muted-foreground">
+   481→   481→   481→                          <span className="font-bold text-foreground">
+   482→   482→   482→                            {chapterCount}
+   483→   483→   483→                          </span>{" "}
+   484→   484→   484→                          chapters ·{" "}
+   485→   485→   485→                          <span className="font-bold text-foreground">
+   486→   486→   486→                            {questionCount.toLocaleString()}
+   487→   487→   487→                          </span>{" "}
+   488→   488→   488→                          Qs
+   489→   489→   489→                        </div>
+   490→   490→   490→                        <div
+   491→   491→   491→                          className={`
+   492→   492→   492→                            flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300
+   493→   493→   493→                            ${config.bgLight} ${config.bgDark}
+   494→   494→   494→                            group-hover:translate-x-1
+   495→   495→   495→                          `}
+   496→   496→   496→                        >
+   497→   497→   497→                          <ArrowRight
+   498→   498→   498→                            className={`h-4 w-4 ${config.color} transition-transform duration-300 group-hover:translate-x-0.5`}
+   499→   499→   499→                          />
+   500→   500→   500→                        </div>
+   501→   501→   501→                      </div>
+   502→   502→   502→                    </CardContent>
+   503→   503→   503→                  </Card>
+   504→   504→   504→                </motion.div>
+   505→   505→   505→              );
+   506→   506→   506→            }
+   507→   507→   507→          )}
+   508→   508→   508→        </div>
+   509→   509→   509→
+   510→   510→   510→        {/* Year Distribution Visual */}
+   511→   511→   511→        <motion.div
+   512→   512→   512→          initial={{ opacity: 0, y: 20 }}
+   513→   513→   513→          whileInView={{ opacity: 1, y: 0 }}
+   514→   514→   514→          viewport={{ once: true }}
+   515→   515→   515→          transition={{ delay: 0.1 }}
+   516→   516→   516→          className="mt-20 max-w-3xl mx-auto"
+   517→   517→   517→        >
+   518→   518→   518→          <div className="text-center mb-6">
+   519→   519→   519→            <h2 className="text-2xl font-bold tracking-tight mb-2">Year-wise Coverage</h2>
+   520→   520→   520→            <p className="text-sm text-muted-foreground">
+   521→   521→   521→              Comprehensive collection spanning over two decades of JEE examinations
+   522→   522→   522→            </p>
+   523→   523→   523→          </div>
+   524→   524→   524→          <Card className="p-6 border-border/60">
+   525→   525→   525→            <CardContent className="p-0">
+   526→   526→   526→              <div className="space-y-3">
+   527→   527→   527→                {yearDistribution.map((item) => (
+   528→   528→   528→                  <div key={item.year} className="flex items-center gap-3">
+   529→   529→   529→                    <span className="text-sm font-bold text-muted-foreground w-12 text-right tabular-nums">
+   530→   530→   530→                      {item.year}
+   531→   531→   531→                    </span>
+   532→   532→   532→                    <div className="flex-1 h-7 bg-muted/50 rounded-lg overflow-hidden relative">
+   533→   533→   533→                      <motion.div
+   534→   534→   534→                        initial={{ width: 0 }}
+   535→   535→   535→                        whileInView={{ width: `${item.percentage}%` }}
+   536→   536→   536→                        viewport={{ once: true }}
+   537→   537→   537→                        transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+   538→   538→   538→                        className="absolute inset-y-0 left-0 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 year-bar"
+   539→   539→   539→                      />
+   540→   540→   540→                    </div>
+   541→   541→   541→                    <span className="text-xs font-semibold text-muted-foreground w-6 tabular-nums">
+   542→   542→   542→                      {item.count}+
+   543→   543→   543→                    </span>
+   544→   544→   544→                  </div>
+   545→   545→   545→                ))}
+   546→   546→   546→              </div>
+   547→   547→   547→            </CardContent>
+   548→   548→   548→          </Card>
+   549→   549→   549→        </motion.div>
+   550→   550→   550→
+   551→   551→   551→        {/* Features Grid */}
+   552→   552→   552→        <motion.div
+   553→   553→   553→          initial={{ opacity: 0, y: 20 }}
+   554→   554→   554→          whileInView={{ opacity: 1, y: 0 }}
+   555→   555→   555→          viewport={{ once: true }}
+   556→   556→   556→          transition={{ delay: 0.1 }}
+   557→   557→   557→          className="mt-20 max-w-5xl mx-auto"
+   558→   558→   558→        >
+   559→   559→   559→          <div className="text-center mb-8">
+   560→   560→   560→            <h2 className="text-2xl font-bold tracking-tight mb-2">Everything You Need</h2>
+   561→   561→   561→            <p className="text-sm text-muted-foreground">
+   562→   562→   562→              Designed for serious JEE aspirants who want structured, efficient preparation
+   563→   563→   563→            </p>
+   564→   564→   564→          </div>
+   565→   565→   565→          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+   566→   566→   566→            {FEATURES.map((feature, i) => (
+   567→   567→   567→              <motion.div
+   568→   568→   568→                key={i}
+   569→   569→   569→                initial={{ opacity: 0, y: 16 }}
+   570→   570→   570→                whileInView={{ opacity: 1, y: 0 }}
+   571→   571→   571→                viewport={{ once: true }}
+   572→   572→   572→                transition={{ delay: 0.05 + i * 0.06 }}
+   573→   573→   573→                className="group p-5 rounded-2xl border border-border/60 bg-card hover:border-amber-200/80 dark:hover:border-amber-800/50 hover:shadow-md transition-all duration-300"
+   574→   574→   574→              >
+   575→   575→   575→                <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 mb-3 group-hover:scale-110 transition-transform duration-300">
+   576→   576→   576→                  {feature.icon}
+   577→   577→   577→                </div>
+   578→   578→   578→                <h4 className="text-sm font-bold mb-1">{feature.title}</h4>
+   579→   579→   579→                <p className="text-xs text-muted-foreground leading-relaxed">
+   580→   580→   580→                  {feature.desc}
+   581→   581→   581→                </p>
+   582→   582→   582→              </motion.div>
+   583→   583→   583→            ))}
+   584→   584→   584→          </div>
+   585→   585→   585→        </motion.div>
+   586→   586→   586→
+   587→   587→   587→        {/* Testimonials */}
+   588→   588→   588→        <motion.div
+   589→   589→   589→          initial={{ opacity: 0, y: 20 }}
+   590→   590→   590→          whileInView={{ opacity: 1, y: 0 }}
+   591→   591→   591→          viewport={{ once: true }}
+   592→   592→   592→          transition={{ delay: 0.1 }}
+   593→   593→   593→          className="mt-20 max-w-5xl mx-auto"
+   594→   594→   594→        >
+   595→   595→   595→          <div className="text-center mb-8">
+   596→   596→   596→            <h2 className="text-2xl font-bold tracking-tight mb-2">Loved by Toppers</h2>
+   597→   597→   597→            <p className="text-sm text-muted-foreground">
+   598→   598→   598→              Hear from students who cracked JEE with PYQ Vault
+   599→   599→   599→            </p>
+   600→   600→   600→          </div>
+   601→   601→   601→          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+   602→   602→   602→            {TESTIMONIALS.map((t, i) => (
+   603→   603→   603→              <motion.div
+   604→   604→   604→                key={i}
+   605→   605→   605→                initial={{ opacity: 0, y: 16 }}
+   606→   606→   606→                whileInView={{ opacity: 1, y: 0 }}
+   607→   607→   607→                viewport={{ once: true }}
+   608→   608→   608→                transition={{ delay: 0.05 + i * 0.08 }}
+   609→   609→   609→              >
+   610→   610→   610→                <Card className="h-full border-border/60 hover:shadow-md transition-shadow duration-300">
+   611→   611→   611→                  <CardContent className="p-5">
+   612→   612→   612→                    <Quote className="h-5 w-5 text-amber-400 mb-3 opacity-60" />
+   613→   613→   613→                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+   614→   614→   614→                      &ldquo;{t.text}&rdquo;
+   615→   615→   615→                    </p>
+   616→   616→   616→                    <div className="flex items-center gap-3 pt-3 border-t border-border/50">
+   617→   617→   617→                      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white text-sm font-bold shadow-sm">
+   618→   618→   618→                        {t.avatar}
+   619→   619→   619→                      </div>
+   620→   620→   620→                      <div>
+   621→   621→   621→                        <p className="text-sm font-semibold">{t.name}</p>
+   622→   622→   622→                        <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+   623→   623→   623→                          {t.score}
+   624→   624→   624→                        </p>
+   625→   625→   625→                      </div>
+   626→   626→   626→                    </div>
+   627→   627→   627→                  </CardContent>
+   628→   628→   628→                </Card>
+   629→   629→   629→              </motion.div>
+   630→   630→   630→            ))}
+   631→   631→   631→          </div>
+   632→   632→   632→        </motion.div>
+   633→   633→   633→
+   634→   634→   634→        {/* Non-logged-in CTA */}
+   635→   635→   635→        {!session?.user && (
+   636→   636→   636→          <motion.div
+   637→   637→   637→            initial={{ opacity: 0, y: 16 }}
+   638→   638→   638→            whileInView={{ opacity: 1, y: 0 }}
+   639→   639→   639→            viewport={{ once: true }}
+   640→   640→   640→            transition={{ delay: 0.2 }}
+   641→   641→   641→            className="text-center mt-20"
+   642→   642→   642→          >
+   643→   643→   643→            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/10 border border-amber-200/60 dark:border-amber-800/30 px-8 py-10 md:px-12 md:py-14">
+   644→   644→   644→              {/* Decorative circles */}
+   645→   645→   645→              <div className="absolute top-0 right-0 w-40 h-40 bg-amber-200/30 dark:bg-amber-800/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+   646→   646→   646→              <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-200/30 dark:bg-orange-800/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+   647→   647→   647→
+   648→   648→   648→              <div className="relative">
+   649→   649→   649→                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/25 mb-5">
+   650→   650→   650→                  <Users className="h-7 w-7 text-white" />
+   651→   651→   651→                </div>
+   652→   652→   652→                <h3 className="text-xl md:text-2xl font-bold mb-3 tracking-tight">
+   653→   653→   653→                  Start Your JEE Journey
+   654→   654→   654→                </h3>
+   655→   655→   655→                <p className="text-muted-foreground mb-6 text-sm md:text-base max-w-md mx-auto leading-relaxed">
+   656→   656→   656→                  Create a free account to save questions, track your progress, and build a personalized revision plan.
+   657→   657→   657→                </p>
+   658→   658→   658→                <Button
+   659→   659→   659→                  size="lg"
+   660→   660→   660→                  className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg shadow-amber-500/25 rounded-2xl px-8 h-12 font-semibold transition-all duration-300 hover:-translate-y-0.5"
+   661→   661→   661→                  onClick={() => setAuthModalOpen(true)}
+   662→   662→   662→                >
+   663→   663→   663→                  Get Started — It&apos;s Free
+   664→   664→   664→                  <ChevronRight className="ml-1 h-4 w-4" />
+   665→   665→   665→                </Button>
+   666→   666→   666→              </div>
+   667→   667→   667→            </div>
+   668→   668→   668→          </motion.div>
+   669→   669→   669→        )}
+   670→   670→   670→      </section>
+   671→   671→   671→    </div>
+   672→   672→   672→  );
+   673→   673→   673→}

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 
 export async function GET(req: Request) {
   try {
@@ -9,6 +10,7 @@ export async function GET(req: Request) {
     const exam = searchParams.get("exam") || "jee-main";
     const year = searchParams.get("year");
     const type = searchParams.get("type");
+    const sort = searchParams.get("sort") || "newest";
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "50");
 
@@ -40,6 +42,14 @@ export async function GET(req: Request) {
       where.questionType = type;
     }
 
+    // Build orderBy based on sort parameter
+    let orderBy: Prisma.QuestionOrderByWithRelationInput[];
+    if (sort === "oldest") {
+      orderBy = [{ year: "asc" }, { sourceOrder: "asc" }];
+    } else {
+      orderBy = [{ year: "desc" }, { sourceOrder: "asc" }];
+    }
+
     const [questions, total] = await Promise.all([
       db.question.findMany({
         where,
@@ -47,7 +57,7 @@ export async function GET(req: Request) {
           subject: { select: { name: true, slug: true } },
           chapter: { select: { name: true, slug: true } },
         },
-        orderBy: [{ year: "desc" }, { sourceOrder: "asc" }],
+        orderBy,
         skip: (page - 1) * limit,
         take: limit,
       }),

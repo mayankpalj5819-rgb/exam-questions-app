@@ -5,7 +5,7 @@ const db = new PrismaClient({
   datasourceUrl: "file:/home/z/my-project/db/custom.db",
 });
 
-function runAB(args: string[], timeoutMs = 45000): { stdout: string; stderr: string; ok: boolean } {
+function runAB(args: string[], timeoutMs = 20000): { stdout: string; stderr: string; ok: boolean } {
   try {
     const r = spawnSync("agent-browser", args, {
       timeout: timeoutMs,
@@ -87,7 +87,7 @@ const EXTRACT_JS = `(() => {
 function extractQuestionsFromPage(): { questions: any[]; total: number; error?: string } | null {
   // Use spawnSync with argument array - no shell, so no quoting issues
   const r = spawnSync("agent-browser", ["eval", EXTRACT_JS], {
-    timeout: 30000,
+    timeout: 15000,
     maxBuffer: 50 * 1024 * 1024,
     encoding: "utf-8",
     stdio: ["pipe", "pipe", "pipe"],
@@ -127,12 +127,12 @@ async function scrapeChapter(
   console.log(`  Opening: ${url}`);
 
   // Open the page
-  const openR = runAB(["open", url], 60000);
+  const openR = runAB(["open", url], 35000);
   if (!openR.ok) {
     console.log(`  Failed to open page: ${openR.stderr.substring(0, 120)}`);
     // Try closing and reopening
     runAB(["close"], 10000);
-    const retry = runAB(["open", url], 60000);
+    const retry = runAB(["open", url], 35000);
     if (!retry.ok) {
       console.log(`  Retry also failed: ${retry.stderr.substring(0, 120)}`);
       return 0;
@@ -140,7 +140,7 @@ async function scrapeChapter(
   }
 
   // Wait for network idle
-  const waitR = runAB(["wait", "--load", "networkidle"], 30000);
+  const waitR = runAB(["wait", "--load", "networkidle"], 15000);
   if (!waitR.ok) {
     console.log(`  Wait failed: ${waitR.stderr.substring(0, 120)}`);
   }
@@ -215,6 +215,8 @@ async function scrapeChapter(
 async function main() {
   const examType = process.argv[2] || "jee-main";
   const subjectSlug = process.argv[3];
+  const startIdx = parseInt(process.argv[4] || "0");
+  const count = parseInt(process.argv[5] || "999");
 
   const chapters = await db.chapter.findMany({
     where: { examType },
@@ -222,12 +224,14 @@ async function main() {
     orderBy: [{ subject: { name: "asc" } }, { name: "asc" }],
   });
 
-  const toScrape = subjectSlug
+  let toScrape = subjectSlug
     ? chapters.filter((c) => c.subject.slug === subjectSlug)
     : chapters;
 
+  // Apply batch slicing
+  const batchSlice = toScrape.slice(startIdx, startIdx + count);
   console.log(
-    `Scraping ${toScrape.length} chapters for ${examType}${subjectSlug ? ` (${subjectSlug})` : ""}\n`
+    `Scraping batch [${startIdx}..${startIdx + batchSlice.length - 1}] of ${toScrape.length} chapters for ${examType}${subjectSlug ? ` (${subjectSlug})` : ""}\n`
   );
 
   let totalSaved = 0;
@@ -235,13 +239,13 @@ async function main() {
   let emptyChapters = 0;
   let errorChapters = 0;
 
-  for (const chapter of toScrape) {
-    console.log(`\n[${totalChapters + 1}/${toScrape.length}] [${chapter.subject.name}] ${chapter.name} (${chapter.slug}):`);
+  for (const chapter of batchSlice) {
+    console.log(`\n[${startIdx + totalChapters + 1}/${toScrape.length}] [${chapter.subject.name}] ${chapter.name} (${chapter.slug}):`);
     try {
       const saved = await scrapeChapter(examType, chapter.subject.slug, chapter.slug);
       totalSaved += saved;
       if (saved === 0) emptyChapters++;
-      console.log(`  ✓ Saved ${saved} questions (running total: ${totalSaved})`);
+      console.log(`  ✓ Saved ${saved} questions (batch total: ${totalSaved})`);
     } catch (e: any) {
       errorChapters++;
       console.log(`  ✗ Error: ${e.message?.substring(0, 200)}`);
@@ -251,13 +255,20 @@ async function main() {
     totalChapters++;
 
     // Small delay between requests
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 200));
   }
 
+  // Always close browser at end of batch
+  try { runAB(["close"], 10000); } catch {}
+
   console.log(
-    `\n✨ Done! Scraped ${totalChapters} chapters, ${totalSaved} total questions`
+    `\n✨ Batch done! Scraped ${totalChapters} chapters, ${totalSaved} total questions saved this batch`
   );
-  console.log(`   ${emptyChapters} chapters had 0 questions, ${errorChapters} chapters had errors`);
+  console.log(`   ${emptyChapters} empty, ${errorChapters} errors`);
+
+  // Print total DB count
+  const totalCount = await db.question.count();
+  console.log(`   Total questions in DB: ${totalCount}`);
 }
 
 main()

@@ -3,6 +3,8 @@ import { create } from "zustand";
 export type ExamType = "jee-main" | "jee-advanced";
 export type ViewType = "landing" | "questions" | "saved";
 export type QuestionTypeFilter = "all" | "MCQ" | "Numerical";
+export type SortOrder = "newest" | "oldest";
+export type SavedViewMode = "list" | "grid";
 
 export interface SubjectData {
   id: string;
@@ -74,6 +76,10 @@ interface AppState {
   selectedChapter: ChapterData | null;
   setSelectedChapter: (chapter: ChapterData | null) => void;
 
+  // Viewing all questions for a subject (no chapter filter)
+  viewingAllQuestions: boolean;
+  setViewingAllQuestions: (viewing: boolean) => void;
+
   // Questions
   questions: QuestionData[];
   setQuestions: (questions: QuestionData[]) => void;
@@ -91,6 +97,14 @@ interface AppState {
   questionTypeFilter: QuestionTypeFilter;
   setQuestionTypeFilter: (filter: QuestionTypeFilter) => void;
 
+  // Year filter
+  yearFilter: string;
+  setYearFilter: (year: string) => void;
+
+  // Sort order
+  sortOrder: SortOrder;
+  setSortOrder: (order: SortOrder) => void;
+
   // Saved questions
   savedQuestions: SavedQuestionData[];
   setSavedQuestions: (questions: SavedQuestionData[]) => void;
@@ -104,6 +118,10 @@ interface AppState {
   savedCount: number;
   setSavedCount: (count: number) => void;
 
+  // Saved view mode
+  savedViewMode: SavedViewMode;
+  setSavedViewMode: (mode: SavedViewMode) => void;
+
   // Auth modal
   authModalOpen: boolean;
   setAuthModalOpen: (open: boolean) => void;
@@ -111,6 +129,14 @@ interface AppState {
   // Mobile sidebar
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+
+  // Sidebar search
+  sidebarSearch: string;
+  setSidebarSearch: (search: string) => void;
+
+  // Mobile nav menu
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
 }
 
 export const useAppState = create<AppState>((set) => ({
@@ -121,7 +147,7 @@ export const useAppState = create<AppState>((set) => ({
   // Exam type
   examType: "jee-main",
   setExamType: (examType) =>
-    set({ examType, selectedChapter: null, questions: [], questionsPage: 1 }),
+    set({ examType, selectedChapter: null, questions: [], questionsPage: 1, yearFilter: "" }),
 
   // Subjects
   subjects: [],
@@ -132,12 +158,17 @@ export const useAppState = create<AppState>((set) => ({
   // Selected subject
   selectedSubject: null,
   setSelectedSubject: (selectedSubject) =>
-    set({ selectedSubject, selectedChapter: null, questions: [], questionsPage: 1 }),
+    set({ selectedSubject, selectedChapter: null, viewingAllQuestions: false, questions: [], questionsPage: 1, yearFilter: "" }),
 
   // Selected chapter
   selectedChapter: null,
   setSelectedChapter: (selectedChapter) =>
-    set({ selectedChapter, questions: [], questionsPage: 1 }),
+    set({ selectedChapter, viewingAllQuestions: false, questions: [], questionsPage: 1 }),
+
+  // Viewing all questions for a subject
+  viewingAllQuestions: false,
+  setViewingAllQuestions: (viewingAllQuestions) =>
+    set({ viewingAllQuestions, selectedChapter: null, questions: [], questionsPage: 1 }),
 
   // Questions
   questions: [],
@@ -157,6 +188,15 @@ export const useAppState = create<AppState>((set) => ({
   questionTypeFilter: "all",
   setQuestionTypeFilter: (questionTypeFilter) =>
     set({ questionTypeFilter, questions: [], questionsPage: 1 }),
+
+  // Year filter
+  yearFilter: "",
+  setYearFilter: (yearFilter) =>
+    set({ yearFilter, questions: [], questionsPage: 1 }),
+
+  // Sort order
+  sortOrder: "newest",
+  setSortOrder: (sortOrder) => set({ sortOrder }),
 
   // Saved questions
   savedQuestions: [],
@@ -183,6 +223,10 @@ export const useAppState = create<AppState>((set) => ({
   savedCount: 0,
   setSavedCount: (savedCount) => set({ savedCount }),
 
+  // Saved view mode
+  savedViewMode: "list",
+  setSavedViewMode: (savedViewMode) => set({ savedViewMode }),
+
   // Auth modal
   authModalOpen: false,
   setAuthModalOpen: (authModalOpen) => set({ authModalOpen }),
@@ -190,4 +234,12 @@ export const useAppState = create<AppState>((set) => ({
   // Mobile sidebar
   sidebarOpen: false,
   setSidebarOpen: (sidebarOpen) => set({ sidebarOpen }),
+
+  // Sidebar search
+  sidebarSearch: "",
+  setSidebarSearch: (sidebarSearch) => set({ sidebarSearch }),
+
+  // Mobile nav menu
+  mobileMenuOpen: false,
+  setMobileMenuOpen: (mobileMenuOpen) => set({ mobileMenuOpen }),
 }));
