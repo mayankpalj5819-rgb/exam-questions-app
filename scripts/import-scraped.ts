@@ -30,88 +30,74 @@ async function main() {
   const dir = process.argv[2] || "/tmp/scraped";
   const files = fs.readdirSync(dir).filter(f => f.endsWith(".json")).sort();
   
-  console.log(`Importing ${files.length} scraped files from ${dir}`);
+  console.log(`Importing ${files.length} files from ${dir}`);
 
-  // Build chapter lookup
+  // Build lookups
   const allChapters = await db.chapter.findMany({ include: { subject: true } });
   const chapterMap = new Map<string, any>();
   for (const ch of allChapters) {
-    const key = `${ch.examType}_${ch.subject.slug}_${ch.slug}`;
-    chapterMap.set(key, ch);
+    chapterMap.set(`${ch.examType}_${ch.subject.slug}_${ch.slug}`, ch);
   }
-
   const subjectMap = new Map<string, any>();
   for (const ch of allChapters) {
     if (!subjectMap.has(ch.subject.slug)) subjectMap.set(ch.subject.slug, ch.subject);
   }
 
   let totalImported = 0;
-  let totalDupes = 0;
-  let totalErrors = 0;
+  let totalSkipped = 0;
 
   for (const file of files) {
-    // Parse filename: examtype_subject_chapterSlug.json
+    // Parse: exam_subject_slug.json
     const base = file.replace(".json", "");
-    const parts = base.split("_"); // e.g., jee-main_physics_electrostatics
-    if (parts.length < 3) continue;
-    
-    const examType = parts[0] + "_" + parts[1]; // jee-main
-    const subjectSlug = parts[2]; // physics
-    const chapterSlug = parts.slice(3).join("_"); // electrostatics (handle slugs with hyphens)
+    const first_ = base.indexOf("_");
+    const exam = base.substring(0, first_); // "jee-main" or "jee-advanced"
+    const rest = base.substring(first_ + 1);
+    const second_ = rest.indexOf("_");
+    const subject = rest.substring(0, second_); // "physics"
+    const slug = rest.substring(second_ + 1); // "electrostatics"
 
-    const filePath = path.join(dir, file);
     let data: any;
     try {
-      const raw = fs.readFileSync(filePath, "utf-8");
-      data = JSON.parse(raw);
-    } catch {
-      console.log(`  SKIP ${file}: parse error`);
-      continue;
-    }
+      data = JSON.parse(fs.readFileSync(path.join(dir, file), "utf-8"));
+    } catch { continue; }
 
-    if (!data.questions?.length) continue;
+    // Support both {q: [...]} and {questions: [...]} formats
+    const questions = data.q || data.questions || [];
+    if (!questions.length) continue;
 
-    const subject = subjectMap.get(subjectSlug);
-    if (!subject) {
-      console.log(`  SKIP ${file}: no subject ${subjectSlug}`);
-      continue;
-    }
+    const subj = subjectMap.get(subject);
+    if (!subj) { console.log(`  SKIP ${file}: no subject ${subject}`); continue; }
 
-    const chapterKey = `${examType}_${subjectSlug}_${chapterSlug}`;
-    const chapter = chapterMap.get(chapterKey);
+    const chapter = chapterMap.get(`${exam}_${subject}_${slug}`);
 
-    let saved = 0;
-    let skipped = 0;
-    for (const q of data.questions) {
-      const year = parseYear(q.meta);
+    let saved = 0, skipped = 0;
+    for (const q of questions) {
+      const text = q.t || q.qt || q.questionText || "";
+      const meta = q.m || q.meta || q.metaText || "";
+      const url = q.u || q.url || q.sourceUrl || "";
+      const year = parseYear(meta);
       if (!year || year < 2000 || year > 2026) { skipped++; continue; }
 
-      const shift = parseShift(q.meta);
-      const questionType = detectType(q.qt);
-      // Determine exam from metadata
-      const exam = q.meta?.includes("Advanced") ? "jee-advanced" : examType;
+      const shift = parseShift(meta);
+      const questionType = detectType(text);
+      const examType = meta.includes("Advanced") ? "jee-advanced" : exam;
 
       try {
         await db.question.create({
           data: {
-            questionText: q.qt,
-            questionHtml: null, // We only scraped text, not HTML
-            imageUrl: q.imgs?.[0] || null,
-            imageUrls: q.imgs?.length > 0 ? JSON.stringify(q.imgs) : null,
+            questionText: text,
             questionType,
             year,
-            exam,
+            exam: examType,
             shift: shift || null,
-            subjectId: subject.id,
+            subjectId: subj.id,
             chapterId: chapter?.id || null,
-            sourceUrl: q.url ? `https://questions.examside.com${q.url}` : null,
-            sourceOrder: q.i,
+            sourceUrl: url ? `https://questions.examside.com${url}` : null,
+            sourceOrder: q.i ?? q.sourceOrder ?? 0,
           },
         });
         saved++;
-      } catch {
-        skipped++;
-      }
+      } catch { skipped++; }
     }
 
     // Update chapter count
@@ -121,12 +107,11 @@ async function main() {
     }
 
     totalImported += saved;
-    totalDupes += skipped;
+    totalSkipped += skipped;
     console.log(`  ${file}: ${saved} imported, ${skipped} skipped`);
   }
 
-  console.log(`\n✅ Total: ${totalImported} imported, ${totalDupes} dupes/errors`);
-  
+  console.log(`\n✅ Total: ${totalImported} imported, ${totalSkipped} skipped`);
   const dbCount = await db.question.count();
   console.log(`📊 DB now has ${dbCount} questions`);
 }

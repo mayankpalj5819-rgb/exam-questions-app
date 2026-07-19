@@ -84,7 +84,7 @@ model Chapter {
 model Question {
   id            String          @id @default(cuid())
   questionText  String
-  questionHtml  String
+  questionHtml  String?
   options       String?
   correctAnswer String?
   solution      String?

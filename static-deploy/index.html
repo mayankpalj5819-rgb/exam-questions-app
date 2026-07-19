@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JEE PYQ Vault - Previous Year Questions</title>
+  <meta name="description" content="Browse 4900+ JEE Previous Year Questions from 2002-2026. Physics, Chemistry, Mathematics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #09090b; --bg-card: #0a0a0c; --bg-secondary: #18181b;
+      --border: #27272a; --border-subtle: #1c1c1f;
+      --text: #fafafa; --text-muted: #a1a1aa; --text-dim: #71717a;
+      --amber: #f59e0b; --amber-light: #fbbf24; --amber-dark: #d97706;
+      --amber-bg: rgba(245, 158, 11, 0.1); --amber-border: rgba(245, 158, 11, 0.2);
+      --green: #22c55e; --green-bg: rgba(34, 197, 94, 0.1);
+      --red: #ef4444; --blue: #3b82f6; --purple: #a855f7;
+      --radius: 12px; --radius-sm: 8px; --radius-xs: 6px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    html.light {
+      --bg: #ffffff; --bg-card: #ffffff; --bg-secondary: #f4f4f5;
+      --border: #e4e4e7; --border-subtle: #f0f0f1;
+      --text: #09090b; --text-muted: #71717a; --text-dim: #a1a1aa;
+      --amber-bg: rgba(245, 158, 11, 0.08); --amber-border: rgba(245, 158, 11, 0.25);
+      --green-bg: rgba(34, 197, 94, 0.08);
+      --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6; min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+    /* Navbar */
+    .navbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(9,9,11,0.85); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1rem; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    html.light .navbar { background: rgba(255,255,255,0.85); }
+
+    .navbar-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .navbar-logo {
+      width: 32px; height: 32px; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; color: #000;
+    }
+    .navbar-title { font-weight: 700; font-size: 16px; letter-spacing: -0.02em; }
+    .navbar-right { display: flex; align-items: center; gap: 8px; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 500; border: none; cursor: pointer;
+      transition: all 0.15s ease; white-space: nowrap;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+      color: #000; font-weight: 600;
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--bg-secondary); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-ghost { background: transparent; color: var(--text-muted); }
+    .btn-ghost:hover { background: var(--bg-secondary); color: var(--text); }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+    .btn-icon { padding: 7px; width: 36px; height: 36px; justify-content: center; }
+
+    /* Badge */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+    .badge-green { background: var(--green-bg); color: var(--green); }
+    .badge-muted { background: var(--bg-secondary); color: var(--text-muted); border: 1px solid var(--border); }
+
+    /* Layout */
+    .app-layout { display: flex; min-height: calc(100vh - 56px); }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px; min-width: 280px;
+      border-right: 1px solid var(--border);
+      background: var(--bg);
+      overflow-y: auto; height: calc(100vh - 56px);
+      position: sticky; top: 56px;
+    }
+    .sidebar-header {
+      padding: 16px; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .sidebar-title { font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+    .sidebar-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .stat-card {
+      padding: 10px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle); text-align: center;
+    }
+    .stat-value { font-weight: 800; font-size: 20px; color: var(--amber); }
+    .stat-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+    .subject-section { border-bottom: 1px solid var(--border-subtle); }
+    .subject-header {
+      padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+      cursor: pointer; font-weight: 600; font-size: 14px;
+      transition: background 0.15s;
+    }
+    .subject-header:hover { background: var(--bg-secondary); }
+    .subject-icon {
+      width: 32px; height: 32px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .subject-count {
+      margin-left: auto; font-size: 12px; color: var(--text-dim);
+      font-weight: 500; font-variant-numeric: tabular-nums;
+    }
+    .subject-arrow { transition: transform 0.2s; color: var(--text-dim); }
+    .subject-section.open .subject-arrow { transform: rotate(90deg); }
+
+    .chapter-list { display: none; padding: 0 8px 8px; }
+    .subject-section.open .chapter-list { display: block; }
+
+    .chapter-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 7px 12px; border-radius: var(--radius-xs);
+      font-size: 13px; color: var(--text-muted); cursor: pointer;
+      transition: all 0.15s; margin: 1px 0;
+    }
+    .chapter-item:hover { background: var(--bg-secondary); color: var(--text); }
+    .chapter-item.active {
+      background: var(--amber-bg); color: var(--amber);
+      border-left: 3px solid var(--amber);
+    }
+    .chapter-item .count { font-size: 11px; font-variant-numeric: tabular-nums; opacity: 0.7; }
+
+    .category-label {
+      padding: 8px 16px 4px; font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim);
+    }
+
+    /* Main content */
+    .main-content { flex: 1; min-width: 0; overflow-y: auto; }
+
+    /* Landing */
+    .landing {
+      max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem;
+      animation: fadeUp 0.5s ease;
+    }
+    .landing-hero { text-align: center; margin-bottom: 3rem; }
+    .landing-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 999px;
+      background: var(--amber-bg); border: 1px solid var(--amber-border);
+      font-size: 12px; font-weight: 600; color: var(--amber);
+      margin-bottom: 1.5rem;
+    }
+    .landing-pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .landing-h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800;
+      line-height: 1.1; letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      background: linear-gradient(to bottom, var(--text), var(--text-muted));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .landing-h1 span { color: var(--amber); -webkit-text-fill-color: var(--amber); }
+    .landing-subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem; line-height: 1.7; }
+    .landing-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 40px; border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+      color: #000; font-weight: 700; font-size: 17px;
+      border: none; cursor: pointer; transition: all 0.2s;
+      animation: ctaPulse 2s infinite;
+    }
+    .landing-cta:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 8px 30px rgba(245,158,11,0.3); }
+    @keyframes ctaPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); } 50% { box-shadow: 0 0 0 12px rgba(245,158,11,0); } }
+
+    .landing-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: var(--border); border-radius: var(--radius);
+      overflow: hidden; margin-bottom: 3rem;
+    }
+    .landing-stat {
+      background: var(--bg-card); padding: 1.5rem; text-align: center;
+    }
+    .landing-stat-value { font-size: 2rem; font-weight: 800; color: var(--amber); }
+    .landing-stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+    .subject-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 3rem; }
+    .subject-card {
+      padding: 24px; border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--bg-card); cursor: pointer; transition: all 0.2s;
+    }
+    .subject-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--amber-border); }
+    .subject-card-icon { font-size: 32px; margin-bottom: 12px; }
+    .subject-card h3 { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+    .subject-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    /* Questions view */
+    .questions-header {
+      position: sticky; top: 56px; z-index: 40;
+      background: rgba(9,9,11,0.9); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); padding: 12px 20px;
+    }
+    html.light .questions-header { background: rgba(255,255,255,0.9); }
+
+    .qh-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .qh-title h2 { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+    .qh-meta { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+    .qh-filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .filter-select {
+      padding: 5px 28px 5px 10px; border-radius: var(--radius-xs);
+      background: var(--bg-secondary); color: var(--text);
+      border: 1px solid var(--border); font-size: 12px;
+      font-family: inherit; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center;
+    }
+    .filter-select:focus { outline: none; border-color: var(--amber); }
+
+    .filter-tabs {
+      display: flex; background: var(--bg-secondary); border-radius: var(--radius-xs);
+      padding: 2px; border: 1px solid var(--border);
+    }
+    .filter-tab {
+      padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 500;
+      cursor: pointer; color: var(--text-muted); transition: all 0.15s;
+      border: none; background: none; font-family: inherit;
+    }
+    .filter-tab.active { background: var(--amber); color: #000; font-weight: 600; }
+    .filter-tab:hover:not(.active) { color: var(--text); }
+
+    .questions-list { padding: 20px; max-width: 900px; margin: 0 auto; }
+
+    /* Question Card */
+    .q-card {
+      border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--bg-card); margin-bottom: 16px;
+      overflow: hidden; transition: all 0.2s;
+      animation: fadeUp 0.3s ease;
+    }
+    .q-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .q-card-top { height: 3px; background: linear-gradient(90deg, var(--amber), var(--amber-dark)); }
+    .q-card-body { padding: 20px; }
+
+    .q-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .q-number {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #000; flex-shrink: 0;
+    }
+
+    .q-text {
+      font-size: 14.5px; line-height: 1.8; margin-bottom: 16px;
+      color: var(--text);
+    }
+    .q-text .katex { font-size: 1.15em; }
+    .q-text .katex-display { margin: 12px 0; }
+    .q-text .katex-display > .katex { font-size: 1.2em; }
+
+    .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .q-option {
+      padding: 12px 14px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); font-size: 13.5px;
+      line-height: 1.6; cursor: pointer; transition: all 0.15s;
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .q-option:hover { border-color: var(--amber-border); background: var(--amber-bg); }
+    .q-option.correct {
+      border-color: var(--green); background: var(--green-bg);
+    }
+    .q-option-letter {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+      background: var(--bg-secondary); color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .q-option.correct .q-option-letter { background: var(--green); color: #fff; border-color: var(--green); }
+    .q-option .katex { font-size: 1.1em; }
+
+    .q-source { margin-top: 14px; font-size: 11px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
+
+    /* Empty / Loading */
+    .empty-state {
+      text-align: center; padding: 4rem 2rem;
+      animation: fadeUp 0.4s ease;
+    }
+    .empty-icon {
+      width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 1.5rem;
+      background: var(--bg-secondary); display: flex; align-items: center;
+      justify-content: center; font-size: 36px; opacity: 0.4;
+    }
+    .empty-state h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; color: var(--text-muted); max-width: 360px; margin: 0 auto; }
+
+    .loading-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: calc(100vh - 56px); flex-direction: column; gap: 16px;
+    }
+    .spinner {
+      width: 40px; height: 40px; border: 3px solid var(--border);
+      border-top-color: var(--amber); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border); padding: 16px;
+      text-align: center; font-size: 13px; color: var(--text-dim);
+    }
+
+    /* Mobile */
+    .mobile-menu-btn { display: none; }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed; left: -300px; top: 56px; z-index: 45;
+        width: 280px; height: calc(100vh - 56px);
+        transition: left 0.3s ease; box-shadow: var(--shadow-lg);
+      }
+      .sidebar.open { left: 0; }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0; top: 56px;
+        background: rgba(0,0,0,0.5); z-index: 44;
+      }
+      .sidebar-overlay.open { display: block; }
+      .mobile-menu-btn { display: flex; }
+      .q-options { grid-template-columns: 1fr; }
+      .landing-stats { grid-template-columns: 1fr; }
+      .subject-cards { grid-template-columns: 1fr; }
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KaTeX overrides */
+    .math-error {
+      display: inline; background: var(--amber-bg); color: var(--amber);
+      padding: 1px 6px; border-radius: 4px; font-family: monospace;
+      font-size: 0.9em; border: 1px solid var(--amber-border);
+    }
+    .q-text img, .q-option img { max-width: 100%; border-radius: var(--radius-sm); margin: 8px 0; }
+    .q-text svg.math-svg, .q-option svg.math-svg { max-width: 200px; height: auto; display: inline; vertical-align: middle; }
+    .q-text table { border-collapse: collapse; margin: 10px 0; font-size: 0.95em; }
+    .q-text th, .q-text td { border: 1px solid var(--border); padding: 6px 12px; text-align: center; }
+    .q-text th { background: var(--bg-secondary); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand" onclick="showLanding()">
+      <div class="navbar-logo">J</div>
+      <span class="navbar-title">JEE PYQ Vault</span>
+    </div>
+    <div class="navbar-right">
+      <button class="btn btn-ghost btn-icon mobile-menu-btn" onclick="toggleSidebar()" title="Menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">
+        <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- App layout -->
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Browse Questions
+        </div>
+        <div class="sidebar-stats" id="sidebarStats"></div>
+      </div>
+      <div id="subjectSections"></div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content" id="mainContent"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">Built for JEE aspirants · JEE PYQ Vault · <span id="footerCount"></span></div>
+
+  <script>
+    // ===== State =====
+    let subjects = [];
+    let allQuestions = [];
+    let currentView = 'landing'; // landing | questions
+    let selectedSubjectId = null;
+    let selectedChapterId = null;
+    let selectedSubject = null;
+    let questionTypeFilter = 'all';
+    let yearFilter = 'all';
+    let sortOrder = 'newest';
+    let displayQuestions = [];
+
+    // ===== Init =====
+    async function init() {
+      showLoading();
+      try {
+        const [subjectsRes, questionsRes] = await Promise.all([
+          fetch('data/subjects.json'),
+          fetch('data/questions.json'),
+        ]);
+        subjects = await subjectsRes.json();
+        allQuestions = await questionsRes.json();
+        document.getElementById('footerCount').textContent = `${allQuestions.length.toLocaleString()} questions`;
+        renderSidebar();
+        showLanding();
+      } catch (e) {
+        document.getElementById('mainContent').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">!</div>
+            <h3>Failed to Load Data</h3>
+            <p>Could not fetch question data. Please try refreshing the page.</p>
+          </div>`;
+        console.error(e);
+      }
+    }
+
+    // ===== Theme =====
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      document.documentElement.classList.toggle('light');
+      const isDark = document.documentElement.classList.contains('dark');
+      document.getElementById('themeIcon').innerHTML = isDark
+        ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+        : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    }
+
+    // ===== Sidebar =====
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+
+    function renderSidebar() {
+      const totalQ = allQuestions.length;
+      const totalChapters = subjects.reduce((a, s) => a + s.chapters.length, 0);
+      document.getElementById('sidebarStats').innerHTML = `
+        <div class="stat-card"><div class="stat-value">${totalQ > 1000 ? (totalQ/1000).toFixed(1) + 'k' : totalQ}</div><div class="stat-label">Questions</div></div>
+        <div class="stat-card"><div class="stat-value">${totalChapters}</div><div class="stat-label">Chapters</div></div>`;
+
+      const container = document.getElementById('subjectSections');
+      const icons = { physics: '\u269B', chemistry: '\u2697', mathematics: '\u03C0' };
+      const colors = { physics: '#f97316', chemistry: '#22c55e', mathematics: '#3b82f6' };
+
+      container.innerHTML = subjects.map(s => {
+        const sQ = allQuestions.filter(q => q.subjectId === s.id);
+        const icon = icons[s.slug.split('-')[0]] || '\uD83D\uDCDA';
+        const color = colors[s.slug.split('-')[0]] || '#f59e0b';
+        // Group chapters by category
+        const categories = {};
+        for (const c of s.chapters) {
+          const cat = c.category || 'General';
+          if (!categories[cat]) categories[cat] = [];
+          categories[cat].push(c);
+        }
+        const catHtml = Object.entries(categories).map(([cat, chapters]) => `
+          <div class="category-label">${cat}</div>
+          ${chapters.map(c => {
+            const count = allQuestions.filter(q => q.chapterId === c.id).length;
+            return `<div class="chapter-item" data-chapter-id="${c.id}" data-subject-id="${s.id}" onclick="selectChapter('${s.id}','${c.id}')">
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.name}</span>
+              ${count > 0 ? `<span class="count">${count}</span>` : ''}
+            </div>`;
+          }).join('')}
+        `).join('');
+
+        return `<div class="subject-section" data-subject-id="${s.id}">
+          <div class="subject-header" onclick="toggleSubject('${s.id}')">
+            <div class="subject-icon" style="background:${color}22;color:${color}">${icon}</div>
+            <span>${s.name}</span>
+            <span class="subject-count">${sQ.length}</span>
+            <span class="subject-arrow">\u25B6</span>
+          </div>
+          <div class="chapter-list">
+            <div class="chapter-item" data-chapter-id="all" data-subject-id="${s.id}" onclick="selectChapter('${s.id}','all')" style="font-weight:600;color:var(--amber)">
+              <span>All Questions</span>
+              <span class="count">${sQ.length}</span>
+            </div>
+            ${catHtml}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function toggleSubject(id) {
+      const el = document.querySelector(`.subject-section[data-subject-id="${id}"]`);
+      el.classList.toggle('open');
+    }
+
+    // ===== Navigation =====
+    function showLanding() {
+      currentView = 'landing';
+      selectedSubjectId = null;
+      selectedChapterId = null;
+      selectedSubject = null;
+      document.querySelectorAll('.chapter-item').forEach(el => el.classList.remove('active'));
+
+      const totalQ = allQuestions.length;
+      const years = new Set(allQuestions.map(q => q.year).filter(Boolean));
+      const minYear = Math.min(...years);
+      const maxYear = Math.max(...years);
+      const subjectCounts = {};
+      subjects.forEach(s => { subjectCounts[s.name] = allQuestions.filter(q => q.subjectId === s.id).length; });
+
+      document.getElementById('mainContent').innerHTML = `
+        <div class="landing">
+          <div class="landing-hero">
+            <div class="landing-badge">
+              <span class="landing-pulse">\u25CF</span> 2026 Updated
+            </div>
+            <h1 class="landing-h1">Master JEE with<br/><span>Previous Year Questions</span></h1>
+            <p class="landing-subtitle">Access ${totalQ.toLocaleString()}+ real JEE questions from ${minYear}\u2013${maxYear}. Browse by subject, chapter, and year. Perfect for focused revision.</p>
+            <button class="landing-cta" onclick="startBrowsing()">Start Practicing \u2192</button>
+          </div>
+
+          <div class="landing-stats">
+            <div class="landing-stat">
+              <div class="landing-stat-value">${totalQ > 1000 ? (totalQ/1000).toFixed(1) + 'k+' : totalQ + '+'}</div>
+              <div class="landing-stat-label">Questions</div>
+            </div>
+            <div class="landing-stat">
+              <div class="landing-stat-value">${minYear}\u2013${maxYear}</div>
+              <div class="landing-stat-label">Years Covered</div>
+            </div>
+            <div class="landing-stat">
+              <div class="landing-stat-value">3</div>
+              <div class="landing-stat-label">Subjects</div>
+            </div>
+          </div>
+
+          <div class="subject-cards">
+            ${subjects.map(s => {
+              const slug = s.slug.split('-')[0];
+              const icons = { physics: '\u269B\uFE0F', chemistry: '\uD83D\uDD2C', mathematics: '\uD83D\uDCD0' };
+              const descs = {
+                physics: 'Mechanics, Thermodynamics, Optics, Electrodynamics & more',
+                chemistry: 'Organic, Inorganic, Physical Chemistry & more',
+                mathematics: 'Calculus, Algebra, Coordinate Geometry & more'
+              };
+              return `<div class="subject-card" onclick="selectSubjectAndOpen('${s.id}')">
+                <div class="subject-card-icon">${icons[slug] || '\uD83D\uDCDA'}</div>
+                <h3>${s.name}</h3>
+                <p>${descs[slug] || 'Comprehensive question bank'} &middot; <strong>${(subjectCounts[s.name] || 0).toLocaleString()}</strong> questions</p>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+    }
+
+    function startBrowsing() {
+      if (subjects.length > 0) {
+        toggleSubject(subjects[0].id);
+        selectSubjectAndOpen(subjects[0].id);
+      }
+    }
+
+    function selectSubjectAndOpen(subjectId) {
+      const s = subjects.find(x => x.id === subjectId);
+      if (!s) return;
+      selectedSubject = s;
+      selectedSubjectId = subjectId;
+      selectedChapterId = 'all';
+      currentView = 'questions';
+      renderQuestions();
+      // Open sidebar subject
+      document.querySelectorAll('.subject-section').forEach(el => {
+        if (el.dataset.subjectId === subjectId) el.classList.add('open');
+      });
+      // Highlight "all" chapter
+      document.querySelectorAll('.chapter-item').forEach(el => el.classList.remove('active'));
+      const allItem = document.querySelector(`.chapter-item[data-subject-id="${subjectId}"][data-chapter-id="all"]`);
+      if (allItem) allItem.classList.add('active');
+      // Close mobile sidebar
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+
+    function selectChapter(subjectId, chapterId) {
+      const s = subjects.find(x => x.id === subjectId);
+      if (!s) return;
+      selectedSubject = s;
+      selectedSubjectId = subjectId;
+      selectedChapterId = chapterId;
+      currentView = 'questions';
+      questionTypeFilter = 'all';
+      yearFilter = 'all';
+      renderQuestions();
+      // Highlight
+      document.querySelectorAll('.chapter-item').forEach(el => el.classList.remove('active'));
+      const item = document.querySelector(`.chapter-item[data-subject-id="${subjectId}"][data-chapter-id="${chapterId}"]`);
+      if (item) item.classList.add('active');
+      // Close mobile sidebar
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+
+    // ===== Questions =====
+    function renderQuestions() {
+      let filtered = allQuestions.filter(q => q.subjectId === selectedSubjectId);
+      if (selectedChapterId && selectedChapterId !== 'all') {
+        filtered = filtered.filter(q => q.chapterId === selectedChapterId);
+      }
+      if (questionTypeFilter !== 'all') {
+        filtered = filtered.filter(q => q.questionType === questionTypeFilter);
+      }
+      if (yearFilter !== 'all') {
+        filtered = filtered.filter(q => String(q.year) === yearFilter);
+      }
+      if (sortOrder === 'newest') {
+        filtered.sort((a, b) => (b.year || 0) - (a.year || 0));
+      } else {
+        filtered.sort((a, b) => (a.year || 0) - (b.year || 0));
+      }
+      displayQuestions = filtered;
+
+      const title = selectedChapterId === 'all'
+        ? `${selectedSubject.name} \u2014 All Questions`
+        : (selectedSubject.chapters.find(c => c.id === selectedChapterId)?.name || 'Questions');
+
+      const years = [...new Set(allQuestions.filter(q => q.subjectId === selectedSubjectId).map(q => q.year).filter(Boolean))].sort((a,b) => b - a);
+
+      const main = document.getElementById('mainContent');
+      main.innerHTML = `
+        <div class="questions-header">
+          <div class="qh-title">
+            <button class="btn btn-ghost btn-sm" onclick="showLanding()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              Subjects
+            </button>
+            <h2>${escHtml(title)}</h2>
+            <span class="badge badge-amber">${escHtml(selectedSubject.name)}</span>
+          </div>
+          <div class="qh-meta">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            ${filtered.length.toLocaleString()} question${filtered.length !== 1 ? 's' : ''}
+          </div>
+          <div class="qh-filters">
+            <div class="filter-tabs">
+              <button class="filter-tab ${questionTypeFilter==='all'?'active':''}" onclick="setTypeFilter('all')">All</button>
+              <button class="filter-tab ${questionTypeFilter==='MCQ'?'active':''}" onclick="setTypeFilter('MCQ')">MCQ</button>
+              <button class="filter-tab ${questionTypeFilter==='Numerical'?'active':''}" onclick="setTypeFilter('Numerical')">Numerical</button>
+            </div>
+            <select class="filter-select" onchange="setYearFilter(this.value)">
+              <option value="all" ${yearFilter==='all'?'selected':''}>All Years</option>
+              ${years.map(y => `<option value="${y}" ${yearFilter===String(y)?'selected':''}>${y}</option>`).join('')}
+            </select>
+            <select class="filter-select" onchange="setSortOrder(this.value)">
+              <option value="newest" ${sortOrder==='newest'?'selected':''}>Newest First</option>
+              <option value="oldest" ${sortOrder==='oldest'?'selected':''}>Oldest First</option>
+            </select>
+          </div>
+        </div>
+        <div class="questions-list" id="questionsList"></div>`;
+
+      const list = document.getElementById('questionsList');
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">\uD83D\uDD0D</div>
+            <h3>No Questions Found</h3>
+            <p>${(questionTypeFilter !== 'all' || yearFilter !== 'all') ? 'Try changing the filters to see more questions' : 'This chapter doesn\'t have any questions yet'}</p>
+            ${(questionTypeFilter !== 'all' || yearFilter !== 'all') ? `<button class="btn btn-secondary btn-sm" style="margin-top:16px" onclick="clearFilters()">Clear Filters</button>` : ''}
+          </div>`;
+      } else {
+        list.innerHTML = `<div style="text-align:center;margin-bottom:16px"><span class="badge badge-muted">${filtered.length.toLocaleString()} questions loaded</span></div>` +
+          filtered.map((q, i) => renderQuestionCard(q, i)).join('');
+        renderMath();
+      }
+    }
+
+    function setTypeFilter(f) { questionTypeFilter = f; renderQuestions(); }
+    function setYearFilter(f) { yearFilter = f; renderQuestions(); }
+    function setSortOrder(s) { sortOrder = s; renderQuestions(); }
+    function clearFilters() { questionTypeFilter = 'all'; yearFilter = 'all'; renderQuestions(); }
+
+    function renderQuestionCard(q, idx) {
+      const optionLetters = ['A', 'B', 'C', 'D'];
+      let optionsHtml = '';
+      if (q.options) {
+        try {
+          const opts = JSON.parse(q.options);
+          optionsHtml = '<div class="q-options">' + opts.map((opt, i) => {
+            const isCorrect = q.correctAnswer && (q.correctAnswer === optionLetters[i] || q.correctAnswer === String(i+1) || q.correctAnswer === opt);
+            return `<div class="q-option ${isCorrect ? 'correct' : ''}">
+              <span class="q-option-letter">${optionLetters[i]}</span>
+              <span>${opt}</span>
+            </div>`;
+          }).join('') + '</div>';
+        } catch(e) {
+          // options is not JSON, might be plain text
+        }
+      }
+
+      const yearBadge = q.year ? `<span class="badge badge-muted">${q.year}</span>` : '';
+      const typeBadge = q.questionType ? `<span class="badge badge-amber">${q.questionType}</span>` : '';
+      const shiftBadge = q.shift ? `<span class="badge badge-muted">${q.shift}</span>` : '';
+      const chapterBadge = q.chapter ? `<span class="badge badge-green">${q.chapter.name}</span>` : '';
+
+      return `<div class="q-card" style="animation-delay:${Math.min(idx * 0.03, 0.3)}s">
+        <div class="q-card-top"></div>
+        <div class="q-card-body">
+          <div class="q-meta">
+            <span class="q-number">${idx + 1}</span>
+            ${yearBadge} ${typeBadge} ${shiftBadge} ${chapterBadge}
+          </div>
+          <div class="q-text">${q.questionHtml || q.questionText}</div>
+          ${optionsHtml}
+          ${q.solutionHtml || q.solution ? `<div style="margin-top:16px;padding-top:12px;border-top:1px dashed var(--border);font-size:13px;color:var(--text-muted)"><strong style="color:var(--green)">Solution:</strong> ${q.solutionHtml || q.solution}</div>` : ''}
+          ${q.sourceUrl ? `<div class="q-source"><a href="${q.sourceUrl}" target="_blank" rel="noopener" style="color:var(--text-dim);text-decoration:none">Source: ExamSide \u2197</a></div>` : ''}
+        </div>
+      </div>`;
+    }
+
+    // ===== KaTeX =====
+    function renderMath() {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.getElementById('questionsList') || document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true },
+          ],
+          throwOnError: false,
+          trust: true,
+        });
+      } else {
+        // Wait for KaTeX to load
+        setTimeout(renderMath, 200);
+      }
+    }
+
+    // ===== Loading =====
+    function showLoading() {
+      document.getElementById('mainContent').innerHTML = `
+        <div class="loading-screen">
+          <div class="spinner"></div>
+          <div style="color:var(--text-muted);font-size:14px">Loading ${allQuestions.length > 0 ? 'questions...' : 'data...'}</div>
+        </div>`;
+    }
+
+    // ===== Utility =====
+    function escHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ===== Start =====
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
