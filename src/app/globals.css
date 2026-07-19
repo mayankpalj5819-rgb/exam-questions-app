@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "katex/dist/katex.min.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -119,4 +120,149 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ========== Math Text & KaTeX Styles ========== */
+
+.math-text-content {
+  line-height: 1.75;
+  word-break: break-word;
+}
+
+.math-text-content .katex-display {
+  margin: 0.75rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
+.math-text-content .katex {
+  font-size: 1em;
+}
+
+/* In dark mode, KaTeX text should be visible */
+.dark .math-text-content .katex {
+  color: inherit;
+}
+
+/* Math error display */
+.math-error {
+  color: #ef4444;
+  font-size: 0.85em;
+  padding: 0.1em 0.3em;
+  background: #fef2f2;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.dark .math-error {
+  background: rgba(127, 29, 29, 0.3);
+  color: #fca5a5;
+}
+
+/* ========== Question HTML Body Styles ========== */
+
+.question-body-html {
+  line-height: 1.75;
+  word-break: break-word;
+}
+
+.question-body-html p {
+  margin-bottom: 0.5em;
+}
+
+.question-body-html br + br {
+  display: none;
+}
+
+/* Tables in question HTML */
+.question-table-wrap {
+  margin: 0.75rem 0;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  border: 1px solid oklch(0.922 0 0);
+}
+
+.dark .question-table-wrap {
+  border-color: oklch(1 0 0 / 10%);
+}
+
+.question-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.question-table th,
+.question-table td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid oklch(0.922 0 0);
+  text-align: left;
+}
+
+.dark .question-table th,
+.dark .question-table td {
+  border-color: oklch(1 0 0 / 10%);
+}
+
+.question-table th {
+  background: oklch(0.97 0 0);
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.dark .question-table th {
+  background: oklch(0.269 0 0);
+}
+
+.question-table tr:nth-child(even) td {
+  background: oklch(0.97 0 0);
+}
+
+.dark .question-table tr:nth-child(even) td {
+  background: oklch(0.269 0 0);
+}
+
+/* KaTeX in question HTML */
+.question-body-html .katex-display {
+  margin: 0.75rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
+.question-body-html .katex {
+  font-size: 1em;
+}
+
+.dark .question-body-html .katex {
+  color: inherit;
+}
+
+/* ========== Custom Scrollbar ========== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.8 0 0);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.7 0 0);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(0.4 0 0);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.5 0 0);
 }
