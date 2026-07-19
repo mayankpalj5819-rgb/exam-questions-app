@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export type ExamType = "jee-main" | "jee-advanced";
-export type ViewType = "landing" | "questions" | "saved";
+export type ViewType = "landing" | "questions" | "saved" | "analytics";
 export type QuestionTypeFilter = "all" | "MCQ" | "Numerical";
 export type SortOrder = "newest" | "oldest";
 export type SavedViewMode = "list" | "grid";
@@ -134,6 +134,10 @@ interface AppState {
   sidebarSearch: string;
   setSidebarSearch: (search: string) => void;
 
+  // Search dialog
+  searchOpen: boolean;
+  setSearchOpen: (open: boolean) => void;
+
   // Mobile nav menu
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
@@ -238,6 +242,10 @@ export const useAppState = create<AppState>((set) => ({
   // Sidebar search
   sidebarSearch: "",
   setSidebarSearch: (sidebarSearch) => set({ sidebarSearch }),
+
+  // Search dialog
+  searchOpen: false,
+  setSearchOpen: (searchOpen) => set({ searchOpen }),
 
   // Mobile nav menu
   mobileMenuOpen: false,

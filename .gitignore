@@ -51,8 +51,7 @@ prompt
 
 server.log
 
-# SQLite database files (too large for Git, must be seeded separately)
-db/*.db
+# SQLite journal files (database is tracked)
 db/*.db-journal
 
 # Temp and scratch files

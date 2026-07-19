@@ -60,6 +60,7 @@ export function Navbar() {
     savedCount,
     setAuthModalOpen,
     setSidebarOpen,
+    setSearchOpen,
     mobileMenuOpen,
     setMobileMenuOpen,
   } = useAppState();
@@ -296,6 +297,7 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
+            onClick={() => setSearchOpen(true)}
             className="h-9 w-9 rounded-lg"
             title="Search (⌘K)"
           >

@@ -5,10 +5,12 @@ import { useSession } from "next-auth/react";
 import { useAppState, type ChapterData, type SubjectData } from "@/hooks/use-app-state";
 import { Navbar } from "@/components/navbar";
 import { AuthModal } from "@/components/auth-modal";
+import { SearchDialog } from "@/components/search-dialog";
 import { Landing } from "@/components/landing";
 import { ChapterSidebar, MobileChapterSidebar } from "@/components/chapter-sidebar";
 import { QuestionList } from "@/components/question-list";
 import { SavedDashboard } from "@/components/saved-dashboard";
+import { Analytics } from "@/components/analytics";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -73,6 +75,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <AuthModal />
+      <SearchDialog />
 
       {view === "landing" && <Landing />}
 
@@ -93,6 +96,8 @@ export default function Home() {
           </main>
         </div>
       )}
+
+      {view === "analytics" && <Analytics />}
 
       <footer className="border-t mt-auto">
         <div className="container mx-auto px-4 py-4 text-center text-sm text-muted-foreground">

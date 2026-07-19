@@ -1,79 +1,20 @@
 ---
 Task ID: 1
-Agent: Main Agent
-Task: Fix "No Questions Found" error - Prisma client stale causing nullable field crash
+Agent: main
+Task: Restore context, fix server, UI overhaul, add features
 
 Work Log:
-- Analyzed user screenshot showing "No Questions Found" in JEE PYQ Vault
-- Checked dev.log and found: `Error converting field "questionHtml" of expected non-nullable type "String", found incompatible value of "null"`
-- Schema already had `questionHtml String?` but Prisma client was stale
-- Ran `npx prisma generate` to regenerate client
-- Fixed 56 `.json.raw` scraped files (jee-advanced data) by stripping outer quotes and wrapping in proper JSON format
-- Imported all 82 scraped JSON files → 12,231 new questions added
-- Updated chapter question counts across all 174 chapters
-- Verified API returns questions correctly via curl: 9,278 physics questions confirmed
+- Read all existing source files to restore lost context from previous session
+- Found 61,991 questions in DB (not 42,461 as in summary - more were scraped)
+- Fixed dev server crash: Turbopack stdout + nohup pipe was causing SIGPIPE. Fixed by redirecting stdout to /dev/null
+- Disabled Prisma query logging (was generating excessive output)
+- Fixed analytics CTA button on landing page (was showing toast, now navigates to analytics view)
+- Verified all APIs working: chapters, questions, analytics, search, auth/session
+- Launched 3 parallel agents: landing page overhaul, analytics dashboard, search functionality
 
 Stage Summary:
-- DB now has 17,158 questions total (16,157 jee-main, 1,001 jee-advanced)
-- 81/174 chapters have questions, 93 chapters still need scraping
-- Root cause: Stale Prisma client + unprocessed .raw scraped files
-- Fix: Regenerated Prisma client, processed .raw files, imported to DB
----
-Task ID: 2
-Agent: Main Agent  
-Task: Build robust scraping pipeline (scrape-v3.sh + batch-scrape.sh)
-
-Work Log:
-- Diagnosed agent-browser eval output capture issue: `const` declarations persist between evals causing errors
-- Fixed by using IIFE pattern: `(function(){...})()` 
-- Created scrape-v3.sh: extracts all questions in one eval, pipes through python for double-JSON-parse (agent-browser wraps output in quotes)
-- Tested successfully: 210 gravitation questions scraped
-- Created batch-scrape.sh: iterates 93 missing chapters, skips already-scraped
-- Started background batch scraping
-
-Stage Summary:
-- scrape-v3.sh reliably extracts questions from ExamSide pages
-- batch-scrape.sh running in background processing 93 chapters
-- Output: /tmp/scrape-progress.log, /tmp/scrape-batch.log
----
-Task ID: 3
-Agent: Scraping Agent
-Task: Scrape all 84 remaining chapters (JEE Advanced + JEE Main) and import to DB
-
-Work Log:
-- Investigated why JEE Advanced pages showed "0 on page" in previous batch
-- Finding: The selector `a.flex.gap-2[href*="/past-years/jee/question/"]` DOES work for JEE Advanced pages
-- Root cause of previous failure: Browser memory leaks from running too many pages without restart
-- Confirmed JEE Advanced page structure: same DOM as JEE Main (a.flex.gap-2 > .flex.flex-col with question text + metadata children)
-- Created batch-scrape-v4.sh: restarts browser every 8 chapters, uses proven extraction logic with IIFE pattern
-- Successfully scraped all 84 remaining chapters in ~90 seconds
-- All 84/84 chapters returned questions (no genuine "0 questions" pages)
-- Imported via `npx tsx scripts/import-scraped.ts` → 19,530 new questions, 1,119 skipped (duplicates)
-- Updated all 174 chapter question counts
-
-Stage Summary:
-- DB now has **61,991 questions total** (55,686 jee-main, 6,305 jee-advanced)
-- **174/174 chapters have questions** (0 chapters with 0 questions)
-- By subject: Physics 27,650 | Mathematics 17,894 | Chemistry 16,447
-- JEE Advanced chapters: 82 with questions | JEE Main chapters: 92 with questions
-- Script saved at: scripts/batch-scrape-v4.sh
----
-Task ID: 5
-Agent: Deployment Config Agent
-Task: Prepare deployment configs for Render and Cloudflare Pages
-
-Work Log:
-- Verified `next.config.ts` already has `output: "standalone"` — no changes needed
-- Rewrote `render.yaml`: updated build command to `npx prisma generate && bun install && bun run build`, start command to `bun run start`, added `healthCheckPath: /api`, added `NEXTAUTH_URL` with auto service reference
-- Created `DEPLOYMENT.md`: comprehensive deployment guide covering Render (primary) and Cloudflare Pages (secondary/CDN). Documented SQLite limitations on ephemeral filesystems, 3 Cloudflare strategies (static export, redirect proxy, D1 migration), database seeding workflow, and troubleshooting
-- Created `Dockerfile`: multi-stage build (deps → builder → runner) using `node:20-alpine` with bun, copies Prisma schema and generates client, builds Next.js standalone, copies static assets, exposes port 3000
-- Updated `.gitignore`: added `db/*.db`, `db/*.db-journal`, `/tmp/`, `*.raw`, `scrape-*.json`, `scrape-*.txt`, `examside_*.json`, `tool-results/`, `/static-deploy/`, `/upload/`, `preview-*.png`
-- Cleaned git tracking: ran `git rm --cached` on 25+ files (db/custom.db, scraping artifacts, screenshots, .env, tool-results, static-deploy, uploads) — these are now properly ignored
-- Committed all changes with descriptive message and pushed to `origin/main`
-
-Stage Summary:
-- Render deployment: `render.yaml` ready with health check, bun-based build/start, auto NEXTAUTH_URL
-- Docker: `Dockerfile` ready for alternative Docker-based Render deployment
-- Cloudflare: `DEPLOYMENT.md` documents 3 strategies; Render recommended as primary due to SQLite persistence requirement
-- Git: repo cleaned, large/generated files removed from tracking, all deployment configs pushed to GitHub
-- Next step for production: push `db/custom.db` to Render persistent disk after first deploy (documented in DEPLOYMENT.md)
+- Dev server stable with: `npx next dev -p 3000 2>dev.log >/dev/null &`
+- New files: analytics API, analytics component, search API, search dialog, new landing page
+- Modified files: page.tsx (added Analytics + SearchDialog), use-app-state.ts (added "analytics" view type + searchOpen state), navbar.tsx (wired searchOpen), landing.tsx (professional overhaul)
+- All APIs returning correct data
+- Lint passes (only pre-existing error in scripts/import-questions.ts)
