@@ -134,7 +134,6 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
     if (question.shift) {
       parts.push(question.shift);
-      parts.push("Shift");
     }
     return parts.join(" ");
   }, [question.year, question.shift, question.questionText, examType]);
