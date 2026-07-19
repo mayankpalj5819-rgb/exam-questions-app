@@ -24,6 +24,7 @@ export function QuestionList() {
     setQuestionsLoading,
     setQuestionsPage,
     setQuestionsTotal,
+    savedQuestionIds,
     setQuestionsTotalPages,
     appendQuestions,
     examType,
@@ -157,7 +158,7 @@ export function QuestionList() {
         ) : (
           <>
             {questions.map((q, i) => (
-              <QuestionCard key={q.id} question={q} index={i} />
+              <QuestionCard key={q.id} question={q} index={i} savedQuestionIds={savedQuestionIds} />
             ))}
 
             {/* Load more */}
