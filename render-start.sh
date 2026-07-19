@@ -1,29 +1,39 @@
 #!/bin/bash
 # Render deployment startup script
-# Copies the committed database to a writable location and starts the server
-
 set -e
 
-DB_DIR="/opt/render/project/src/db"
-DB_FILE="$DB_DIR/custom.db"
-WDB_DIR="/opt/render/data"
-WDB_FILE="$WDB_DIR/custom.db"
+echo "=== Render Startup Script ==="
 
-# Create writable data directory
-mkdir -p "$WDB_DIR"
+# Determine project root (where .next/standalone/ exists)
+PROJECT_ROOT="${RENDER_PROJECT_ROOT:-/opt/render/project/src}"
+echo "Project root: $PROJECT_ROOT"
+ls -la "$PROJECT_ROOT/.next/standalone/server.js" 2>/dev/null || {
+  echo "ERROR: server.js not found at $PROJECT_ROOT/.next/standalone/server.js"
+  ls -la "$PROJECT_ROOT/.next/" 2>/dev/null | head -10
+  exit 1
+}
 
-# Copy database to writable location if it doesn't exist or is newer
-if [ ! -f "$WDB_FILE" ] || [ "$DB_FILE" -nt "$WDB_FILE" ]; then
-  echo "Copying database to writable location..."
-  cp "$DB_FILE" "$WDB_FILE"
+# Handle database
+SRC_DB="$PROJECT_ROOT/db/custom.db"
+DATA_DIR="/opt/render/data"
+mkdir -p "$DATA_DIR"
+WDB_FILE="$DATA_DIR/custom.db"
+
+if [ -f "$SRC_DB" ]; then
+  if [ ! -f "$WDB_FILE" ] || [ "$SRC_DB" -nt "$WDB_FILE" ]; then
+    echo "Copying database to writable location..."
+    cp "$SRC_DB" "$WDB_FILE"
+  else
+    echo "Using existing database at $WDB_FILE"
+  fi
+  export DATABASE_URL="file:$WDB_FILE"
+else
+  echo "WARNING: No database found at $SRC_DB, using default DATABASE_URL"
 fi
 
-# Set DATABASE_URL to writable location
-export DATABASE_URL="file:$WDB_FILE"
-
-# Run database migrations (schema changes)
-npx prisma generate --no-engine 2>/dev/null || npx prisma generate 2>/dev/null || true
-
-# Start the Next.js server
+echo "DATABASE_URL set"
 echo "Starting production server..."
-exec node /opt/render/project/src/.next/standalone/server.js
+
+# Change to project root and start
+cd "$PROJECT_ROOT"
+exec node .next/standalone/server.js
