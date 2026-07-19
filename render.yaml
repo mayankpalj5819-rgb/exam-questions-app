@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: exam-questions-app
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npx prisma generate && npx next build
+    startCommand: npx next start -p $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: file:./db/custom.db
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: NODE_VERSION
+        value: "20"
