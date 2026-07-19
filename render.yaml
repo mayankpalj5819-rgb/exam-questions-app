@@ -4,8 +4,8 @@ services:
     runtime: node
     plan: free
     branch: main
-    buildCommand: npx prisma generate && npx next build
-    startCommand: npx next start -p $PORT
+    buildCommand: npx prisma generate && npx next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/
+    startCommand: node .next/standalone/server.js
     envVars:
       - key: DATABASE_URL
         value: file:./db/custom.db
