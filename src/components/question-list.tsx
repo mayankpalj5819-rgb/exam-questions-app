@@ -175,10 +175,11 @@ export function QuestionList() {
   };
 
   const handleAnswerUpdate = useCallback((questionId: string, correctAnswer: string, solution: string) => {
-    setQuestions(prev => prev.map(q => 
+    const updated = questions.map(q =>
       q.id === questionId ? { ...q, correctAnswer, solution } : q
-    ));
-  }, [setQuestions]);
+    );
+    setQuestions(updated);
+  }, [questions, setQuestions]);
 
   const handleBackToSubjects = () => {
     setSelectedChapter(null);
