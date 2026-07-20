@@ -161,11 +161,21 @@ function normalizeNumericalAnswer(answer: string): string {
 
 /** Extract inline options (A), (B), etc. from question text */
 function extractInlineOptions(text: string): string[] {
-  const optionRegex = /\(([A-E])\)\s*([\s\S]*?)(?=\([A-E]\)|$)/g;
+  // Only extract from the portion after common option-intro phrases
+  const introMatch = text.match(/(?:choose the correct|select the correct|options given|following options?|answer from the options)/i);
+  const searchFrom = introMatch ? text.indexOf(introMatch[0]) : 0;
+  const optionText = text.slice(searchFrom);
+
+  const optionRegex = /\(([A-E])\)\s*([\s\S]*?)(?=\(([A-E])\)|$)/g;
   const extracted: string[] = [];
   let match;
-  while ((match = optionRegex.exec(text)) !== null) {
-    extracted.push(match[2].trim());
+  while ((match = optionRegex.exec(optionText)) !== null) {
+    let optText = match[2].trim();
+    // Limit option length to prevent capturing question body
+    if (optText.length > 500) {
+      optText = optText.slice(0, 500).trim() + "…";
+    }
+    extracted.push(optText);
   }
   return extracted;
 }
@@ -381,8 +391,8 @@ export function QuestionCard({
       if (data.correctAnswer) {
         // Persist AI answer locally
         setAiCorrectAnswer(data.correctAnswer);
-        if (data.solution) {
-          setAiSolution(data.solution);
+        if (data.explanation) {
+          setAiSolution(data.explanation);
         }
 
         // Determine correct/wrong
@@ -403,12 +413,13 @@ export function QuestionCard({
         onAnswerUpdate?.(
           question.id,
           data.correctAnswer,
-          data.solution || ""
+          data.explanation || ""
         );
       } else {
         setAnswerState("no_answer");
       }
-    } catch {
+    } catch (err) {
+      console.error("[QuestionCard] handleCheckAnswer error:", err);
       setAnswerState("no_answer");
       toast.error("Failed to get answer. Please try again.");
     }
