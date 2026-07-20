@@ -174,6 +174,12 @@ export function QuestionList() {
     }
   };
 
+  const handleAnswerUpdate = useCallback((questionId: string, correctAnswer: string, solution: string) => {
+    setQuestions(prev => prev.map(q => 
+      q.id === questionId ? { ...q, correctAnswer, solution } : q
+    ));
+  }, [setQuestions]);
+
   const handleBackToSubjects = () => {
     setSelectedChapter(null);
     setSelectedSubject(null);
@@ -461,7 +467,7 @@ export function QuestionList() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: Math.min(i * 0.02, 0.2) }}
                 >
-                  <QuestionCard question={q} index={i} />
+                  <QuestionCard question={q} index={i} onAnswerUpdate={handleAnswerUpdate} />
                 </motion.div>
               ))}
             </div>

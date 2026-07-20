@@ -141,6 +141,9 @@ interface AppState {
   // Mobile nav menu
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
+
+  // Update a single question's answer
+  updateQuestionAnswer: (questionId: string, correctAnswer: string, solution: string) => void;
 }
 
 export const useAppState = create<AppState>((set) => ({
@@ -250,4 +253,12 @@ export const useAppState = create<AppState>((set) => ({
   // Mobile nav menu
   mobileMenuOpen: false,
   setMobileMenuOpen: (mobileMenuOpen) => set({ mobileMenuOpen }),
+
+  // Update a single question's answer
+  updateQuestionAnswer: (questionId, correctAnswer, solution) =>
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.id === questionId ? { ...q, correctAnswer, solution } : q
+      ),
+    })),
 }));
