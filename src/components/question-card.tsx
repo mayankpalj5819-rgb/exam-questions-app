@@ -95,6 +95,11 @@ interface QuestionCardProps {
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
+/** Normalize literal \n in scraped text to real newlines */
+function normalizeText(text: string): string {
+  return text.replace(/\\n/g, "\n");
+}
+
 /** Detect if question is assertion-reason type */
 function isAssertionReason(text: string): boolean {
   return /Statement-I/i.test(text) && /Statement-II/i.test(text);
@@ -146,7 +151,7 @@ function getSubjectBorder(subjectSlug?: string): string {
 
 /** Check if text mentions figures/diagrams */
 function hasFigureReference(text: string): boolean {
-  return /\b(?:figure|diagram|circuit|graph|arrangement|setup|configuration|shown below|given below|given figure|following figure)\b/i.test(
+  return /\b(?:figure|diagram|graph|arrangement|setup|configuration|shown below|given figure|following figure|given below)\b/i.test(
     text
   );
 }
@@ -159,25 +164,37 @@ function normalizeNumericalAnswer(answer: string): string {
     .toLowerCase();
 }
 
-/** Extract inline options (A), (B), etc. from question text */
-function extractInlineOptions(text: string): string[] {
-  // Only extract from the portion after common option-intro phrases
-  const introMatch = text.match(/(?:choose the correct|select the correct|options given|following options?|answer from the options)/i);
-  const searchFrom = introMatch ? text.indexOf(introMatch[0]) : 0;
-  const optionText = text.slice(searchFrom);
+/** Extract inline options (A), (B), etc. OR A. B. C. D. from question text */
+function extractInlineOptions(rawText: string): string[] {
+  // Normalize literal \n to real newlines first
+  const text = normalizeText(rawText);
 
-  const optionRegex = /\(([A-E])\)\s*([\s\S]*?)(?=\(([A-E])\)|$)/g;
-  const extracted: string[] = [];
+  // Strategy 1: (A) text (B) text format — search entire text
+  const parenRegex = /\(([A-E])\)\s*([\s\S]*?)(?=\(([A-E])\)|$)/g;
+  const parenExtracted: string[] = [];
   let match;
-  while ((match = optionRegex.exec(optionText)) !== null) {
+  while ((match = parenRegex.exec(text)) !== null) {
     let optText = match[2].trim();
-    // Limit option length to prevent capturing question body
     if (optText.length > 500) {
       optText = optText.slice(0, 500).trim() + "…";
     }
-    extracted.push(optText);
+    parenExtracted.push(optText);
   }
-  return extracted;
+  if (parenExtracted.length >= 2) return parenExtracted;
+
+  // Strategy 2: \nA. text \nB. text format (letter + period) — search entire text
+  const dotRegex = /^[A-E]\.\s+([\s\S]*?)(?=\n[A-E]\.\s|$)/gm;
+  const dotExtracted: string[] = [];
+  while ((match = dotRegex.exec(text)) !== null) {
+    let optText = match[1].trim();
+    if (optText.length > 500) {
+      optText = optText.slice(0, 500).trim() + "…";
+    }
+    dotExtracted.push(optText);
+  }
+  if (dotExtracted.length >= 2) return dotExtracted;
+
+  return [];
 }
 
 /** Compare MCQ answers, accounting for various formats */
@@ -238,14 +255,20 @@ export function QuestionCard({
   const [aiCorrectAnswer, setAiCorrectAnswer] = useState<string | null>(null);
   const [aiSolution, setAiSolution] = useState<string | null>(null);
 
+  // ── Normalized Text (literal \n → real newlines) ──
+  const normalizedRawText = useMemo(
+    () => normalizeText(question.questionText || ""),
+    [question.questionText]
+  );
+
   // ── Derived Values ──
   const isSaved = savedQuestionIds.has(question.id);
   const detectedType = detectQuestionType(question);
   const isNumerical = detectedType === "Numerical";
-  const isAssertion = !isNumerical && isAssertionReason(question.questionText);
+  const isAssertion = !isNumerical && isAssertionReason(normalizedRawText);
   const subjectBorder = getSubjectBorder(selectedSubject?.slug || question.subject?.slug);
   const isAnswered = answerState !== "unanswered" && answerState !== "checking";
-  const hasFigure = hasFigureReference(question.questionText || "");
+  const hasFigure = hasFigureReference(normalizedRawText);
 
   // Use AI-returned answer if available, otherwise fall back to DB
   const effectiveCorrectAnswer = aiCorrectAnswer || question.correctAnswer || null;
@@ -256,17 +279,17 @@ export function QuestionCard({
     const parts: string[] = [];
     parts.push(examType === "jee-main" ? "JEE Main" : "JEE Advanced");
     if (question.year) parts.push(String(question.year));
-    const dateStr = extractDateFromText(question.questionText || "");
+    const dateStr = extractDateFromText(normalizedRawText);
     if (dateStr) parts.push(`(${dateStr})`);
     if (question.shift) parts.push(question.shift);
     if (question.paper) parts.push(question.paper);
     return parts.join(" · ").trim();
   }, [question.year, question.shift, question.paper, question.questionText, examType]);
 
-  // ── Clean Question Text ──
+  // ── Cleaned Question Text ──
   const cleanText = useMemo(
-    () => cleanQuestionText(question.questionText || ""),
-    [question.questionText]
+    () => cleanQuestionText(normalizedRawText),
+    [normalizedRawText]
   );
 
   // ── Parse Options ──
@@ -302,16 +325,38 @@ export function QuestionCard({
   const showGenericOptions =
     !isNumerical && !isAssertion && !hasInlineOptions;
 
+  // ── Determine which option format was detected ──
+  const optionFormat = useMemo(() => {
+    if (!normalizedRawText) return "none";
+    if (/\([A-E]\)/.test(normalizedRawText)) return "paren";
+    // Check for \nA. format (requires at least 2 options)
+    const lines = normalizedRawText.split(/\n/);
+    let dotCount = 0;
+    for (const line of lines) {
+      if (/^[A-E]\.\s/.test(line.trim())) dotCount++;
+    }
+    if (dotCount >= 2) return "dot";
+    return "none";
+  }, [normalizedRawText]);
+
   // ── Display Text (strip options from body) ──
   const displayText = useMemo(() => {
     if (hasInlineOptions && !isAssertion) {
-      return cleanText
-        .replace(/\s*\([A-E]\)[\s\S]*$/g, "")
-        .replace(/\n{2,}/g, "\n")
-        .trim();
+      if (optionFormat === "paren") {
+        return cleanText
+          .replace(/\s*\([A-E]\)[\s\S]*$/g, "")
+          .replace(/\n{2,}/g, "\n")
+          .trim();
+      }
+      if (optionFormat === "dot") {
+        return cleanText
+          .replace(/\n[A-E]\.\s[\s\S]*$/g, "")
+          .replace(/\n{2,}/g, "\n")
+          .trim();
+      }
     }
     return cleanText;
-  }, [cleanText, hasInlineOptions, isAssertion]);
+  }, [cleanText, hasInlineOptions, isAssertion, optionFormat]);
 
   // ── Determine correct answer letter for MCQ ──
   const correctLetter = useMemo(() => {

@@ -236,7 +236,7 @@ export function MathText({ text, className = "" }: MathTextProps) {
   if (!html) return null;
 
   return (
-    <div
+    <span
       className={`math-text-content ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />

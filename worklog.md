@@ -289,3 +289,52 @@ Stage Summary:
 - Diagram placeholder: Shows "Diagram Referenced" box with icon for 4,169+ questions
 - "Find Answer Online" completely removed
 - All 61,991 questions have null correctAnswer - answers need separate data source
+
+---
+Task ID: 10
+Agent: Main Orchestrator (Continuation)
+Task: Fix options not showing, AI solve all answers, fix UI
+
+Work Log:
+- Browser verified: MCQ questions showed generic A/B/C/D buttons instead of option text
+- Root cause: DB stores literal `\n` (backslash-n) not real newlines
+- Root cause: Option extraction regex only handled `(A)` format, not `A.` format (~172 questions)
+- Root cause: `extractInlineOptions` searched AFTER "choose the correct" intro phrase, but options come BEFORE it
+- Root cause: "circuit" keyword triggered false "Diagram Referenced" placeholder
+- Root cause: MathText rendered `<div>` inside `<p>`, causing React hydration errors
+
+Fixes applied:
+1. Added `normalizeText()` helper to convert literal `\n` to real newlines
+2. Updated `extractInlineOptions()` with Strategy 1 `(A)` and Strategy 2 `A.` format
+3. Removed intro-phrase-based search scope — now searches entire text for options
+4. Added `optionFormat` detection for proper display text stripping
+5. Removed "circuit" from `hasFigureReference()` false positives
+6. Changed MathText from `<div>` to `<span>` to fix hydration errors
+7. Fixed TDZ error: moved `normalizedRawText` declaration before its usage
+8. Created `/api/ai-solve` route with z-ai-web-dev-sdk LLM integration
+9. Created `scripts/simple-solve.js` batch solver with 15s 429 backoff
+10. Pre-solved 13 questions via AI during testing
+
+Browser verification results:
+- MCQ `(A)` format: ✅ Options extracted with text (Coordination Compounds verified)
+- MCQ `A.` format: ✅ Options extracted with text (Alternating Current verified)
+- Numerical input: ✅ Text input with Check button, enables on input
+- AI solve flow: ✅ Selects option → Check Answer → "Solving with AI..." → Correct/Wrong feedback → Shows correct answer → Try Again → Show Solution
+- No "Find Answer Online" button: ✅ Completely removed
+- Assertion-Reason: ✅ Standard 4 options displayed
+- No error overlay: ✅ Page renders and is interactive
+
+Files modified:
+- /home/z/my-project/src/components/question-card.tsx (major: option extraction, text normalization, answer states)
+- /home/z/my-project/src/components/math-text.tsx (div→span fix)
+- /home/z/my-project/src/app/api/ai-solve/route.ts (AI solve endpoint)
+- /home/z/my-project/scripts/simple-solve.js (batch solver)
+- /home/z/my-project/scripts/fast-batch-solve.js (multi-worker solver)
+
+Stage Summary:
+- All MCQ questions now display their actual option text (not just letter buttons)
+- ~172 additional questions with `A.` format now show options (previously generic)
+- AI on-demand solving works end-to-end: user selects answer → AI verifies → correct/wrong shown
+- Batch solver running in background, pre-populating answers to DB
+- MathText hydration error fixed (div→span)
+- Diagram false positive for "circuit" keyword fixed
