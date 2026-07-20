@@ -206,3 +206,86 @@ Stage Summary:
 - All critical bugs fixed: image proxy, solve API, JEE Advanced, PCM equalization
 - UI improvements: navbar, CSS, glass effects, subject borders, KaTeX overflow
 - Full end-to-end verification passed
+
+---
+Task ID: 9
+Agent: Question Card Graceful Handling
+Task: Update question-card.tsx to gracefully handle missing correctAnswer (all 61,991 questions have correctAnswer: null)
+
+Work Log:
+- Read worklog.md and question-card.tsx for full context
+- Added "no_answer" to AnswerState union type
+- Added `hasAnswer` derived boolean (`!!question.correctAnswer`) for clean checks
+- Updated `handleOptionClick`: when `!hasAnswer`, sets state to "no_answer" instead of "wrong"
+- Updated `handleNumericalSubmit`: removed early return on `!correctAnswer`, now sets "no_answer" state and allows submission
+- Updated `getOptionStyle`: added "no_answer" branch — selected option keeps its color palette highlight, unselected options are dimmed (no green/red)
+- Updated `getOptionLetterStyle`: added "no_answer" branch — selected letter circle keeps palette text color, unselected are dimmed
+- Updated answer status badge in header: MCQ shows "Your answer: A" (sky blue), Numerical shows "Answered" (sky blue)
+- Guarded MCQ option check/X icons with `answerState !== "no_answer"` to prevent wrong indicators
+- Added "no_answer" ternary branch in numerical input section: neutral gray display showing "Your answer: [value]"
+- Updated "Correct!" confirmation: removed dark mode border variant, simplified to `border-emerald-200/60 bg-emerald-50/50` per spec
+- Added unified "no answer available" info box (dashed border, muted bg) before Try Again button for both MCQ and Numerical
+- Card ring (green/red) only applies to correct/wrong states — no ring for "no_answer"
+- Try Again button appears for all answered states including "no_answer"
+- Verified: zero new TypeScript errors (only pre-existing errors in examples/ and scripts/)
+
+Files modified: /home/z/my-project/src/components/question-card.tsx
+
+Stage Summary:
+- Questions with `correctAnswer: null` now show a graceful "no answer" state instead of broken behavior
+- MCQ: selected option highlighted in its palette color, other options dimmed, no correct/wrong indicators
+- Numerical: neutral display of user's answer value
+- Both types show dashed-border info box: "Correct answer not available in database"
+- "Try Again" button available to reset and retry
+- When correctAnswer IS present (after extraction), existing correct/wrong behavior is fully preserved
+
+---
+Task ID: 8
+Agent: Answer Extractor
+Task: Extract answers from question text and update the database
+
+Work Log:
+- Read worklog.md for context, read schema.prisma to confirm Question.correctAnswer (String?) field
+- Investigated the 1,158 questions containing "correct answer" and 350 containing "correct option"
+- Sampled and analyzed question texts extensively:
+  - 1,139/1,158 "correct answer" occurrences are "choose the correct answer from the options given below" (question instruction, NOT an embedded answer)
+  - 19/1,158 are other non-answer usages ("correct answer for the expression...", "for each correct answer...", "chose the correct answer...")
+  - 261/350 "correct option" occurrences are "choose/select/identify the correct option" instructions
+  - 89/350 have "correct option is :" but the colon is followed by nothing or "Assertion (A):" text (false positive)
+- Scanned ALL 61,991 questions for "Ans:" / "Answer:" patterns — 0 matches found
+- Scanned ALL 61,991 questions for all 5 extraction patterns from the task spec — only false positives found
+- Wrote /home/z/my-project/scripts/extract-answers.js with all 5 patterns, false-positive filtering, batch processing (100), and progress logging (every 500)
+- Ran the script: scanned all 1,508 candidate questions, 0 answers extracted, 0 errors
+
+Files created: /home/z/my-project/scripts/extract-answers.js
+
+Stage Summary:
+- The database question text does NOT contain extractable answers via the specified patterns
+- All "correct answer"/"correct option" mentions are part of question instructions (e.g., "choose the correct answer from the options given below"), not embedded answer values
+- The extraction script is correctly implemented and ready to use if answers are added to the text in the future
+- All 61,991 questions still have correctAnswer: null — answers would need to come from a different source (e.g., answer key files, API lookups)
+
+---
+Task ID: 8-9
+Agent: Main Orchestrator
+Task: Interactive answer system + diagram fix
+
+Work Log:
+- Investigated diagram issue: DB has ZERO images (no imageUrl, imageUrls, questionHtml)
+- 4,169 questions reference "figure"/"diagram" in text but images were lost during scraping
+- Added smart diagram placeholder for figure-referencing questions
+- Rewrote question-card.tsx with interactive MCQ options (click to select)
+- Added numerical answer input with "Check" button
+- Removed "Find Answer Online" button and solve API dependency
+- Added answer state management: unanswered → correct/wrong/no_answer
+- Added "Try Again" button to re-attempt
+- Attempted answer extraction from question text: 0 answers found (all "correct answer" mentions are question instructions)
+- Added graceful "no_answer" state for questions without correctAnswer in DB
+
+Stage Summary:
+- Interactive MCQ: Click options, selected option highlighted, other options dimmed
+- Interactive Numerical: Type value, click Check or press Enter
+- Answer feedback: Green highlight for correct, red for wrong, neutral for no-answer
+- Diagram placeholder: Shows "Diagram Referenced" box with icon for 4,169+ questions
+- "Find Answer Online" completely removed
+- All 61,991 questions have null correctAnswer - answers need separate data source
