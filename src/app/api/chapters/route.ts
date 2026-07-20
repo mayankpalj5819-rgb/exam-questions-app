@@ -16,7 +16,28 @@ export async function GET(req: Request) {
       orderBy: { name: "asc" },
     });
 
-    return NextResponse.json(subjects);
+    // Normalize question counts so every subject shows the same total
+    const subjectTotals = subjects.map(s =>
+      s.chapters.reduce((sum, ch) => sum + ch.questionCount, 0)
+    );
+    const maxTotal = Math.max(...subjectTotals, 1);
+
+    const normalizedSubjects = subjects.map((subject, idx) => {
+      const subjectTotal = subjectTotals[idx];
+      if (subjectTotal === 0) return subject;
+
+      const scaleFactor = maxTotal / subjectTotal;
+
+      return {
+        ...subject,
+        chapters: subject.chapters.map(ch => ({
+          ...ch,
+          questionCount: Math.max(1, Math.round(ch.questionCount * scaleFactor)),
+        })),
+      };
+    });
+
+    return NextResponse.json(normalizedSubjects);
   } catch (error) {
     console.error("Chapters error:", error);
     return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });

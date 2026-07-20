@@ -96,7 +96,7 @@ function ImageZoomDialog({
         <DialogTitle className="sr-only">Image Preview</DialogTitle>
         <div className="relative flex items-center justify-center p-2">
           <img
-            src={url}
+            src={url.startsWith('/') || url.startsWith('data:') ? url : '/api/image-proxy?url=' + encodeURIComponent(url)}
             alt={alt}
             className="max-w-full max-h-[85vh] object-contain rounded-lg"
           />
@@ -106,6 +106,14 @@ function ImageZoomDialog({
   );
 }
 
+function getSubjectBorder(subjectSlug?: string) {
+  if (!subjectSlug) return "";
+  if (subjectSlug.includes("physics")) return "subject-border-physics";
+  if (subjectSlug.includes("chem")) return "subject-border-chemistry";
+  if (subjectSlug.includes("math")) return "subject-border-mathematics";
+  return "";
+}
+
 export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
   const { data: session } = useSession();
   const {
@@ -113,6 +121,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     toggleSavedQuestionId,
     setAuthModalOpen,
     examType,
+    selectedSubject,
   } = useAppState();
   const [solutionOpen, setSolutionOpen] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
@@ -126,6 +135,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
   const isSaved = savedQuestionIds.has(question.id);
   const detectedType = detectQuestionType(question);
   const isNumerical = detectedType === "Numerical";
+  const subjectBorder = getSubjectBorder(selectedSubject?.slug);
 
   // Build exam metadata string
   const examMeta = useMemo(() => {
@@ -174,7 +184,13 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     return [];
   }, [question.options, question.questionText, isNumerical]);
 
-  // Collect all image URLs
+  // Proxy external image URLs through our API to avoid CORS/hotlinking issues
+  const proxyUrl = (url: string) => {
+    if (url.startsWith('/') || url.startsWith('data:')) return url;
+    return '/api/image-proxy?url=' + encodeURIComponent(url);
+  };
+
+  // Collect all image URLs (from imageUrl, imageUrls, and questionHtml)
   const allImageUrls = useMemo(() => {
     const urls: string[] = [];
     if (question.imageUrl) urls.push(question.imageUrl);
@@ -190,8 +206,20 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
         if (!urls.includes(question.imageUrls)) urls.push(question.imageUrls);
       }
     }
+    // Also extract image src from questionHtml
+    if (question.questionHtml) {
+      const imgMatches = question.questionHtml.match(/src=["']([^"']+)["']/gi);
+      if (imgMatches) {
+        for (const match of imgMatches) {
+          const srcMatch = match.match(/src=["']([^"']+)["']/i);
+          if (srcMatch?.[1] && !urls.includes(srcMatch[1]) && !srcMatch[1].startsWith('data:')) {
+            urls.push(srcMatch[1]);
+          }
+        }
+      }
+    }
     return urls;
-  }, [question.imageUrl, question.imageUrls]);
+  }, [question.imageUrl, question.imageUrls, question.questionHtml]);
 
   const handleSaveToggle = async () => {
     if (!session?.user) {
@@ -284,7 +312,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
   return (
     <>
-      <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg hover:shadow-black/5 border-border/60 bg-card">
+      <Card className={`group overflow-hidden transition-all duration-200 hover:shadow-premium-lg border-border/60 bg-card ${subjectBorder}`}>
         <CardContent className="p-0">
           {/* Question meta header */}
           <div className="flex items-start justify-between px-5 pt-4 pb-2 gap-2">
@@ -400,7 +428,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                     {!imageErrors[i] ? (
                       <>
                         <img
-                          src={url}
+                          src={proxyUrl(url)}
                           alt={`Diagram ${i + 1} for question ${index + 1}`}
                           className="max-w-full h-auto mx-auto"
                           loading="lazy"
@@ -428,7 +456,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
             {/* Options for MCQ */}
             {!isNumerical && parsedOptions.length > 0 && (
-              <div className="mt-4 space-y-2">
+              <div className="mt-5 space-y-2.5">
                 {parsedOptions.map((option: string, i: number) => {
                   const letter = String.fromCharCode(65 + i);
                   const isCorrect =
@@ -439,18 +467,18 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                     <div
                       key={i}
                       className={cn(
-                        "flex items-start gap-3 rounded-xl border p-3 text-sm transition-all",
+                        "flex items-start gap-3 rounded-xl border p-3.5 text-sm transition-all duration-200",
                         isCorrect
-                          ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/80 dark:bg-emerald-950/20"
-                          : `${colors.border} ${colors.bg} hover:border-foreground/20`
+                          ? "border-emerald-300 dark:border-emerald-700/80 bg-emerald-50/80 dark:bg-emerald-950/20 shadow-sm shadow-emerald-500/10"
+                          : `${colors.border} ${colors.bg} hover:border-foreground/15 hover:shadow-sm`
                       )}
                     >
                       <span
                         className={cn(
-                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold",
+                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[11px] font-extrabold mt-0.5",
                           isCorrect
-                            ? "bg-emerald-500 text-white"
-                            : `${colors.bg} ${colors.text}`
+                            ? "bg-emerald-500 text-white shadow-sm"
+                            : `${colors.bg} ${colors.text} border ${colors.border}`
                         )}
                       >
                         {letter}
@@ -483,16 +511,18 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
             )}
 
             {/* Find Answer button (web search) */}
-            <div className="mt-4 pt-3 border-t border-border/30">
+            <div className="mt-5 pt-4 border-t border-border/30">
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="gap-2 text-xs text-muted-foreground hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/20 h-8 rounded-lg"
+                className="gap-2 text-xs font-medium text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:border-emerald-300 dark:hover:border-emerald-700/60 hover:text-emerald-800 dark:hover:text-emerald-300 h-9 rounded-lg transition-all duration-200"
                 onClick={handleSearchAnswer}
                 disabled={solveLoading}
               >
                 {solveLoading ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : webSolution ? (
+                  <Search className="h-3.5 w-3.5" />
                 ) : (
                   <Search className="h-3.5 w-3.5" />
                 )}
@@ -514,7 +544,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-3 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40 bg-gradient-to-br from-emerald-50/70 to-teal-50/50 dark:from-emerald-950/20 dark:to-teal-950/10 p-4">
+                    <div className="mt-3 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40 bg-gradient-to-br from-emerald-50/70 to-teal-50/50 dark:from-emerald-950/20 dark:to-teal-950/10 p-4 shadow-sm shadow-emerald-500/5">
                       <div className="flex items-center justify-between mb-3">
                         <p className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
                           <Search className="h-3 w-3" />
@@ -570,7 +600,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                     className="overflow-hidden"
                   >
                     <div className="px-5 pb-4">
-                      <div className="rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 p-4">
+                      <div className="rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 p-4 shadow-sm shadow-amber-500/5">
                         <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3">
                           Solution
                         </p>

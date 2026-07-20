@@ -172,7 +172,7 @@ export function Analytics() {
   return (
     <div className="flex-1">
       {/* Header */}
-      <div className="sticky top-14 z-10 bg-background/80 backdrop-blur-xl border-b">
+      <div className="sticky top-14 z-10 glass-nav border-b border-border/60">
         <div className="px-4 md:px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -217,7 +217,7 @@ export function Analytics() {
         </div>
       </div>
 
-      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6">
+      <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-8">
         {/* ─── Subject Overview Cards ─── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {subjectOverview.map((sub, i) => (
@@ -227,7 +227,7 @@ export function Analytics() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
             >
-              <Card className={`overflow-hidden ${sub.colors.border} border`}>
+              <Card className={`overflow-hidden ${sub.colors.border} border shadow-premium hover:shadow-premium-lg transition-shadow duration-300`}>
                 <CardContent className="p-5">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2.5">
@@ -254,13 +254,13 @@ export function Analytics() {
                   </div>
 
                   {/* Mini bar chart */}
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     {sub.chapters.slice(0, 4).map((ch, ci) => (
                       <div key={ci} className="flex items-center gap-2">
                         <span className="text-[10px] text-muted-foreground w-28 truncate">
                           {ch.chapter}
                         </span>
-                        <div className="flex-1 h-2 bg-muted/50 rounded-full overflow-hidden">
+                        <div className="flex-1 h-2.5 bg-muted/50 rounded-full overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${(ch.weightage / 12) * 100}%` }}
@@ -286,7 +286,7 @@ export function Analytics() {
         </div>
 
         {/* ─── JEE Pattern Info ─── */}
-        <Card>
+        <Card className="shadow-premium">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <PieChart className="h-4 w-4 text-amber-500" />
@@ -396,7 +396,7 @@ export function Analytics() {
         </Card>
 
         {/* ─── Chapter Weightage Breakdown ─── */}
-        <Card>
+        <Card className="shadow-premium">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
@@ -443,7 +443,7 @@ export function Analytics() {
                           {ch.chapter}
                         </span>
                       </div>
-                      <div className="mt-1 h-2 bg-muted/50 rounded-full overflow-hidden">
+                      <div className="mt-1 h-3 bg-muted/50 rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${pct}%` }}
@@ -466,7 +466,7 @@ export function Analytics() {
         </Card>
 
         {/* ─── Year Distribution ─── */}
-        <Card>
+        <Card className="shadow-premium">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <CalendarRange className="h-4 w-4 text-amber-500" />
@@ -491,7 +491,7 @@ export function Analytics() {
                     <span className="text-xs font-bold text-muted-foreground w-10 text-right tabular-nums shrink-0 group-hover/bar:text-foreground transition-colors">
                       {item.year}
                     </span>
-                    <div className="flex-1 h-6 bg-muted/40 rounded-lg overflow-hidden relative flex">
+                    <div className="flex-1 h-8 bg-muted/40 rounded-lg overflow-hidden relative flex">
                       {SUBJECTS.map((slug) => {
                         const colors = SUBJECT_COLORS[slug];
                         const width = (item[slug] / item.total) * 100;
@@ -533,7 +533,7 @@ export function Analytics() {
         </Card>
 
         {/* ─── Important Topics ─── */}
-        <Card>
+        <Card className="shadow-premium">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <BookOpen className="h-4 w-4 text-amber-500" />

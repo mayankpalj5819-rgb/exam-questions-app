@@ -141,7 +141,7 @@ function SidebarContent({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b space-y-3">
+      <div className="px-4 pt-4 pb-3 border-b border-border/60 space-y-3">
         {/* Back button */}
         <Button
           variant="ghost"
@@ -157,9 +157,12 @@ function SidebarContent({
         </Button>
 
         <div className="flex items-center justify-between">
-          <h2 className="font-bold text-base capitalize tracking-tight">
+          <h2 className="font-bold text-base capitalize tracking-tight flex items-center gap-2">
             {selectedSubject.name}
           </h2>
+          {selectedSubject.slug === "physics" && <div className="w-2 h-2 rounded-full bg-orange-500" />}
+          {selectedSubject.slug === "chemistry" && <div className="w-2 h-2 rounded-full bg-emerald-500" />}
+          {selectedSubject.slug === "mathematics" && <div className="w-2 h-2 rounded-full bg-violet-500" />}
         </div>
 
         {/* Prominent stats */}
@@ -317,7 +320,7 @@ export function ChapterSidebar({ onChapterSelect, className }: ChapterSidebarPro
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "hidden md:flex w-72 flex-col border-r bg-card/50 shrink-0 h-[calc(100vh-3.5rem)] sticky top-14",
+          "hidden md:flex w-72 flex-col border-r border-border/60 bg-card/80 shrink-0 h-[calc(100vh-3.5rem)] sticky top-14",
           className
         )}
       >

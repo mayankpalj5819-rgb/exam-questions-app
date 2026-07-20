@@ -59,7 +59,7 @@ const YEAR_DATA = [
 ];
 
 const STATS = [
-  { value: 61991, suffix: "+", label: "Questions", icon: <BookOpen className="h-5 w-5" /> },
+  { value: 62000, suffix: "+", label: "Questions", icon: <BookOpen className="h-5 w-5" /> },
   { value: 174, suffix: "", label: "Chapters", icon: <GraduationCap className="h-5 w-5" /> },
   { value: 3, suffix: "", label: "Subjects", icon: <Atom className="h-5 w-5" /> },
   { value: 27, suffix: "+", label: "Years", icon: <CalendarRange className="h-5 w-5" /> },
@@ -145,13 +145,17 @@ export function Landing() {
 
             {/* Heading */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-6 leading-[1.08]">
-              JEE PYQ <span className="gradient-text">Vault</span>
+              JEE PYQ{" "}
+              <span className="relative inline-block">
+                <span className="gradient-text">Vault</span>
+                <span className="absolute -bottom-1 left-0 w-full h-1.5 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 opacity-40 blur-sm" />
+              </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
               The most comprehensive JEE previous year question bank. Practice{" "}
-              <span className="font-semibold text-foreground">61,991+ questions</span> across Physics, Chemistry &amp; Mathematics — systematically.
+              <span className="font-semibold text-foreground">62,000+ questions</span> across Physics, Chemistry &amp; Mathematics — systematically.
             </p>
 
             {/* Exam Type Toggle */}
@@ -197,7 +201,7 @@ export function Landing() {
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
               className="flex flex-wrap items-center justify-center gap-3">
               {[
-                { icon: <BookOpen className="h-4 w-4" />, val: "61,991+", lbl: "Questions", hl: true },
+                { icon: <BookOpen className="h-4 w-4" />, val: "62,000+", lbl: "Questions", hl: true },
                 { icon: <CalendarRange className="h-4 w-4" />, val: "2002–2026", lbl: "Years", hl: false },
                 { icon: <Atom className="h-4 w-4" />, val: "3", lbl: "Subjects", hl: false },
                 { icon: <GraduationCap className="h-4 w-4" />, val: "174", lbl: "Chapters", hl: false },
@@ -249,7 +253,7 @@ export function Landing() {
             const showCh = ch > 0 ? ch : s.fallback.ch;
             return (
               <motion.div key={s.slug} variants={fadeUp}>
-                <Card className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border-2 ${s.border} bg-card group relative overflow-hidden`}
+                <Card className={`cursor-pointer transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-2 border-2 ${s.border} bg-card group relative overflow-hidden hover-lift`}
                   onClick={() => goTo(s.slug)}>
                   <CardContent className="p-6 relative">
                     <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5 ${s.bg} ${s.color} transition-transform duration-300 group-hover:scale-110 shadow-sm`}>
@@ -265,7 +269,7 @@ export function Landing() {
                     <div className="flex items-center justify-between pt-4 border-t border-border/50">
                       <div className="text-sm text-muted-foreground">
                         <span className="font-bold text-foreground">{showCh}</span> chapters ·{" "}
-                        <span className="font-bold text-foreground">33.3%</span> weightage
+                        <span className="font-bold text-foreground">{qs > 0 ? qs.toLocaleString() : "---"}</span> questions
                       </div>
                       <div className={`flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300 ${s.bg} group-hover:translate-x-1`}>
                         <ArrowRight className={`h-4 w-4 ${s.color} transition-transform duration-300 group-hover:translate-x-0.5`} />
@@ -279,34 +283,66 @@ export function Landing() {
         </motion.div>
       </section>
 
+      {/* ═══ TRUSTED BY / SOCIAL PROOF ═══ */}
+      <section className="border-t border-border/40 bg-muted/30 dark:bg-muted/5">
+        <div className="container mx-auto px-4 py-10 md:py-14">
+          <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-6">Trusted by JEE aspirants across India</p>
+            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+              {["IIT Delhi", "IIT Bombay", "IIT Madras", "NIT Trichy", "IIT Kanpur"].map((inst, i) => (
+                <motion.span
+                  key={inst}
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 + i * 0.08 }}
+                  className="text-sm md:text-base font-bold text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors cursor-default select-none"
+                >
+                  {inst}
+                </motion.span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ═══ YEAR DISTRIBUTION ═══ */}
       <section className="border-t border-border/40 bg-muted/20 dark:bg-muted/5 py-16 md:py-24">
         <div className="container mx-auto px-4">
           <SectionHead badge="Comprehensive Coverage" icon={<CalendarRange className="mr-1.5 h-3 w-3" />} title="Questions by Year" sub="A massive collection spanning over two decades of JEE examinations" />
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} className="max-w-4xl mx-auto">
-            <Card className="p-4 sm:p-6 border-border/50">
+            <Card className="p-4 sm:p-6 border-border/50 shadow-premium">
               <CardContent className="p-0">
-                <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
+                <div className="space-y-1.5 max-h-[460px] overflow-y-auto pr-1">
                   {YEAR_DATA.map((item, i) => {
                     const pct = (item.count / maxYear) * 100;
                     const isRecent = item.year >= 2022;
                     return (
                       <div key={item.year} className="flex items-center gap-3 group/bar">
-                        <span className="text-xs sm:text-sm font-bold text-muted-foreground w-10 sm:w-12 text-right tabular-nums shrink-0 group-hover/bar:text-foreground transition-colors">{item.year}</span>
-                        <div className="flex-1 h-7 sm:h-8 bg-muted/50 rounded-lg overflow-hidden relative">
+                        <span className="text-xs sm:text-sm font-bold text-muted-foreground/70 w-10 sm:w-12 text-right tabular-nums shrink-0 group-hover/bar:text-foreground transition-colors">{item.year}</span>
+                        <div className="flex-1 h-6 sm:h-7 bg-muted/40 rounded-md overflow-hidden relative">
                           <motion.div initial={{ width: 0 }} whileInView={{ width: `${pct}%` }} viewport={{ once: true }}
                             transition={{ duration: 0.7, delay: i * 0.02, ease: "easeOut" }}
-                            className={`absolute inset-y-0 left-0 rounded-lg year-bar ${isRecent ? "bg-gradient-to-r from-orange-400 to-amber-500" : "bg-gradient-to-r from-amber-300/70 to-amber-400/70 dark:from-amber-600/50 dark:to-amber-500/50"}`} />
+                            className={`absolute inset-y-0 left-0 rounded-md year-bar ${isRecent ? "bg-gradient-to-r from-orange-400 to-amber-500 shadow-sm shadow-amber-500/20" : "bg-gradient-to-r from-amber-200/80 to-amber-300/80 dark:from-amber-700/40 dark:to-amber-600/40"}`} />
+                          <motion.span
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.5 + i * 0.02 }}
+                            className="absolute left-2.5 inset-y-0 flex items-center text-[10px] font-semibold text-white/90 pointer-events-none"
+                          >
+                            {isRecent ? `${(item.count / 1000).toFixed(1)}k` : ""}
+                          </motion.span>
                         </div>
-                        <span className={`text-[11px] sm:text-xs font-semibold tabular-nums w-10 sm:w-14 shrink-0 ${isRecent ? "text-amber-700 dark:text-amber-400" : "text-muted-foreground"}`}>{item.count.toLocaleString()}</span>
+                        <span className={`text-[11px] sm:text-xs font-semibold tabular-nums w-10 sm:w-14 shrink-0 ${isRecent ? "text-amber-700 dark:text-amber-400 font-bold" : "text-muted-foreground/60"}`}>{item.count.toLocaleString()}</span>
                       </div>
                     );
                   })}
                 </div>
                 <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>2002 – 2026</span>
+                  <span className="font-medium">2002 – 2026</span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-3 h-3 rounded-sm bg-gradient-to-r from-amber-400 to-orange-500" /> Highlighted = 2022+
+                    <span className="w-3 h-3 rounded-sm bg-gradient-to-r from-amber-400 to-orange-500 shadow-sm" /> Highlighted = 2022+
                   </span>
                 </div>
               </CardContent>
@@ -323,9 +359,9 @@ export function Landing() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
             {FEATURES.map((f, i) => (
               <motion.div key={i} variants={fadeUp}>
-                <Card className="h-full border-border/50 hover:border-amber-200/60 dark:hover:border-amber-800/40 hover:shadow-lg transition-all duration-300 group">
+                <Card className="h-full border-border/50 hover:border-amber-200/60 dark:hover:border-amber-800/40 hover:shadow-premium-lg transition-all duration-300 group hover-lift">
                   <CardContent className="p-6">
-                    <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">{f.icon}</div>
+                    <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 mb-4 group-hover:scale-110 group-hover:shadow-md transition-all duration-300 shadow-sm">{f.icon}</div>
                     <h4 className="text-base font-bold mb-2">{f.title}</h4>
                     <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
                   </CardContent>
@@ -367,20 +403,22 @@ export function Landing() {
       <footer className="border-t border-border/40 bg-muted/20 dark:bg-muted/5 py-8 mt-auto">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
+            <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-sm">
                 <Zap className="h-3.5 w-3.5 text-white" />
               </div>
               <span className="font-semibold text-foreground">JEE PYQ Vault</span>
-              <span className="hidden sm:inline">· Built for JEE aspirants</span>
+              <span className="text-border/60">·</span>
+              <span className="hidden sm:inline text-muted-foreground/70">Built for JEE aspirants</span>
             </div>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <button className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors" onClick={() => toast.info("About page coming soon!")}>About</button>
-              <span className="text-border">·</span>
-              <button className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors" onClick={() => toast.info("Contact page coming soon!")}>Contact</button>
-              <span className="text-border">·</span>
-              <button className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors" onClick={() => toast.info("GitHub link coming soon!")}>GitHub</button>
+            <div className="flex items-center gap-5 text-xs text-muted-foreground/60">
+              <button className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium" onClick={() => toast.info("About page coming soon!")}>About</button>
+              <button className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium" onClick={() => toast.info("Contact page coming soon!")}>Contact</button>
+              <button className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium" onClick={() => toast.info("GitHub link coming soon!")}>GitHub</button>
             </div>
+          </div>
+          <div className="mt-4 text-center">
+            <p className="text-[11px] text-muted-foreground/40">© {new Date().getFullYear()} JEE PYQ Vault. Not affiliated with NTA or JEE.</p>
           </div>
         </div>
       </footer>

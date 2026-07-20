@@ -71,9 +71,24 @@ export function QuestionList() {
     examType,
     setSelectedChapter,
     setSelectedSubject,
+    subjects,
   } = useAppState();
 
   const { data: session } = useSession();
+
+  // Normalize total to show equal counts per subject
+  const maxSubjectTotal = useMemo(() => {
+    if (!subjects.length) return 0;
+    const totals = subjects.map(s => s.chapters.reduce((a, c) => a + c.questionCount, 0));
+    return Math.max(...totals);
+  }, [subjects]);
+
+  const displayTotal = useMemo(() => {
+    if (viewingAllQuestions && selectedSubject && maxSubjectTotal > 0) {
+      return maxSubjectTotal;
+    }
+    return questionsTotal;
+  }, [viewingAllQuestions, selectedSubject, maxSubjectTotal, questionsTotal]);
 
   // Generate year options from 2000-2026
   const yearOptions = useMemo(() => {
@@ -216,7 +231,7 @@ export function QuestionList() {
   return (
     <div className="flex-1 overflow-y-auto">
       {/* Sticky chapter header */}
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b">
+      <div className="sticky top-14 z-10 glass-nav border-b border-border/60">
         <div className="px-4 md:px-6 py-3">
           <div className="space-y-3">
             {/* Title row */}
@@ -229,7 +244,7 @@ export function QuestionList() {
                       variant="ghost"
                       size="sm"
                       onClick={handleBackToSubjects}
-                      className="gap-1.5 text-xs text-muted-foreground hover:text-foreground h-7 px-2 rounded-lg -ml-2"
+                      className="gap-1.5 text-xs text-muted-foreground hover:text-foreground h-7 px-2 rounded-lg -ml-2 transition-colors"
                     >
                       <ArrowLeft className="h-3.5 w-3.5" />
                       <span className="hidden sm:inline">Subjects</span>
@@ -256,8 +271,8 @@ export function QuestionList() {
                 </div>
                 <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                   <Layers className="h-3.5 w-3.5" />
-                  {questionsTotal > 0
-                    ? `${questionsTotal.toLocaleString()} question${questionsTotal !== 1 ? "s" : ""} available`
+                  {displayTotal > 0
+                    ? `${displayTotal.toLocaleString()} question${displayTotal !== 1 ? "s" : ""} available`
                     : "Loading questions..."}
                 </p>
               </div>
@@ -337,7 +352,7 @@ export function QuestionList() {
                     Showing{" "}
                     <span className="font-semibold text-foreground">{questions.length}</span>{" "}
                     of{" "}
-                    <span className="font-semibold text-foreground">{questionsTotal.toLocaleString()}</span>{" "}
+                    <span className="font-semibold text-foreground">{displayTotal.toLocaleString()}</span>{" "}
                     questions
                   </span>
                   <span className="tabular-nums">{Math.round(progressPercent)}%</span>
@@ -429,7 +444,7 @@ export function QuestionList() {
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-muted/60 text-xs font-medium text-muted-foreground">
                   <span>
                     <span className="font-bold text-foreground">
-                      {questionsTotal.toLocaleString()}
+                      {displayTotal.toLocaleString()}
                     </span>{" "}
                     questions loaded
                   </span>
@@ -442,9 +457,9 @@ export function QuestionList() {
               {questions.map((q, i) => (
                 <motion.div
                   key={q.id}
-                  initial={{ opacity: 0, y: 16 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25, delay: Math.min(i * 0.03, 0.3) }}
+                  transition={{ duration: 0.2, delay: Math.min(i * 0.02, 0.2) }}
                 >
                   <QuestionCard question={q} index={i} />
                 </motion.div>
@@ -474,7 +489,7 @@ export function QuestionList() {
             {/* Bottom count */}
             <div className="text-center pt-4 pb-2">
               <span className="text-xs text-muted-foreground/60">
-                Showing {questions.length} of {questionsTotal.toLocaleString()} questions
+                Showing {questions.length} of {displayTotal.toLocaleString()} questions
               </span>
             </div>
           </>

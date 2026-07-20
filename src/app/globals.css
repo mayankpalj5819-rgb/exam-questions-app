@@ -134,8 +134,8 @@
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -143,20 +143,32 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.8 0 0);
+  background: oklch(0.82 0.005 75);
   border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.65 0 0);
+  background: oklch(0.65 0.015 75);
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: oklch(0.35 0 0);
+  background: oklch(0.35 0.005 75);
+  background-clip: content-box;
+  border: 2px solid transparent;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.45 0 0);
+  background: oklch(0.45 0.015 75);
+  background-clip: content-box;
+  border: 2px solid transparent;
 }
 
 /* ========== Math Text & KaTeX Styles ========== */
@@ -463,12 +475,36 @@
   background: oklch(0.3 0.06 80);
 }
 
+/* ========== Smooth Theme Transition ========== */
+
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Exclude animation-heavy elements from theme transition */
+[data-motion-preserve],
+[data-motion-preserve] *,
+video, canvas, img,
+.mesh-blob-1, .mesh-blob-2, .mesh-blob-3,
+.cta-pulse, .animate-spin, .animate-pulse {
+  transition: none !important;
+}
+
 /* ========== Focus Visible ========== */
 
 :focus-visible {
   outline: 2px solid #f59e0b;
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 8px;
+}
+
+/* Remove outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* ========== Progress Bar ========== */
@@ -583,4 +619,89 @@
 
 .dark .glow-amber {
   box-shadow: 0 0 20px rgba(245, 158, 11, 0.1);
+}
+
+/* ========== Glassmorphism Utilities ========== */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+}
+
+.dark .glass-nav {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+}
+
+/* ========== Subject Left Border Accent ========== */
+
+.subject-border-physics {
+  border-left: 3px solid #f97316;
+}
+
+.dark .subject-border-physics {
+  border-left-color: #fb923c;
+}
+
+.subject-border-chemistry {
+  border-left: 3px solid #10b981;
+}
+
+.dark .subject-border-chemistry {
+  border-left-color: #34d399;
+}
+
+.subject-border-mathematics {
+  border-left: 3px solid #8b5cf6;
+}
+
+.dark .subject-border-mathematics {
+  border-left-color: #a78bfa;
+}
+
+/* ========== Micro-interaction Utilities ========== */
+
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 10px -5px rgba(0, 0, 0, 0.06);
+}
+
+.dark .hover-lift:hover {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 10px -5px rgba(0, 0, 0, 0.25);
+}
+
+/* ========== Premium Shadow Scale ========== */
+
+.shadow-premium {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.dark .shadow-premium {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-premium-lg {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.dark .shadow-premium-lg {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.15);
 }

@@ -94,7 +94,7 @@ export function Navbar() {
   const isActive = (targetView: string) => view === targetView;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 glass-nav shadow-sm shadow-black/[0.03] dark:shadow-black/20">
       <div className="flex h-14 items-center px-4 md:px-6">
         {/* Left: Mobile Menu + Logo */}
         <div className="flex items-center gap-2 mr-4">
@@ -109,8 +109,8 @@ export function Navbar() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72 p-0">
-              <SheetHeader className="px-5 pt-5 pb-3 border-b">
+            <SheetContent side="left" className="w-72 p-0 bg-card">
+              <SheetHeader className="px-5 pt-5 pb-3 border-b border-border/60">
                 <SheetTitle className="flex items-center gap-2.5">
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-sm">
                     <Zap className="h-4 w-4 text-white" />
@@ -139,13 +139,13 @@ export function Navbar() {
                 </div>
 
                 {/* Nav items */}
-                <nav className="space-y-1">
+                <nav className="space-y-0.5">
                   <button
                     onClick={goHome}
-                    className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                       isActive("landing")
-                        ? "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300"
-                        : "hover:bg-accent"
+                        ? "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 shadow-sm"
+                        : "hover:bg-accent hover:text-foreground"
                     }`}
                   >
                     <Home className={`h-4 w-4 ${isActive("landing") ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground"}`} />
@@ -159,10 +159,10 @@ export function Navbar() {
                       <button
                         key={slug}
                         onClick={() => handleSubjectClick(slug)}
-                        className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                           isSubjectActive
-                            ? "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300"
-                            : "hover:bg-accent"
+                            ? "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 shadow-sm"
+                            : "hover:bg-accent hover:text-foreground"
                         }`}
                       >
                         <span className={isSubjectActive ? "text-amber-600 dark:text-amber-400" : slug === "physics" ? "text-orange-500" : slug === "chemistry" ? "text-emerald-500" : "text-violet-500"}>
@@ -275,7 +275,7 @@ export function Navbar() {
                     relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200
                     ${
                       isSubjectActive
-                        ? "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300"
+                        ? "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 shadow-sm shadow-amber-500/10"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                     }
                   `}
