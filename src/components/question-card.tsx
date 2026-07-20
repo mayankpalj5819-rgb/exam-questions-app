@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { useAppState, type QuestionData } from "@/hooks/use-app-state";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MathText, extractImagesFromHtml, processHtmlContent } from "@/components/math-text";
+import { MathText } from "@/components/math-text";
 import {
   Bookmark,
   ChevronDown,
@@ -20,23 +20,25 @@ import {
   Clock,
   CheckCircle2,
   Image as ImageIcon,
-  Sparkles,
-  Hash,
-  Maximize2,
-  Wand2,
+  ExternalLink,
   Loader2,
   Zap,
+  Search,
+  Maximize2,
+  Hash,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Color palette for option circles (amber/warm tones, no blue/indigo)
+// Color palette for option circles
 const OPTION_COLORS = [
-  { bg: "bg-amber-100 dark:bg-amber-950/60", text: "text-amber-700 dark:text-amber-300", correct: "bg-emerald-500 text-white" },
-  { bg: "bg-orange-100 dark:bg-orange-950/60", text: "text-orange-700 dark:text-orange-300", correct: "bg-emerald-500 text-white" },
-  { bg: "bg-rose-100 dark:bg-rose-950/60", text: "text-rose-700 dark:text-rose-300", correct: "bg-emerald-500 text-white" },
-  { bg: "bg-teal-100 dark:bg-teal-950/60", text: "text-teal-700 dark:text-teal-300", correct: "bg-emerald-500 text-white" },
+  { bg: "bg-amber-50 dark:bg-amber-950/40", text: "text-amber-700 dark:text-amber-300", border: "border-amber-200 dark:border-amber-800/60" },
+  { bg: "bg-emerald-50 dark:bg-emerald-950/40", text: "text-emerald-700 dark:text-emerald-300", border: "border-emerald-200 dark:border-emerald-800/60" },
+  { bg: "bg-rose-50 dark:bg-rose-950/40", text: "text-rose-700 dark:text-rose-300", border: "border-rose-200 dark:border-rose-800/60" },
+  { bg: "bg-violet-50 dark:bg-violet-950/40", text: "text-violet-700 dark:text-violet-300", border: "border-violet-200 dark:border-violet-800/60" },
+  { bg: "bg-sky-50 dark:bg-sky-950/40", text: "text-sky-700 dark:text-sky-300", border: "border-sky-200 dark:border-sky-800/60" },
 ];
 
 interface QuestionCardProps {
@@ -56,12 +58,25 @@ function detectQuestionType(question: QuestionData): "MCQ" | "Numerical" {
   return "Numerical";
 }
 
-// Extract date-like info from questionText (e.g., "8th April")
 function extractDateFromText(text: string): string | null {
   const dateMatch = text.match(
     /(\d{1,2})(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)/i
   );
   return dateMatch ? dateMatch[0] : null;
+}
+
+// Clean question text - remove trailing junk
+function cleanQuestionText(text: string): string {
+  return text
+    // Remove trailing "Choose the correct..." and similar
+    .replace(/\s*(?:Choose the correct (?:answer|option)[s]?.*|Select the correct (?:answer|option)[s]?.*)$/is, "")
+    // Remove trailing chapter names like "ElectricalCircuit Components"
+    .replace(/\s*ElectricalCircuit\s*Components$/i, "")
+    // Remove trailing PascalCase junk (2+ words)
+    .replace(/\s+([A-Z][a-z]+[A-Z][a-zA-Z]+)$/m, "")
+    // Clean up whitespace
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 function ImageZoomDialog({
@@ -105,14 +120,14 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [solveLoading, setSolveLoading] = useState(false);
-  const [localSolution, setLocalSolution] = useState<string | null>(null);
-  const [aiSolutionOpen, setAiSolutionOpen] = useState(false);
+  const [webSolution, setWebSolution] = useState<{ solution: string; source?: string; sourceUrl?: string } | null>(null);
+  const [webSolutionOpen, setWebSolutionOpen] = useState(false);
 
   const isSaved = savedQuestionIds.has(question.id);
   const detectedType = detectQuestionType(question);
   const isNumerical = detectedType === "Numerical";
 
-  // Build exam metadata string with date info
+  // Build exam metadata string
   const examMeta = useMemo(() => {
     const parts: string[] = [];
     if (examType === "jee-main") {
@@ -123,33 +138,32 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     if (question.year) {
       parts.push(String(question.year));
     }
-
-    // Try to extract date from questionText
     const dateStr = extractDateFromText(question.questionText || "");
     if (dateStr) {
       parts.push(`(${dateStr})`);
-    } else {
-      parts.push("(Online)");
+    } else if (question.year) {
+      parts.push("");
     }
-
     if (question.shift) {
       parts.push(question.shift);
     }
-    return parts.join(" ");
+    return parts.join(" ").trim();
   }, [question.year, question.shift, question.questionText, examType]);
 
-  // Parse options
+  // Clean the question text for display
+  const cleanText = useMemo(() => cleanQuestionText(question.questionText || ""), [question.questionText]);
+
+  // Parse options from text
   const parsedOptions = useMemo(() => {
-    if (question.options) {
+    if (question.options && question.options !== "undefined" && question.options !== "null") {
       try {
         const opts = JSON.parse(question.options);
-        return Array.isArray(opts) ? opts : [];
-      } catch {
-        return [];
-      }
+        if (Array.isArray(opts) && opts.length >= 2) return opts;
+      } catch { /* ignore */ }
     }
+    // Try to extract from question text
     if (!isNumerical && question.questionText) {
-      const optionRegex = /\(([A-D])\)\s*([\s\S]*?)(?=\([A-D]\)|$)/g;
+      const optionRegex = /\(([A-E])\)\s*([\s\S]*?)(?=\([A-E]\)|$)/g;
       const extracted: string[] = [];
       let match;
       while ((match = optionRegex.exec(question.questionText)) !== null) {
@@ -159,16 +173,6 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     }
     return [];
   }, [question.options, question.questionText, isNumerical]);
-
-  // Process questionHtml for rendering
-  const questionContent = useMemo(() => {
-    if (question.questionHtml && question.questionHtml.trim().length > 10) {
-      const { cleanedHtml, imageUrls: htmlImageUrls } = extractImagesFromHtml(question.questionHtml);
-      const processed = processHtmlContent(cleanedHtml);
-      return { html: processed, htmlImageUrls };
-    }
-    return { html: null, htmlImageUrls: [] as string[] };
-  }, [question.questionHtml]);
 
   // Collect all image URLs
   const allImageUrls = useMemo(() => {
@@ -186,11 +190,8 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
         if (!urls.includes(question.imageUrls)) urls.push(question.imageUrls);
       }
     }
-    for (const u of questionContent.htmlImageUrls) {
-      if (!urls.includes(u)) urls.push(u);
-    }
     return urls;
-  }, [question.imageUrl, question.imageUrls, questionContent.htmlImageUrls]);
+  }, [question.imageUrl, question.imageUrls]);
 
   const handleSaveToggle = async () => {
     if (!session?.user) {
@@ -226,10 +227,9 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     }
   };
 
-  const handleGenerateSolution = useCallback(async () => {
-    // If already generated, just toggle visibility
-    if (localSolution) {
-      setAiSolutionOpen((prev) => !prev);
+  const handleSearchAnswer = async () => {
+    if (webSolution) {
+      setWebSolutionOpen((prev) => !prev);
       return;
     }
 
@@ -240,7 +240,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           questionId: question.id,
-          questionText: question.questionText,
+          questionText: cleanText,
         }),
       });
 
@@ -250,17 +250,17 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
       }
 
       const data = await res.json();
-      setLocalSolution(data.solution);
-      setAiSolutionOpen(true);
-      toast.success("Solution generated!", {
-        icon: <Zap className="h-4 w-4 text-amber-500" />,
+      setWebSolution({ solution: data.solution, source: data.source, sourceUrl: data.sourceUrl });
+      setWebSolutionOpen(true);
+      toast.success("Answer found!", {
+        icon: <Search className="h-4 w-4 text-emerald-500" />,
       });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to generate solution");
+      toast.error(err instanceof Error ? err.message : "Failed to find answer");
     } finally {
       setSolveLoading(false);
     }
-  }, [localSolution, question.id, question.questionText]);
+  };
 
   const handleImageLoad = (i: number) => {
     setImageLoaded((prev) => ({ ...prev, [i]: true }));
@@ -270,47 +270,46 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     setImageErrors((prev) => ({ ...prev, [i]: true }));
   };
 
+  // Remove options text from question body if options are parsed separately
+  const displayText = useMemo(() => {
+    if (parsedOptions.length >= 2) {
+      // Remove the (A) (B) ... options from the question text
+      return cleanText
+        .replace(/\s*\([A-E]\)[\s\S]*$/g, "")
+        .replace(/\n{2,}/g, "\n")
+        .trim();
+    }
+    return cleanText;
+  }, [cleanText, parsedOptions.length]);
+
   return (
     <>
-      <Card className="group overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/8 dark:hover:shadow-amber-500/10 border-border/80 bg-card hover:-translate-y-0.5">
-        {/* Gradient header bar */}
-        <div className="relative h-1.5 w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 dark:from-amber-600 dark:via-orange-600 dark:to-amber-700" />
-
+      <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg hover:shadow-black/5 border-border/60 bg-card">
         <CardContent className="p-0">
           {/* Question meta header */}
           <div className="flex items-start justify-between px-5 pt-4 pb-2 gap-2">
             <div className="flex flex-wrap items-center gap-2 min-w-0">
-              {/* Question number badge */}
-              <span className="inline-flex items-center justify-center h-8 min-w-8 px-2.5 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xs font-extrabold shadow-md shadow-amber-500/25">
+              <span className="inline-flex items-center justify-center h-7 min-w-7 px-2 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 text-white text-[11px] font-extrabold shadow-sm">
                 Q{index + 1}
               </span>
 
-              {/* Year badge */}
               {question.year && (
-                <Badge
-                  variant="outline"
-                  className="gap-1 text-xs border-border/60 font-medium"
-                >
+                <Badge variant="outline" className="gap-1 text-[11px] border-border/50 font-medium px-2">
                   <Calendar className="h-3 w-3 text-muted-foreground" />
                   {question.year}
                 </Badge>
               )}
 
-              {/* Shift badge */}
               {question.shift && (
-                <Badge
-                  variant="outline"
-                  className="gap-1 text-xs border-border/60 font-medium"
-                >
+                <Badge variant="outline" className="gap-1 text-[11px] border-border/50 font-medium px-2">
                   <Clock className="h-3 w-3 text-muted-foreground" />
                   {question.shift}
                 </Badge>
               )}
 
-              {/* Question type badge */}
               <Badge
                 className={cn(
-                  "gap-1 text-xs font-semibold border-0 shadow-sm",
+                  "gap-1 text-[11px] font-semibold border-0",
                   isNumerical
                     ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400"
                     : "bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400"
@@ -322,35 +321,30 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                   <Sparkles className="h-3 w-3" />
                 )}
                 {detectedType}
+                {!isNumerical && (
+                  <span className="text-[10px] opacity-70 ml-0.5">+4 / -1</span>
+                )}
               </Badge>
             </div>
 
-            {/* Action buttons */}
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="flex items-center gap-0.5 shrink-0">
               {session?.user && (
-                <motion.div whileTap={{ scale: 0.85 }}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
-                    onClick={handleSaveToggle}
-                    disabled={saveLoading}
-                  >
-                    <motion.div
-                      animate={isSaved ? { scale: [1, 1.3, 1] } : {}}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Bookmark
-                        className={cn(
-                          "h-4.5 w-4.5 transition-all duration-300",
-                          isSaved
-                            ? "fill-red-500 text-red-500 drop-shadow-sm"
-                            : "text-muted-foreground/50 hover:text-red-400"
-                        )}
-                      />
-                    </motion.div>
-                  </Button>
-                </motion.div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30"
+                  onClick={handleSaveToggle}
+                  disabled={saveLoading}
+                >
+                  <Bookmark
+                    className={cn(
+                      "h-4 w-4 transition-all duration-200",
+                      isSaved
+                        ? "fill-red-500 text-red-500"
+                        : "text-muted-foreground/40 hover:text-red-400"
+                    )}
+                  />
+                </Button>
               )}
             </div>
           </div>
@@ -358,7 +352,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
           {/* Exam metadata line */}
           {(question.year || question.shift) && (
             <div className="px-5 pb-2">
-              <p className="text-[11px] text-muted-foreground/70 font-medium tracking-wide">
+              <p className="text-[10px] text-muted-foreground/60 font-medium tracking-wide">
                 {examMeta}
               </p>
             </div>
@@ -369,7 +363,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
             <div className="px-5 pb-3">
               <Badge
                 variant="secondary"
-                className="text-[11px] font-medium tracking-wide bg-muted/60 text-muted-foreground hover:bg-muted/80 rounded-md"
+                className="text-[10px] font-medium bg-muted/60 text-muted-foreground hover:bg-muted/80 rounded-md px-2"
               >
                 {question.chapter.name}
               </Badge>
@@ -378,17 +372,10 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
           {/* Question body */}
           <div className="px-5 pb-4">
-            {/* Question text / HTML */}
-            {questionContent.html ? (
-              <div
-                className="text-sm leading-7 question-body-html"
-                dangerouslySetInnerHTML={{ __html: questionContent.html }}
-              />
-            ) : (
-              <div className="text-sm leading-7">
-                <MathText text={question.questionText} />
-              </div>
-            )}
+            {/* Question text */}
+            <div className="text-sm leading-7">
+              <MathText text={displayText} />
+            </div>
 
             {/* Images */}
             {allImageUrls.length > 0 && (
@@ -396,9 +383,8 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                 {allImageUrls.map((url, i) => (
                   <motion.div
                     key={i}
-                    whileHover={{ scale: 1.01 }}
                     className={cn(
-                      "relative rounded-xl overflow-hidden border border-border/50 bg-muted/30 transition-all duration-300 group/img cursor-zoom-in shadow-sm hover:shadow-md",
+                      "relative rounded-xl overflow-hidden border border-border/50 bg-muted/30 cursor-zoom-in shadow-sm",
                       imageLoaded[i] ? "opacity-100" : "opacity-0"
                     )}
                     onClick={() => setZoomedImage(url)}
@@ -421,16 +407,16 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                           onLoad={() => handleImageLoad(i)}
                           onError={() => handleImageError(i)}
                         />
-                        <div className="absolute top-2 right-2 opacity-0 group-hover/img:opacity-100 transition-opacity">
-                          <div className="h-8 w-8 flex items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-white shadow-md">
-                            <Maximize2 className="h-3.5 w-3.5" />
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="h-7 w-7 flex items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-white shadow-md">
+                            <Maximize2 className="h-3 w-3" />
                           </div>
                         </div>
                       </>
                     ) : (
                       <div className="flex items-center justify-center py-8 text-muted-foreground">
                         <div className="flex flex-col items-center gap-1.5">
-                          <ImageIcon className="h-6 w-6" />
+                          <ImageIcon className="h-5 w-5" />
                           <span className="text-xs">Image unavailable</span>
                         </div>
                       </div>
@@ -442,7 +428,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
             {/* Options for MCQ */}
             {!isNumerical && parsedOptions.length > 0 && (
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="mt-4 space-y-2">
                 {parsedOptions.map((option: string, i: number) => {
                   const letter = String.fromCharCode(65 + i);
                   const isCorrect =
@@ -450,24 +436,20 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                     question.correctAnswer === option;
                   const colors = OPTION_COLORS[i] || OPTION_COLORS[0];
                   return (
-                    <motion.div
+                    <div
                       key={i}
-                      initial={false}
-                      animate={{ scale: 1 }}
-                      whileHover={{ scale: 1.008 }}
                       className={cn(
-                        "flex items-start gap-3 rounded-xl border-2 p-3 text-sm transition-all duration-200",
+                        "flex items-start gap-3 rounded-xl border p-3 text-sm transition-all",
                         isCorrect
-                          ? "border-emerald-400 bg-emerald-50/80 dark:border-emerald-600 dark:bg-emerald-950/30 shadow-sm shadow-emerald-500/10"
-                          : "border-border/60 bg-background hover:border-amber-300/60 hover:bg-amber-50/50 dark:hover:border-amber-700/50 dark:hover:bg-amber-950/20"
+                          ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/80 dark:bg-emerald-950/20"
+                          : `${colors.border} ${colors.bg} hover:border-foreground/20`
                       )}
                     >
-                      {/* Colored circle for option letter */}
                       <span
                         className={cn(
-                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold transition-all mt-0.5",
+                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-extrabold",
                           isCorrect
-                            ? colors.correct
+                            ? "bg-emerald-500 text-white"
                             : `${colors.bg} ${colors.text}`
                         )}
                       >
@@ -477,9 +459,9 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                         <MathText text={option} />
                       </div>
                       {isCorrect && (
-                        <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+                        <CheckCircle2 className="h-4.5 w-4.5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
                       )}
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
@@ -487,12 +469,8 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
             {/* Numerical answer */}
             {isNumerical && question.correctAnswer && (
-              <motion.div
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-4"
-              >
-                <div className="flex items-center gap-3 rounded-xl border-2 border-emerald-400 bg-emerald-50/80 dark:border-emerald-600 dark:bg-emerald-950/30 p-4 shadow-sm shadow-emerald-500/10">
+              <div className="mt-4">
+                <div className="flex items-center gap-3 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50/80 dark:bg-emerald-950/20 p-3.5">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span className="text-sm font-medium">
                     Answer:{" "}
@@ -501,49 +479,61 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                     </span>
                   </span>
                 </div>
-              </motion.div>
+              </div>
             )}
 
-            {/* Generate Solution button */}
-            <div className="mt-4 pt-3 border-t border-border/40">
+            {/* Find Answer button (web search) */}
+            <div className="mt-4 pt-3 border-t border-border/30">
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-2 text-xs text-muted-foreground hover:text-amber-700 dark:hover:text-amber-400 hover:bg-amber-50/60 dark:hover:bg-amber-950/30 h-8 rounded-lg transition-colors"
-                onClick={handleGenerateSolution}
+                className="gap-2 text-xs text-muted-foreground hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50/60 dark:hover:bg-emerald-950/20 h-8 rounded-lg"
+                onClick={handleSearchAnswer}
                 disabled={solveLoading}
               >
                 {solveLoading ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <Wand2 className="h-3.5 w-3.5" />
+                  <Search className="h-3.5 w-3.5" />
                 )}
                 {solveLoading
-                  ? "Generating..."
-                  : localSolution
-                    ? aiSolutionOpen
-                      ? "Hide AI Solution"
-                      : "Show AI Solution"
-                    : "Generate AI Solution"}
+                  ? "Searching..."
+                  : webSolution
+                    ? webSolutionOpen
+                      ? "Hide Answer"
+                      : "Show Answer"
+                    : "Find Answer Online"}
               </Button>
 
-              {/* AI-generated solution collapsible */}
               <AnimatePresence>
-                {localSolution && aiSolutionOpen && (
+                {webSolution && webSolutionOpen && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-3 rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-gradient-to-br from-amber-50/70 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10 p-4">
-                      <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3 flex items-center gap-1.5">
-                        <Wand2 className="h-3 w-3" />
-                        AI-Generated Solution
-                      </p>
-                      <div className="text-sm leading-7">
-                        <MathText text={localSolution} />
+                    <div className="mt-3 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40 bg-gradient-to-br from-emerald-50/70 to-teal-50/50 dark:from-emerald-950/20 dark:to-teal-950/10 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                          <Search className="h-3 w-3" />
+                          Answer
+                        </p>
+                        {webSolution.sourceUrl && (
+                          <a
+                            href={webSolution.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
+                          >
+                            {webSolution.source || "Source"}
+                            <ExternalLink className="h-2.5 w-2.5" />
+                          </a>
+                        )}
+                      </div>
+                      <div className="text-sm leading-7 whitespace-pre-wrap">
+                        {webSolution.solution}
                       </div>
                     </div>
                   </motion.div>
@@ -552,20 +542,20 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
             </div>
           </div>
 
-          {/* Solution section */}
+          {/* Built-in solution section */}
           {(question.solution || question.solutionHtml) && (
-            <div className="border-t border-border/50">
+            <div className="border-t border-border/30">
               <button
                 className={cn(
-                  "w-full flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium transition-colors",
+                  "w-full flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-medium transition-colors",
                   "text-amber-700 dark:text-amber-400 hover:bg-amber-50/50 dark:hover:bg-amber-950/20"
                 )}
                 onClick={() => setSolutionOpen(!solutionOpen)}
               >
                 {solutionOpen ? (
-                  <ChevronUp className="h-4 w-4" />
+                  <ChevronUp className="h-3.5 w-3.5" />
                 ) : (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-3.5 w-3.5" />
                 )}
                 {solutionOpen ? "Hide Solution" : "Show Solution"}
               </button>
@@ -576,11 +566,11 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-5 pb-5">
-                      <div className="rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 p-5">
+                    <div className="px-5 pb-4">
+                      <div className="rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 p-4">
                         <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3">
                           Solution
                         </p>

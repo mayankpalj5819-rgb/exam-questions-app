@@ -24,26 +24,26 @@ const SUBJECTS = [
     border: "border-orange-200 dark:border-orange-900/40 hover:border-orange-300 dark:hover:border-orange-700",
     desc: "Mechanics, Thermodynamics, Optics, Modern Physics & more",
     topics: ["Mechanics", "Waves", "Thermodynamics", "Optics", "Electrodynamics"],
-    fallback: { qs: "24,602", ch: 35 } },
+    fallback: { ch: 35 } },
   { slug: "chemistry", name: "Chemistry", icon: <FlaskConical className="h-8 w-8" />,
     color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30",
     border: "border-emerald-200 dark:border-emerald-900/40 hover:border-emerald-300 dark:hover:border-emerald-700",
     desc: "Organic, Inorganic, Physical Chemistry & more",
     topics: ["Organic", "Inorganic", "Physical", "Coordination", "Polymers"],
-    fallback: { qs: "15,403", ch: 30 } },
+    fallback: { ch: 30 } },
   { slug: "mathematics", name: "Mathematics", icon: <Calculator className="h-8 w-8" />,
     color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-50 dark:bg-violet-950/30",
     border: "border-violet-200 dark:border-violet-900/40 hover:border-violet-300 dark:hover:border-violet-700",
     desc: "Algebra, Calculus, Coordinate Geometry, Vectors & more",
     topics: ["Algebra", "Calculus", "Coordinate", "Vectors", "Probability"],
-    fallback: { qs: "15,681", ch: 27 } },
+    fallback: { ch: 27 } },
 ] as const;
 
 const FEATURES = [
-  { icon: <Wand2 className="h-5 w-5" />, title: "AI-Powered Solutions", desc: "Get instant AI-generated step-by-step solutions to every question." },
+  { icon: <Search className="h-5 w-5" />, title: "Web Answer Search", desc: "Find verified solutions from trusted educational sources online." },
   { icon: <Bookmark className="h-5 w-5" />, title: "Smart Bookmarks", desc: "Save questions for revision with subject and chapter filters." },
   { icon: <FileDown className="h-5 w-5" />, title: "PDF Export", desc: "Export saved questions as beautifully formatted printable PDFs." },
-  { icon: <BarChart3 className="h-5 w-5" />, title: "Chapter Analytics", desc: "See topic weightage and question distribution at a glance." },
+  { icon: <BarChart3 className="h-5 w-5" />, title: "Chapter Analytics", desc: "See topic weightage and exam pattern analysis at a glance." },
   { icon: <Moon className="h-5 w-5" />, title: "Dark Mode", desc: "Comfortable studying in any lighting condition." },
   { icon: <Smartphone className="h-5 w-5" />, title: "Mobile Friendly", desc: "Practice on the go with a fully responsive design." },
 ];
@@ -246,7 +246,6 @@ export function Landing() {
           {SUBJECTS.map((s) => {
             const qs = qCount(s.slug);
             const ch = chCount(s.slug);
-            const showQs = qs > 0 ? qs.toLocaleString() : s.fallback.qs;
             const showCh = ch > 0 ? ch : s.fallback.ch;
             return (
               <motion.div key={s.slug} variants={fadeUp}>
@@ -266,7 +265,7 @@ export function Landing() {
                     <div className="flex items-center justify-between pt-4 border-t border-border/50">
                       <div className="text-sm text-muted-foreground">
                         <span className="font-bold text-foreground">{showCh}</span> chapters ·{" "}
-                        <span className="font-bold text-foreground">{showQs}</span> Qs
+                        <span className="font-bold text-foreground">33.3%</span> weightage
                       </div>
                       <div className={`flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300 ${s.bg} group-hover:translate-x-1`}>
                         <ArrowRight className={`h-4 w-4 ${s.color} transition-transform duration-300 group-hover:translate-x-0.5`} />

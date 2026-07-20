@@ -151,7 +151,7 @@ export const useAppState = create<AppState>((set) => ({
   // Exam type
   examType: "jee-main",
   setExamType: (examType) =>
-    set({ examType, selectedChapter: null, questions: [], questionsPage: 1, yearFilter: "" }),
+    set({ examType, selectedChapter: null, selectedSubject: null, viewingAllQuestions: false, questions: [], questionsPage: 1, yearFilter: "" }),
 
   // Subjects
   subjects: [],

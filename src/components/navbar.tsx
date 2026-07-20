@@ -37,6 +37,7 @@ import {
   FlaskConical,
   Calculator,
   X,
+  BarChart3,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -82,6 +83,11 @@ export function Navbar() {
 
   const handleSavedClick = () => {
     setView(view === "saved" ? "landing" : "saved");
+    setMobileMenuOpen(false);
+  };
+
+  const handleAnalyticsClick = () => {
+    setView(view === "analytics" ? "landing" : "analytics");
     setMobileMenuOpen(false);
   };
 
@@ -189,6 +195,19 @@ export function Navbar() {
                     </button>
                   </>
                 )}
+
+                <div className="my-3 border-t" />
+                <button
+                  onClick={handleAnalyticsClick}
+                  className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                    isActive("analytics")
+                      ? "bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300"
+                      : "hover:bg-accent"
+                  }`}
+                >
+                  <BarChart3 className={`h-4 w-4 ${isActive("analytics") ? "text-amber-500" : "text-muted-foreground"}`} />
+                  Analytics
+                </button>
               </div>
             </SheetContent>
           </Sheet>
@@ -271,6 +290,23 @@ export function Navbar() {
 
         {/* Right: Actions */}
         <div className="flex items-center gap-1 ml-auto">
+          {/* Analytics button */}
+          <Button
+            variant={isActive("analytics") ? "secondary" : "ghost"}
+            size="icon"
+            onClick={handleAnalyticsClick}
+            className="relative h-9 w-9 rounded-lg"
+            title="Analytics"
+          >
+            <BarChart3
+              className={`h-[18px] w-[18px] transition-colors ${
+                isActive("analytics")
+                  ? "text-amber-600 dark:text-amber-400"
+                  : "text-muted-foreground"
+              }`}
+            />
+          </Button>
+
           {/* Saved questions button with count badge */}
           <Button
             variant={isActive("saved") ? "secondary" : "ghost"}
