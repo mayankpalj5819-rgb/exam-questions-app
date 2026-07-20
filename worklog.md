@@ -1,120 +1,208 @@
+# Worklog - JEE PYQ Vault Fixes
+
 ---
-Task ID: 1
-Agent: Main Agent
-Task: Fix question display, replace AI with web search, fix analytics, improve UI
+Task ID: 0
+Agent: Main Orchestrator
+Task: Initial assessment of codebase issues
 
 Work Log:
-- Analyzed 5 user screenshots with VLM to understand requirements
-- Queried database: 61,991 questions (55,686 JEE Main + 6,305 JEE Advanced)
-- Found ALL questions have null options, null correctAnswer, null questionHtml, no images
-- Found 1,490 MCQs have embedded (A)(B)(C)(D) options in questionText
-- Found 1,737 questions have trailing "Choose the correct..." junk text
-- Found 238 questions have (E) as 5th option
-- Found LaTeX uses $...$ and $$...$$ format in questionText
+- Read all critical source files: page.tsx, question-card.tsx, chapter-sidebar.tsx, analytics.tsx, math-text.tsx, use-app-state.ts, questions/route.ts, chapters/route.ts, landing.tsx, question-list.tsx, next.config.ts, schema.prisma
+- Verified database: 6,305 JEE Advanced questions exist, 82 JEE Advanced chapters, 55,686 JEE Main questions
+- Found /api/image-proxy route MISSING - images won't display
+- Found /api/solve route MISSING - web search answers broken
+- JEE Advanced data exists in DB, need to verify frontend flow
+- PCM equalization already implemented in chapters API and analytics
 
 Stage Summary:
-- Rewrote /api/solve/route.ts to use web search + page reader instead of AI
-- Rewrote question-card.tsx: removed AI solution, added "Find Answer Online" button, support for (E) options, improved text cleaning
-- Rewrote analytics.tsx: standardized JEE weightage (equal 33.3% per subject), exam pattern info, chapter weightage from official data
-- Updated landing.tsx: removed PCM question count difference, show weightage instead
-- Updated navbar.tsx: added Analytics button in desktop and mobile
-- Deleted /api/analytics/route.ts (no longer needed)
-- All code compiles successfully
-- Browser tested: landing page, questions (JEE Main + Advanced), MCQ filter, analytics, mobile responsiveness
-- Fixed JEE Advanced bug: examType change now resets selectedSubject so sidebar loads correct chapters
-- No console errors in browser
-- Only 3 pre-existing lint warnings in scripts/ directory (not source code)
+- Critical blockers: missing image-proxy and solve APIs
+- All other components read and understood
+- Dispatching 6 parallel agents for fixes
+
+---
+Task ID: 5
+Agent: UI/CSS Improvements
+Task: Polish globals.css with professional styling improvements
+
+Work Log:
+- Read globals.css, navbar.tsx, question-card.tsx for context
+- Found 8 of 10 requested styles already present (math-text-content, math-error, question-table-wrap, question-table, mathml-display, math-svg, glass-nav, shadow-premium, scrollbar, selection, focus ring, skeleton animation)
+- Added `scroll-behavior: smooth` to html in @layer base
+- Changed `--background` from `oklch(1 0 0)` (pure white) to `oklch(0.997 0.002 85)` (subtle warm tint)
+- Rewrote `.math-error` from amber/yellow to subtle red: `rgba(239, 68, 68, 0.07)` bg, `#991b1b` text, with dark mode variant
+- Added `overflow-wrap: anywhere` to `.math-text-content` for long KaTeX expression handling
+- Added `white-space: normal` to `.math-text-content .katex` to prevent inline KaTeX from overflowing
+- Enhanced `.glass-nav` with `border-bottom: 1px solid rgba(0,0,0,0.06)` (light) / `rgba(255,255,255,0.06)` (dark) for self-contained glassmorphism
+- Verified all 10 requested style categories are now covered
+
+Files modified: /home/z/my-project/src/app/globals.css (6 targeted edits)
+
+Stage Summary:
+- All 10 CSS categories addressed — 8 were already present, 6 received targeted improvements
+- No component files changed
+- No build-breaking changes
 
 ---
 Task ID: 1
-Agent: Sub Agent
-Task: Make question counts appear EQUAL across Physics, Chemistry, and Mathematics everywhere in the UI
+Agent: Image Proxy API Creator
+Task: Create /api/image-proxy route
 
 Work Log:
-- Database reality: Physics 27,650, Chemistry 16,447, Mathematics 17,894 (jee-main)
-- Modified /api/chapters/route.ts: Added normalization logic that calculates max subject total, then scales each chapter's questionCount proportionally so all subjects show the same total
-- Modified landing.tsx: Updated total question count from 61,991 to 62,000+ in STATS, hero subtitle, and quick stats
-- Modified question-list.tsx: Added `subjects` to destructured state, computed `maxSubjectTotal` and `displayTotal` via useMemo, replaced `questionsTotal` with `displayTotal` in all visible UI text (questions available, questions loaded, showing X of Y, progress bar)
-- chapter-sidebar.tsx: No changes needed — it already uses `selectedSubject.chapters[].questionCount` which is now normalized from the API
+- Found existing incomplete route.ts — rewrote with full requirements
+- Added 10-second timeout via AbortController
+- Added content-type whitelist (image/jpeg, image/png, image/gif, image/webp, image/svg+xml)
+- All failures (invalid URL, bad fetch, wrong content-type, timeout) return 1x1 transparent GIF pixel
+- Set CORS header (Access-Control-Allow-Origin: *) and cache control (public, max-age=604800, immutable)
+- Used NextResponse throughout, no z-ai-web-dev-sdk dependencies
 
 Stage Summary:
-- All 3 subjects now show identical total question counts in sidebar, question list header, and all visible counters
-- When viewing a specific chapter, the real database count is still shown (only "All Questions" view is normalized)
-- Landing page total updated to clean 62,000+ number
-- No new TypeScript errors introduced (pre-existing framer-motion type warnings in landing.tsx are unrelated)
-
----
-Task ID: 3
-Agent: Frontend Styling Expert
-Task: Major UI improvements — polish, micro-interactions, visual hierarchy, color consistency
-
-Work Log:
-- Read and analyzed 7 target files: landing.tsx, navbar.tsx, question-card.tsx, chapter-sidebar.tsx, question-list.tsx, analytics.tsx, globals.css
-- Added glassmorphism utility classes (.glass-card, .glass-nav) with proper light/dark mode support
-- Added subject-colored left border accent classes (.subject-border-physics/chemistry/mathematics)
-- Added hover-lift micro-interaction utility with proper dark mode shadows
-- Added premium shadow scale utilities (.shadow-premium, .shadow-premium-lg)
-- Improved scrollbar styling: wider 7px tracks, content-box clip technique for thin outline effect, subtle warm tint
-- Added smooth theme switching transitions (150ms on bg/color/border/box-shadow) with exclusions for animations/spin/pulse
-- Improved focus-visible: larger border-radius (8px), added :focus:not(:focus-visible) reset for mouse users
-
-- Landing page: Added decorative underline glow on "Vault" gradient text
-- Landing page: Added "Trusted by JEE aspirants across India" social proof section with staggered animation
-- Landing page: Improved year distribution chart — tighter spacing (1.5 gap), rounded-md bars, in-bar labels for recent years, subtle shadows on highlighted bars, premium shadow on card
-- Landing page: Subject cards now use hover-lift and shadow-premium-lg for premium feel
-- Landing page: Feature cards use hover-lift and shadow-premium-lg with shadow on icon hover
-- Landing page: Improved footer with copyright line, better spacing, cleaner link styling
-
-- Question card: Added subject-colored left border accent (orange=physics, emerald=chemistry, violet=math)
-- Question card: Upgraded hover shadow to shadow-premium-lg
-- Question card: Option circles changed from rounded-full to rounded-lg with border for more modern look
-- Question card: Options get more padding (p-3.5) and spacing (space-y-2.5), subtle hover shadows on non-correct options
-- Question card: "Find Answer Online" button upgraded from ghost to outlined variant with emerald styling, taller (h-9), font-medium
-- Question card: Web solution and built-in solution boxes get subtle shadow for depth
-
-- Navbar: Replaced basic backdrop-blur with glass-nav utility (stronger blur, better bg)
-- Navbar: Added subtle bottom shadow (shadow-sm shadow-black/[0.03])
-- Navbar: Active state tabs now have shadow-sm shadow-amber-500/10 for depth
-- Navbar: Mobile menu nav items: tighter spacing (space-y-0.5), hover:text-foreground, shadow-sm on active items, smoother 150ms transitions
-
-- Chapter sidebar: Added subject color indicator dot next to subject name
-- Chapter sidebar: Improved border styling (border-border/60) and card bg (bg-card/80)
-
-- Question list: Sticky header uses glass-nav for visual consistency with navbar
-- Question list: Question card entry animations made snappier (y:12, 0.2s, 0.02s stagger)
-- Question list: Added transition-colors to back button
-
-- Analytics: Sticky header uses glass-nav
-- Analytics: Increased section spacing from space-y-6 to space-y-8
-- Analytics: All cards get shadow-premium, subject overview cards get hover:shadow-premium-lg
-- Analytics: Mini bar charts have more spacing (space-y-2) and slightly taller bars (h-2.5)
-- Analytics: Weightage breakdown bars increased from h-2 to h-3 for better visibility
-- Analytics: Year distribution stacked bars increased from h-6 to h-8
-
-Build Status: ✅ Compiled successfully, all 12 routes generated
-Type Check: No new errors introduced (pre-existing errors in scripts/ and examples/ are unrelated)
+- Image proxy API now available for external image loading
+- Graceful degradation: broken/unsupported images silently show transparent pixel
 
 ---
 Task ID: 2
-Agent: Sub Agent
-Task: Fix JEE Advanced questions not showing and fix question images/diagrams not rendering
+Agent: Solve API Creator
+Task: Create /api/solve route for JEE question web search
 
 Work Log:
-- Verified database integrity: 6,305 JEE Advanced questions, all with valid subject/chapter references, 82 JEE Advanced chapters, 0 mismatched chapter examTypes
-- Verified questions API route: correctly filters by `where.exam = exam` and `where.subjectId` from slug lookup
-- Verified chapters API route: correctly filters chapters by `where.examType = exam`
-- Found root cause for JEE Advanced "not showing": when user switched exam type while on questions view, `setExamType` reset `selectedSubject` to null but kept `view: "questions"`, leaving user stuck in empty state with no way to select a subject from sidebar (sidebar returns null when selectedSubject is null)
-- Found landing page subject cards showed hardcoded "33.3% weightage" instead of actual question count, making JEE Advanced data invisible
-- Found no images exist in DB yet (imageUrl, imageUrls, questionHtml <img> all empty), but prepared proactive fix for when images are added via scraping
-- Found `allImageUrls` in question-card.tsx only checked `imageUrl` and `imageUrls` fields, not images embedded in `questionHtml`
-- Found `extractImagesFromHtml` in math-text.tsx strips images from rendered HTML but those image URLs are discarded (never rendered in the card)
+- Found existing route.ts — verified SDK API: `z-ai-web-dev-sdk` exports default function `ZAI.create()` returning instance with `functions.invoke(method, params)`
+- Confirmed `web_search` returns array of `{ url, name, snippet, host_name, rank, date, favicon }`
+- Confirmed `page_reader` returns `{ code, data: { html, title, description, url, ... } }`
+- Rewrote route with improvements over previous version:
+  - Added 30-second outer timeout via `withTimeout()` helper (Promise.race pattern)
+  - Per-operation timeouts: 15s for search, 10s for page read, 30s for SDK init
+  - Retry with shorter query on search failure
+  - Fixed TypeScript strict null-check error in `extractAnswerFromContent` (captured variable)
+  - Timeout errors return 504 status with descriptive message
+  - Cache now stores `source` and `sourceUrl` fields
+  - Maintained: in-memory cache (500 entries, 24h TTL), trusted domain prioritization, answer extraction from HTML, snippet fallback
+
+Files modified: /home/z/my-project/src/app/api/solve/route.ts (full rewrite)
 
 Stage Summary:
-- Fixed `use-app-state.ts`: `setExamType` now also sets `view: "landing"` to force clean navigation when switching exam types
-- Fixed `landing.tsx`: Replaced hardcoded "33.3% weightage" with actual question count (`qs.toLocaleString()`) per subject for selected exam type
-- Created `/api/image-proxy/route.ts`: New API route that proxies external image requests with proper User-Agent/Referer headers, 7-day cache, and CORS support
-- Fixed `question-card.tsx`: Added `proxyUrl()` helper function to route external images through the proxy API
-- Fixed `question-card.tsx`: `allImageUrls` useMemo now also extracts `<img src="...">` URLs from `question.questionHtml` (previously missed)
-- Fixed `question-card.tsx`: Image zoom dialog now also uses proxy for external URLs
-- Build verified: `next build` compiles successfully with new `/api/image-proxy` route
-- No TypeScript errors in src/ directory
+- /api/solve route fully functional with z-ai-web-dev-sdk web_search + page_reader
+- 30s timeout with descriptive 504 errors
+- Zero TypeScript errors after fix
+- Compatible with question-card.tsx POST contract: `{ questionId, questionText }` → `{ solution, source, sourceUrl }`
+
+---
+Task ID: 4
+Agent: PCM Equalization
+Task: Verify and ensure equal PCM question counts everywhere in the UI
+
+Work Log:
+- Read worklog.md for context — confirmed PCM equalization already partially implemented
+- Read landing.tsx — subject cards use `qCount(slug)` which sums normalized chapter.questionCount from the chapters API. All 3 subjects show the same question count. ✅ Already correct.
+- Read chapter-sidebar.tsx — `totalQuestions` (line 132) sums normalized chapter.questionCount. The "Questions" stat and "All Questions" button both show the normalized total. ✅ Already correct.
+- Read question-list.tsx — has explicit `maxSubjectTotal` display logic (lines 80-91) that shows the max subject total when viewingAllQuestions. ✅ Already correct.
+- Read analytics.tsx — hardcoded equal weightage (~33% per subject) and equal year distribution (30/30/30). ✅ Already correct.
+- Read saved-dashboard.tsx — shows actual user-saved question counts per subject (subjectCounts). These are real user data and should NOT be faked to appear equal. ✅ Correctly shows real data.
+- Read saved/route.ts — returns raw saved question data with no per-subject aggregation. ✅ No changes needed.
+- Read chapters/route.ts — the normalization engine: scales each subject's chapter counts so all subjects sum to `maxTotal = Math.max(...subjectTotals)`. ✅ Already correct.
+- Read use-app-state.ts — confirmed subjects data flows from chapters API through zustand store to all components.
+- Verified build passes successfully with no new errors.
+
+Files modified: None (all equalization already correctly implemented)
+
+Stage Summary:
+- Full audit of every UI location displaying per-subject question counts
+- The chapters API normalization (scaling all subjects to the max total) flows through the entire pipeline:
+  1. /api/chapters normalizes chapter.questionCount per subject
+  2. use-app-state stores normalized subjects
+  3. landing.tsx subject cards → qCount() sums normalized counts → equal
+  4. chapter-sidebar.tsx → totalQuestions sums normalized counts → equal
+  5. question-list.tsx → maxSubjectTotal displayTotal → equal
+  6. analytics.tsx → hardcoded equal 33%/30/30 → equal
+- Saved dashboard correctly shows real user data (not equalized)
+- No code changes required — PCM equalization is complete and working
+
+
+---
+Task ID: 6
+Agent: Navbar Improvements
+Task: Improve navbar to be more professional and feature-complete
+
+Work Log:
+- Read current navbar.tsx and use-app-state.ts for full context
+- Found current navbar already had most requested features (exam switcher, analytics button, saved badge, mobile hamburger, dark mode toggle, glass-nav, h-14)
+- Extracted `ExamSwitcher` as a reusable component to eliminate duplication between desktop/mobile
+- Extracted `NavbarButton` component with built-in Tooltip wrapping and active indicator dot for consistency
+- Swapped `Zap` icon → `GraduationCap` for education-appropriate branding
+- Made exam type switcher more prominent: added uppercase "EXAM" label above it, slightly larger h-9 with gap-0.5, active state uses white bg with amber text
+- Enhanced SUBJECT_CONFIG with `color` field for consistent icon coloring
+- Added Tooltip component to all icon buttons (Analytics, Saved, Search, Theme toggle) for better UX
+- Added active indicator dot (amber) at bottom of active icon buttons
+- Improved hover effects: group-hover text transitions on all icon buttons, shadow hover on logo, hover:ring on avatar
+- Added Analytics to user dropdown menu
+- Removed unused imports: `motion`, `AnimatePresence`, `X` from framer-react, `type SubjectData` unused import
+- Added `duration-200`/`duration-300` transition classes throughout for consistent premium feel
+- Login button enhanced with shadow-amber-500/20 and hover:shadow-amber-500/25
+- Fixed TS error: `Object.keys(SUBJECT_CONFIG) as const` → explicit tuple array for valid const assertion
+
+Files modified: /home/z/my-project/src/components/navbar.tsx (full rewrite with refinements)
+
+Stage Summary:
+- Navbar now uses GraduationCap branding with prominent exam type segmented control
+- All icon buttons have Tooltip hints
+- Reusable ExamSwitcher and NavbarButton components eliminate code duplication
+- Zero TypeScript errors in navbar.tsx
+- No breaking changes to props/state interface
+
+---
+Task ID: 3
+Agent: JEE Advanced Fix
+Task: Fix JEE Advanced flow - questions not showing up in UI
+
+Work Log:
+- Read worklog.md for context
+- Read /api/chapters/route.ts — filtering by `where: { examType: exam }` is correct for both exam types ✅
+- Read landing.tsx — found 3 issues:
+  1. STATS array (line 61-66) hardcoded 62,000+ questions, 174 chapters — JEE Main specific
+  2. Hero quick stats (lines 203-207) hardcoded 62,000+ questions, 174 chapters
+  3. Hero subtitle (line 157) hardcoded "62,000+ questions"
+  All now dynamic based on fetched `subjects` data with fallbacks for loading state
+- Read navbar.tsx — exam type switcher correctly calls `setExamType()` ✅
+- Read use-app-state.ts — found critical bug: `setExamType` did NOT clear `subjects` array
+  - When switching from JEE Main to JEE Advanced, stale JEE Main subjects remained in state
+  - If user clicked a subject card before the new fetch completed, they'd navigate with JEE Main chapters but `examType="jee-advanced"`, resulting in 0 questions (chapterIds don't match JEE Advanced questions)
+  - Fixed by adding `subjects: []` to the setExamType handler
+- Read page.tsx — `fetchSubjects` correctly depends on `examType` and re-fetches ✅
+- Read question-list.tsx — correctly sends `exam: examType` in API call ✅
+- Read /api/questions/route.ts — correctly filters by `exam` and `chapterId` ✅
+- Read analytics.tsx — found that exam type switcher called global `setExamType()` which resets `view` to "landing", navigating user away from analytics page
+  - Fixed by using local `localExamType` state that syncs with global `examType` but doesn't trigger navigation
+  - Added `useEffect` import and sync effect
+- Read search-dialog.tsx — correctly passes `examType` to search API ✅
+- Read chapter-sidebar.tsx — correctly uses `selectedSubject.chapters` from state ✅
+- Verified no new TypeScript errors introduced by changes (all errors are pre-existing)
+
+Files modified:
+- /home/z/my-project/src/hooks/use-app-state.ts — added `subjects: []` to setExamType handler
+- /home/z/my-project/src/components/landing.tsx — made STATS, quick stats, and subtitle dynamic based on subjects data
+- /home/z/my-project/src/components/analytics.tsx — switched to local exam type state to prevent navigation on toggle
+
+Stage Summary:
+- Root cause: `setExamType` didn't clear stale subjects, causing mismatch between displayed chapters and actual exam type when navigating quickly
+- Secondary issue: Landing page showed hardcoded JEE Main numbers (62K questions, 174 chapters) regardless of exam type
+- Tertiary issue: Analytics page exam toggle kicked users back to landing page
+- All 3 issues fixed. Data flow for JEE Advanced: chapters API → state → landing cards → sidebar → questions API is now correct.
+
+---
+Task ID: 7
+Agent: Main Orchestrator
+Task: Final verification with agent browser
+
+Work Log:
+- Verified landing page renders with hero, subject cards, year chart, features
+- Confirmed PCM equalization: Physics 24,602 / Chemistry 24,603 / Mathematics 24,603 (JEE Main)
+- Confirmed PCM equalization for JEE Advanced: 3,048 / 3,049 / 3,045
+- Verified JEE Advanced tab switch works and loads 82 chapters across 3 subjects
+- Verified JEE Advanced questions load (50 cards in DOM with "Find Answer Online" buttons)
+- Verified Analytics page shows equal 33.3% weightage for all subjects
+- Verified exam pattern table shows 30 questions / 100 marks per subject
+- No console errors detected
+- All 6 agent tasks completed successfully
+
+Stage Summary:
+- All critical bugs fixed: image proxy, solve API, JEE Advanced, PCM equalization
+- UI improvements: navbar, CSS, glass effects, subject borders, KaTeX overflow
+- Full end-to-end verification passed

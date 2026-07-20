@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   BarChart3,
@@ -128,10 +128,14 @@ function getWeightage(examType: string) {
 // ─── Analytics Component ──────────────────────────────────────────────────
 
 export function Analytics() {
-  const { examType, setView, setExamType } = useAppState();
+  const { examType, setView } = useAppState();
+  const [localExamType, setLocalExamType] = useState<string>(examType);
   const [selectedSubject, setSelectedSubject] = useState<string>("all");
 
-  const weightage = getWeightage(examType);
+  // Sync local exam type when global changes
+  useEffect(() => { setLocalExamType(examType); }, [examType]);
+
+  const weightage = getWeightage(localExamType);
 
   // Subject overview cards (equal representation)
   const subjectOverview = SUBJECTS.map((slug) => {
@@ -198,10 +202,8 @@ export function Analytics() {
 
             <div className="flex items-center gap-2">
               <Select
-                value={examType}
-                onValueChange={(v) =>
-                  setExamType(v as "jee-main" | "jee-advanced")
-                }
+                value={localExamType}
+                onValueChange={(v) => setLocalExamType(v)}
               >
                 <SelectTrigger className="h-8 w-[140px] text-xs rounded-lg">
                   <GraduationCap className="h-3 w-3 mr-1 text-muted-foreground" />
@@ -290,7 +292,7 @@ export function Analytics() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <PieChart className="h-4 w-4 text-amber-500" />
-              {examType === "jee-main" ? "JEE Main" : "JEE Advanced"} Exam Pattern
+              {localExamType === "jee-main" ? "JEE Main" : "JEE Advanced"} Exam Pattern
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -320,9 +322,9 @@ export function Analytics() {
                     </thead>
                     <tbody>
                       {[
-                        { name: "Physics", questions: examType === "jee-main" ? 30 : 20, marks: examType === "jee-main" ? 100 : 70, color: SUBJECT_COLORS.physics },
-                        { name: "Chemistry", questions: examType === "jee-main" ? 30 : 20, marks: examType === "jee-main" ? 100 : 70, color: SUBJECT_COLORS.chemistry },
-                        { name: "Mathematics", questions: examType === "jee-main" ? 30 : 20, marks: examType === "jee-main" ? 100 : 70, color: SUBJECT_COLORS.mathematics },
+                        { name: "Physics", questions: localExamType === "jee-main" ? 30 : 20, marks: localExamType === "jee-main" ? 100 : 70, color: SUBJECT_COLORS.physics },
+                        { name: "Chemistry", questions: localExamType === "jee-main" ? 30 : 20, marks: localExamType === "jee-main" ? 100 : 70, color: SUBJECT_COLORS.chemistry },
+                        { name: "Mathematics", questions: localExamType === "jee-main" ? 30 : 20, marks: localExamType === "jee-main" ? 100 : 70, color: SUBJECT_COLORS.mathematics },
                       ].map((row) => (
                         <tr key={row.name} className="border-t border-border/30">
                           <td className="px-4 py-2.5 font-medium flex items-center gap-2">
@@ -348,10 +350,10 @@ export function Analytics() {
                       <tr className="border-t-2 border-border/50 bg-muted/30 font-bold">
                         <td className="px-4 py-2.5">Total</td>
                         <td className="text-center px-4 py-2.5 tabular-nums">
-                          {examType === "jee-main" ? 90 : 60}
+                          {localExamType === "jee-main" ? 90 : 60}
                         </td>
                         <td className="text-center px-4 py-2.5 tabular-nums">
-                          {examType === "jee-main" ? 300 : 210}
+                          {localExamType === "jee-main" ? 300 : 210}
                         </td>
                         <td className="text-center px-4 py-2.5 text-muted-foreground text-xs">
                           100%
@@ -369,10 +371,10 @@ export function Analytics() {
                 </h4>
                 <div className="space-y-3">
                   {[
-                    { type: "Multiple Choice (MCQ)", desc: "4 options, 1 correct", marks: examType === "jee-main" ? "+4 / -1" : "+3 / -1", count: examType === "jee-main" ? 20 : 10 },
-                    { type: "Numerical Value", desc: "Enter numerical answer", marks: examType === "jee-main" ? "+4 / -1" : "+3 / 0", count: examType === "jee-main" ? 10 : 10 },
-                    ...(examType === "jee-main" ? [{ type: "Multiple Select (MSQ)", desc: "One or more correct", marks: "+4 / -1 (partial)", count: 0 }] : []),
-                    ...(examType === "jee-advanced" ? [
+                    { type: "Multiple Choice (MCQ)", desc: "4 options, 1 correct", marks: localExamType === "jee-main" ? "+4 / -1" : "+3 / -1", count: localExamType === "jee-main" ? 20 : 10 },
+                    { type: "Numerical Value", desc: "Enter numerical answer", marks: localExamType === "jee-main" ? "+4 / -1" : "+3 / 0", count: localExamType === "jee-main" ? 10 : 10 },
+                    ...(localExamType === "jee-main" ? [{ type: "Multiple Select (MSQ)", desc: "One or more correct", marks: "+4 / -1 (partial)", count: 0 }] : []),
+                    ...(localExamType === "jee-advanced" ? [
                       { type: "Multiple Correct (MCQ)", desc: "One or more correct options", marks: "+4 / -1 (partial)", count: 10 },
                     ] : []),
                   ].map((q, i) => (
@@ -526,7 +528,7 @@ export function Analytics() {
                 );
               })}
               <span className="text-muted-foreground/50 ml-auto">
-                {examType === "jee-main" ? "30" : "20"} Qs per subject per year
+                {localExamType === "jee-main" ? "30" : "20"} Qs per subject per year
               </span>
             </div>
           </CardContent>

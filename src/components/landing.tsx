@@ -58,12 +58,17 @@ const YEAR_DATA = [
   {year:2026,count:880},
 ];
 
-const STATS = [
-  { value: 62000, suffix: "+", label: "Questions", icon: <BookOpen className="h-5 w-5" /> },
-  { value: 174, suffix: "", label: "Chapters", icon: <GraduationCap className="h-5 w-5" /> },
-  { value: 3, suffix: "", label: "Subjects", icon: <Atom className="h-5 w-5" /> },
-  { value: 27, suffix: "+", label: "Years", icon: <CalendarRange className="h-5 w-5" /> },
-];
+function getDynamicStats(subjects: { chapters: { questionCount: number }[] }[]) {
+  const totalQ = subjects.reduce((s, sub) => s + sub.chapters.reduce((a, c) => a + c.questionCount, 0), 0);
+  const totalCh = subjects.reduce((s, sub) => s + sub.chapters.length, 0);
+  const subCount = subjects.filter((s) => s.chapters.length > 0).length;
+  return [
+    { value: totalQ > 0 ? totalQ : 62000, suffix: totalQ > 0 ? "+" : "+", label: "Questions", icon: <BookOpen className="h-5 w-5" /> },
+    { value: totalCh > 0 ? totalCh : 174, suffix: "", label: "Chapters", icon: <GraduationCap className="h-5 w-5" /> },
+    { value: subCount > 0 ? subCount : 3, suffix: "", label: "Subjects", icon: <Atom className="h-5 w-5" /> },
+    { value: 27, suffix: "+", label: "Years", icon: <CalendarRange className="h-5 w-5" /> },
+  ];
+}
 
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } } };
@@ -102,6 +107,10 @@ function SectionHead({ badge, icon, title, sub }: { badge: string; icon: React.R
 export function Landing() {
   const { data: session } = useSession();
   const { subjects, examType, setExamType, setSelectedSubject, setView, setAuthModalOpen, savedCount } = useAppState();
+
+  const dynamicStats = getDynamicStats(subjects);
+  const totalQ = subjects.reduce((s, sub) => s + sub.chapters.reduce((a, c) => a + c.questionCount, 0), 0);
+  const totalCh = subjects.reduce((s, sub) => s + sub.chapters.length, 0);
 
   const chCount = (slug: string) => subjects.find((s) => s.slug === slug)?.chapters?.length || 0;
   const qCount = (slug: string) => subjects.find((s) => s.slug === slug)?.chapters?.reduce((a, c) => a + c.questionCount, 0) || 0;
@@ -155,7 +164,7 @@ export function Landing() {
             {/* Subtitle */}
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
               The most comprehensive JEE previous year question bank. Practice{" "}
-              <span className="font-semibold text-foreground">62,000+ questions</span> across Physics, Chemistry &amp; Mathematics — systematically.
+              <span className="font-semibold text-foreground">{totalQ > 0 ? `${totalQ.toLocaleString()}+` : "62,000+"} questions</span> across Physics, Chemistry &amp; Mathematics — systematically.
             </p>
 
             {/* Exam Type Toggle */}
@@ -201,10 +210,10 @@ export function Landing() {
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
               className="flex flex-wrap items-center justify-center gap-3">
               {[
-                { icon: <BookOpen className="h-4 w-4" />, val: "62,000+", lbl: "Questions", hl: true },
+                { icon: <BookOpen className="h-4 w-4" />, val: totalQ > 0 ? `${totalQ.toLocaleString()}+` : "62,000+", lbl: "Questions", hl: true },
                 { icon: <CalendarRange className="h-4 w-4" />, val: "2002–2026", lbl: "Years", hl: false },
-                { icon: <Atom className="h-4 w-4" />, val: "3", lbl: "Subjects", hl: false },
-                { icon: <GraduationCap className="h-4 w-4" />, val: "174", lbl: "Chapters", hl: false },
+                { icon: <Atom className="h-4 w-4" />, val: String(subjects.filter((s) => s.chapters.length > 0).length || 3), lbl: "Subjects", hl: false },
+                { icon: <GraduationCap className="h-4 w-4" />, val: String(totalCh > 0 ? totalCh : 174), lbl: "Chapters", hl: false },
               ].map((s, i) => (
                 <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.55 + i * 0.06, duration: 0.4 }}
@@ -231,7 +240,7 @@ export function Landing() {
         <div className="container mx-auto px-4 py-10 md:py-14">
           <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}
             className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-            {STATS.map((s) => (
+            {dynamicStats.map((s) => (
               <motion.div key={s.label} variants={fadeUp} className="text-center">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 mb-3">{s.icon}</div>
                 <p className="text-2xl sm:text-3xl font-black tracking-tight mb-0.5"><AnimatedCounter value={s.value} suffix={s.suffix} /></p>
