@@ -40,6 +40,6 @@ export async function GET(req: Request) {
     return NextResponse.json(normalizedSubjects);
   } catch (error) {
     console.error("Chapters error:", error);
-    return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch", detail: String(error) }, { status: 500 });
   }
 }
