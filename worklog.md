@@ -65,3 +65,27 @@ Stage Summary:
 - 328 questions have pre-populated answers+solution
 - batch-solve.ts script available for solving more questions locally
 - Code pushed to GitHub, Render needs manual unsuspend from dashboard
+
+---
+Task ID: 3
+Agent: Main
+Task: Add interactive answer selection with post-attempt solution reveal + deploy to Render
+
+Work Log:
+- Rewrote question-card.tsx: MCQ options clickable, Numerical input with Submit button
+- Solutions hidden until user submits answer (MCQ: option + Submit, Numerical: number + Enter/Send)
+- After attempt: Correct (green highlight + 🎉) or Incorrect (red + correct answer shown) + Solution revealed
+- Retry button to re-attempt any question
+- Browser verified full flow:
+  - MCQ with inline options: click to select, Submit to check, Correct! + Solution appears
+  - MCQ with generic A-E buttons: same flow
+  - Numerical: input field + Send button, Enter key support
+  - No console errors
+- Committed and pushed to GitHub
+- Render service is manually suspended by user — API cannot unsuspend
+  - Code is pushed and auto-deploy will trigger once user resumes service at dashboard.render.com
+
+Stage Summary:
+- Interactive answer selection fully working
+- Solution reveal only after attempt (user's exact request)
+- Git pushed, awaiting Render unsuspend by user at https://dashboard.render.com/web/srv-d9ehb33bc2fs7381icag
