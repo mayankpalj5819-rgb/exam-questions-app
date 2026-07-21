@@ -89,3 +89,24 @@ Stage Summary:
 - Interactive answer selection fully working
 - Solution reveal only after attempt (user's exact request)
 - Git pushed, awaiting Render unsuspend by user at https://dashboard.render.com/web/srv-d9ehb33bc2fs7381icag
+
+---
+Task ID: 4
+Agent: Main
+Task: Deploy to Render with new API key
+
+Work Log:
+- Unsuspended Render service with new API key rnd_bdlZp9HMeKqCEClHlGFgE3rYtUHt
+- Discovered standalone output crashes on Render (502) - server.js exits immediately
+- Node v20.20.2 confirmed available on Render free tier
+- Switched from standalone to `npx next start` (non-standalone) - this works!
+- Fixed DATABASE_URL: set absolute path in .env.production (file:/opt/render/project/src/db/custom.db)
+- Deleted old service, created new one via API with correct type=web_service
+- Verified: page loads (200, 86KB), API returns 3 subjects, questions work
+- Cleaned up debug files (test-server.js, debug-server.js, start-wrapper.js)
+
+Stage Summary:
+- Site LIVE at https://jee-pyq-vault.onrender.com/
+- Interactive answer selection working (choose option → submit → solution reveals)
+- API verified: /api/chapters returns subjects, DB connected
+- Used non-standalone output (next start) for Render compatibility
