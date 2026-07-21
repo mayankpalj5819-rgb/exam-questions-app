@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client'
+import path from 'path'
+import fs from 'fs'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
@@ -10,14 +12,9 @@ function getDatabaseUrl(): string {
     return process.env.DATABASE_URL;
   }
   // Fallback: try to find db/custom.db relative to common paths
-  const path = require('path');
-  const fs = require('fs');
-  
   const candidates = [
     path.join(process.cwd(), 'db', 'custom.db'),
-    path.join(process.cwd(), '.next', 'standalone', 'db', 'custom.db'),
     '/opt/render/project/src/db/custom.db',
-    '/opt/render/project/src/.next/standalone/db/custom.db',
   ];
   
   for (const candidate of candidates) {
@@ -27,7 +24,7 @@ function getDatabaseUrl(): string {
     }
   }
   
-  console.error('[DB] ERROR: No database file found! Checked:', candidates);
+  console.error('[DB] ERROR: No database file found!');
   return 'file:./db/custom.db';
 }
 
