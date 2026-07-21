@@ -6,6 +6,7 @@ import { useAppState, type QuestionData } from "@/hooks/use-app-state";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -17,20 +18,24 @@ import {
   Calendar,
   Clock,
   CheckCircle2,
+  XCircle,
   Hash,
   Sparkles,
   Image as ImageIcon,
   Lightbulb,
   X,
   ZoomIn,
+  Send,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
 const OPTION_LETTERS = ["A", "B", "C", "D", "E"] as const;
+
+type AnswerState = "idle" | "correct" | "incorrect";
 
 const OPTION_COLORS = [
   { bg: "bg-amber-50 dark:bg-amber-950/40", text: "text-amber-700 dark:text-amber-300", border: "border-amber-200 dark:border-amber-800/60" },
@@ -93,7 +98,6 @@ function hasFigureReference(text: string): boolean {
 
 function extractInlineOptions(rawText: string): string[] {
   const text = normalizeText(rawText);
-  // Try (A) ... (B) ... format
   const parenRegex = /\(([A-E])\)\s*([\s\S]*?)(?=\(([A-E])\)|$)/g;
   const parenExtracted: string[] = [];
   let match;
@@ -103,7 +107,6 @@ function extractInlineOptions(rawText: string): string[] {
     parenExtracted.push(optText);
   }
   if (parenExtracted.length >= 2) return parenExtracted;
-  // Try A. ... B. ... format
   const dotRegex = /^[A-E]\.\s+([\s\S]*?)(?=\n[A-E]\.\s|$)/gm;
   const dotExtracted: string[] = [];
   while ((match = dotRegex.exec(text)) !== null) {
@@ -155,6 +158,12 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
   const { data: session } = useSession();
   const { savedQuestionIds, toggleSavedQuestionId, setAuthModalOpen, examType, selectedSubject } = useAppState();
 
+  // Answer state
+  const [answerState, setAnswerState] = useState<AnswerState>("idle");
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [numericalInput, setNumericalInput] = useState("");
+
+  // UI state
   const [saveLoading, setSaveLoading] = useState(false);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
 
@@ -165,6 +174,8 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
   const subjectBorder = getSubjectBorder(selectedSubject?.slug || question.subject?.slug);
   const hasFig = hasFigureReference(normalizedRawText);
   const imageUrls = parseImageUrls(question);
+
+  const hasAttempted = answerState !== "idle";
 
   // Exam metadata line
   const examMeta = useMemo(() => {
@@ -229,6 +240,40 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
   const solutionContent = question.solution || question.solutionHtml || null;
 
+  // ─── Handlers ────────────────────────────────────────────────────────────
+
+  const handleOptionSelect = useCallback((letter: string) => {
+    if (hasAttempted) return;
+    setSelectedOption(letter);
+  }, [hasAttempted]);
+
+  const handleCheckAnswer = useCallback(() => {
+    if (hasAttempted) return;
+
+    if (isNumerical) {
+      const userAns = numericalInput.trim();
+      if (!userAns) { toast.error("Enter your answer first"); return; }
+      const correctAns = (question.correctAnswer || "").trim();
+      // Normalize both for comparison (remove trailing zeros, etc.)
+      const normalizeNum = (s: string) => {
+        const n = parseFloat(s);
+        return isNaN(n) ? s : String(n);
+      };
+      const isCorrect = normalizeNum(userAns) === normalizeNum(correctAns);
+      setAnswerState(isCorrect ? "correct" : "incorrect");
+    } else {
+      if (!selectedOption) { toast.error("Select an option first"); return; }
+      const isCorrect = selectedOption === correctLetter;
+      setAnswerState(isCorrect ? "correct" : "incorrect");
+    }
+  }, [hasAttempted, isNumerical, numericalInput, selectedOption, correctLetter, question.correctAnswer]);
+
+  const handleReset = useCallback(() => {
+    setAnswerState("idle");
+    setSelectedOption(null);
+    setNumericalInput("");
+  }, []);
+
   const handleSaveToggle = useCallback(async () => {
     if (!session?.user) { setAuthModalOpen(true); return; }
     setSaveLoading(true);
@@ -274,11 +319,18 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                 {!isNumerical && <span className="text-[10px] opacity-70 ml-0.5">+4 / -1</span>}
               </Badge>
             </div>
-            {session?.user && (
-              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30" onClick={handleSaveToggle} disabled={saveLoading}>
-                <Bookmark className={cn("h-4 w-4 transition-all duration-200", isSaved ? "fill-red-500 text-red-500" : "text-muted-foreground/40 hover:text-red-400")} />
-              </Button>
-            )}
+            <div className="flex items-center gap-1">
+              {hasAttempted && (
+                <Button variant="ghost" size="sm" onClick={handleReset} className="h-7 text-[11px] text-muted-foreground hover:text-foreground px-2 rounded-lg">
+                  Retry
+                </Button>
+              )}
+              {session?.user && (
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30" onClick={handleSaveToggle} disabled={saveLoading}>
+                  <Bookmark className={cn("h-4 w-4 transition-all duration-200", isSaved ? "fill-red-500 text-red-500" : "text-muted-foreground/40 hover:text-red-400")} />
+                </Button>
+              )}
+            </div>
           </div>
 
           {/* Exam metadata line */}
@@ -341,31 +393,73 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
               </div>
             )}
 
-            {/* MCQ Options — correct one highlighted green */}
+            {/* ─── MCQ Options ─────────────────────────────────────────────── */}
             {!isNumerical && hasInlineOptions && (
               <div className="mt-5 space-y-2.5">
                 {parsedOptions.map((option: string, i: number) => {
                   const letter = OPTION_LETTERS[i];
-                  const isCorrect = correctLetter === letter;
+                  const isThisCorrect = correctLetter === letter;
+                  const isSelected = selectedOption === letter;
                   const colors = OPTION_COLORS[i] || OPTION_COLORS[0];
+
+                  // After attempt: highlight correct/incorrect
+                  if (hasAttempted) {
+                    return (
+                      <motion.div
+                        key={letter}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        className={cn(
+                          "flex items-start gap-3 rounded-xl border p-3.5 text-sm transition-all duration-200",
+                          isThisCorrect
+                            ? "border-emerald-400 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 shadow-sm shadow-emerald-500/15"
+                            : isSelected
+                              ? "border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950/20"
+                              : `${colors.border} ${colors.bg} opacity-60`
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[11px] font-extrabold mt-0.5",
+                            isThisCorrect
+                              ? "bg-emerald-500 text-white shadow-sm"
+                              : isSelected
+                                ? "bg-red-500 text-white"
+                                : `${colors.bg} ${colors.text} border ${colors.border}`
+                          )}
+                        >
+                          {letter}
+                        </span>
+                        <div className="flex-1 min-w-0 leading-relaxed">
+                          <MathText text={option} />
+                        </div>
+                        {isThisCorrect && <CheckCircle2 className="h-[18px] w-[18px] shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />}
+                        {isSelected && !isThisCorrect && <XCircle className="h-[18px] w-[18px] shrink-0 text-red-500 dark:text-red-400 mt-0.5" />}
+                      </motion.div>
+                    );
+                  }
+
+                  // Before attempt: clickable
                   return (
                     <motion.div
                       key={letter}
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.05 }}
+                      onClick={() => handleOptionSelect(letter)}
                       className={cn(
-                        "flex items-start gap-3 rounded-xl border p-3.5 text-sm transition-all duration-200",
-                        isCorrect
-                          ? "border-emerald-400 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 shadow-sm shadow-emerald-500/15"
-                          : `${colors.border} ${colors.bg}`
+                        "flex items-start gap-3 rounded-xl border p-3.5 text-sm transition-all duration-200 cursor-pointer hover:shadow-md active:scale-[0.99]",
+                        isSelected
+                          ? "border-foreground/30 bg-foreground/5 shadow-sm ring-2 ring-foreground/10"
+                          : `${colors.border} ${colors.bg} hover:border-foreground/20`
                       )}
                     >
                       <span
                         className={cn(
-                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[11px] font-extrabold mt-0.5",
-                          isCorrect
-                            ? "bg-emerald-500 text-white shadow-sm"
+                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[11px] font-extrabold mt-0.5 transition-all",
+                          isSelected
+                            ? "bg-foreground text-background"
                             : `${colors.bg} ${colors.text} border ${colors.border}`
                         )}
                       >
@@ -374,45 +468,182 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                       <div className="flex-1 min-w-0 leading-relaxed">
                         <MathText text={option} />
                       </div>
-                      {isCorrect && <CheckCircle2 className="h-[18px] w-[18px] shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />}
                     </motion.div>
                   );
                 })}
               </div>
             )}
 
-            {/* Numerical Answer — shown directly */}
-            {isNumerical && question.correctAnswer && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-5 flex items-center gap-3 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50/80 dark:bg-emerald-950/20 p-3.5"
-              >
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-muted-foreground mb-0.5">Answer</p>
-                  <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
-                    <MathText text={question.correctAnswer} />
-                  </p>
+            {/* ─── Generic MCQ buttons (no inline options) ────────────────── */}
+            {!isNumerical && !hasInlineOptions && (
+              <div className="mt-5">
+                <div className="flex flex-wrap gap-2">
+                  {OPTION_LETTERS.map((letter) => {
+                    const isThisCorrect = correctLetter === letter;
+                    const isSelected = selectedOption === letter;
+
+                    if (hasAttempted) {
+                      return (
+                        <motion.button
+                          key={letter}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          disabled
+                          className={cn(
+                            "inline-flex items-center justify-center h-10 min-w-10 px-3.5 rounded-xl border-2 text-sm font-bold transition-all",
+                            isThisCorrect
+                              ? "border-emerald-500 bg-emerald-500 text-white shadow-md shadow-emerald-500/25"
+                              : isSelected
+                                ? "border-red-400 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400"
+                                : "border-border bg-muted/50 text-muted-foreground/40"
+                          )}
+                        >
+                          {letter}
+                          {isThisCorrect && <CheckCircle2 className="h-3.5 w-3.5 ml-1.5" />}
+                          {isSelected && !isThisCorrect && <XCircle className="h-3.5 w-3.5 ml-1.5" />}
+                        </motion.button>
+                      );
+                    }
+
+                    return (
+                      <motion.button
+                        key={letter}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleOptionSelect(letter)}
+                        className={cn(
+                          "inline-flex items-center justify-center h-10 min-w-10 px-3.5 rounded-xl border-2 text-sm font-bold transition-all cursor-pointer",
+                          isSelected
+                            ? "border-foreground bg-foreground text-background shadow-md"
+                            : "border-border bg-card text-foreground hover:border-foreground/30 hover:shadow-sm"
+                        )}
+                      >
+                        {letter}
+                      </motion.button>
+                    );
+                  })}
                 </div>
-              </motion.div>
+              </div>
             )}
 
-            {/* Solution — always visible when available */}
-            {solutionContent && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="mt-5 rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 p-4 shadow-sm shadow-amber-500/5"
-              >
-                <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3 flex items-center gap-1.5">
-                  <Lightbulb className="h-3.5 w-3.5" />
-                  Solution
-                </p>
-                <div className="text-sm leading-7">
-                  <MathText text={solutionContent} />
+            {/* ─── Numerical Input ─────────────────────────────────────────── */}
+            {isNumerical && (
+              <div className="mt-5">
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    step="any"
+                    placeholder="Enter your answer (integer or decimal)"
+                    value={numericalInput}
+                    onChange={(e) => setNumericalInput(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleCheckAnswer(); }}
+                    disabled={hasAttempted}
+                    className={cn(
+                      "h-11 text-sm font-medium",
+                      hasAttempted && answerState === "correct" && "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 focus-visible:ring-emerald-400",
+                      hasAttempted && answerState === "incorrect" && "border-red-400 bg-red-50 dark:bg-red-950/20 focus-visible:ring-red-400"
+                    )}
+                  />
+                  {!hasAttempted && (
+                    <Button
+                      onClick={handleCheckAnswer}
+                      disabled={!numericalInput.trim()}
+                      size="icon"
+                      className="h-11 w-11 shrink-0 rounded-xl"
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
+              </div>
+            )}
+
+            {/* ─── Submit Button (MCQ) ─────────────────────────────────────── */}
+            {!isNumerical && !hasAttempted && (
+              <div className="mt-4">
+                <Button
+                  onClick={handleCheckAnswer}
+                  disabled={!selectedOption}
+                  className="w-full h-10 rounded-xl font-semibold text-sm"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit Answer
+                </Button>
+              </div>
+            )}
+
+            {/* ─── Answer Result Badge ─────────────────────────────────────── */}
+            <AnimatePresence>
+              {hasAttempted && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="mt-4"
+                >
+                  <div className={cn(
+                    "flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold",
+                    answerState === "correct"
+                      ? "bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-300"
+                      : "bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800/40 text-red-700 dark:text-red-300"
+                  )}>
+                    {answerState === "correct" ? (
+                      <><CheckCircle2 className="h-5 w-5" /> Correct! 🎉</>
+                    ) : (
+                      <><XCircle className="h-5 w-5" /> Incorrect</>
+                    )}
+                  </div>
+
+                  {/* Show correct answer when wrong */}
+                  {answerState === "incorrect" && question.correctAnswer && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="mt-2 flex items-center gap-2 rounded-xl border border-emerald-200 dark:border-emerald-800/40 bg-emerald-50/80 dark:bg-emerald-950/10 px-4 py-3"
+                    >
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span className="text-xs font-medium text-muted-foreground">Correct Answer:</span>
+                      <span className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
+                        <MathText text={question.correctAnswer} />
+                      </span>
+                    </motion.div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* ─── Solution (visible only after attempt) ──────────────────── */}
+            <AnimatePresence>
+              {hasAttempted && solutionContent && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: -8, height: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="mt-5 overflow-hidden"
+                >
+                  <div className="rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-950/20 p-4 shadow-sm shadow-amber-500/5">
+                    <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3 flex items-center gap-1.5">
+                      <Lightbulb className="h-3.5 w-3.5" />
+                      Solution
+                    </p>
+                    <div className="text-sm leading-7">
+                      <MathText text={solutionContent} />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* No solution available message */}
+            {hasAttempted && !solutionContent && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-4 rounded-xl border border-dashed border-muted-foreground/20 bg-muted/30 px-4 py-3 text-center"
+              >
+                <p className="text-xs text-muted-foreground">Solution not available yet for this question</p>
               </motion.div>
             )}
           </div>
