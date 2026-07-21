@@ -148,12 +148,14 @@ function extractInlineOptions(normalizedText: string): string[] {
 
   // Pattern 3: A. text B. text C. text (all inline on same line or mixed)
   // Handles: "A. Electrostatic field lines... B. The electric field... C. ..."
-  const firstOptMatch = normalizedText.match(/(?:^|[\s:])\s*([A-E])\.\s+/);
-  if (firstOptMatch) {
-    // Find the start position of the first option
-    const firstOptIdx = normalizedText.indexOf(firstOptMatch[0]) + firstOptMatch[0].length - firstOptMatch[0].trimStart().length;
-    const optSection = normalizedText.slice(firstOptIdx).replace(/\s*Choose the correct.*$/is, "").trim();
-    // Split on option boundaries: end of sentence then space then new option letter
+  const firstOptMatch = normalizedText.match(/[\s:]\s*([A-E])\.\s/);
+  if (firstOptMatch && firstOptMatch.index !== undefined) {
+    // Start from the option letter itself (include "A. ")
+    const optStart = firstOptMatch.index + (firstOptMatch[0].length - firstOptMatch[0].trimStart().length);
+    // Actually, go back to include the letter+dot
+    const letterStart = normalizedText.indexOf(firstOptMatch[1] + ".", firstOptMatch.index);
+    const optSection = normalizedText.slice(letterStart).replace(/\s*Choose the correct.*$/is, "").trim();
+    // Split on option boundaries: end-of-sentence then space then new option
     const segments = optSection.split(/(?<=\.)\s+(?=[A-E]\.\s)/);
     const inlineExtracted: string[] = [];
     for (const seg of segments) {
@@ -293,9 +295,14 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
   // For display text: remove inline options if they were extracted (non-A/R)
   const finalDisplayText = useMemo(() => {
-    if (isAR || !hasInlineOptions || isAR) return displayText;
+    if (isAR || !hasInlineOptions) return displayText;
     if (optionFormat === "paren") return displayText.replace(/\s*\([A-E]\)[\s\S]*$/g, "").replace(/\n{2,}/g, "\n").trim();
     if (optionFormat === "dot") return displayText.replace(/\n[A-E]\.\s[\s\S]*$/g, "").replace(/\n{2,}/g, "\n").trim();
+    // Pattern 3 (inline A. B. same line): strip from first option letter onwards
+    const inlineMatch = displayText.match(/[\s:]\s*[A-E]\.\s/);
+    if (inlineMatch && inlineMatch.index !== undefined && inlineMatch.index > 0) {
+      return displayText.slice(0, inlineMatch.index).replace(/\s*Choose the correct.*$/is, "").trim();
+    }
     return displayText;
   }, [displayText, hasInlineOptions, optionFormat, isAR]);
 
@@ -580,7 +587,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                   Options not available in text — select the correct letter
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {OPTION_LETTERS.map((letter) => {
+                  {(OPTION_LETTERS.slice(0, 4) as readonly ["A","B","C","D"]).map((letter) => {
                     const isThisCorrect = correctLetter === letter;
                     const isSelected = selectedOption === letter;
 

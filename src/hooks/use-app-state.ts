@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 export type ExamType = "jee-main" | "jee-advanced";
 export type ViewType = "landing" | "questions" | "saved" | "analytics";
-export type QuestionTypeFilter = "all" | "MCQ" | "Numerical";
+export type QuestionTypeFilter = "all" | "MCQ" | "Numerical" | "withSolutions";
 export type SortOrder = "newest" | "oldest";
 export type SavedViewMode = "list" | "grid";
 

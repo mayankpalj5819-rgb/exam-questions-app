@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useAppState, type ChapterData, type SubjectData } from "@/hooks/use-app-state";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -33,10 +33,12 @@ function ChapterItem({
   chapter,
   isActive,
   onSelect,
+  hasSolutions,
 }: {
   chapter: ChapterData;
   isActive: boolean;
   onSelect: () => void;
+  hasSolutions: boolean;
 }) {
   return (
     <button
@@ -72,13 +74,16 @@ function ChapterItem({
       {chapter.questionCount > 0 && (
         <span
           className={cn(
-            "text-xs font-bold tabular-nums shrink-0 px-2 py-0.5 rounded-md",
+            "text-xs font-bold tabular-nums shrink-0 px-2 py-0.5 rounded-md flex items-center gap-1",
             isActive
               ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300"
               : "bg-muted text-muted-foreground"
           )}
         >
           {chapter.questionCount}
+          {hasSolutions && (
+            <span className="text-emerald-500 text-[10px] leading-none">●</span>
+          )}
         </span>
       )}
     </button>
@@ -102,6 +107,19 @@ function SidebarContent({
     setSidebarSearch,
     setSidebarOpen,
   } = useAppState();
+
+  // Track which chapters have solutions
+  const [solvedChapterIds, setSolvedChapterIds] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    fetch("/api/chapters/solved-chapters")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.solvedChapterIds) {
+          setSolvedChapterIds(new Set(data.solvedChapterIds));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const chaptersByCategory = useMemo(() => {
     if (!selectedSubject?.chapters) return {};
@@ -275,6 +293,7 @@ function SidebarContent({
                           key={chapter.id}
                           chapter={chapter}
                           isActive={selectedChapter?.id === chapter.id && !viewingAllQuestions}
+                          hasSolutions={solvedChapterIds.has(chapter.id)}
                           onSelect={() => {
                             onChapterSelect(chapter);
                             setSidebarOpen(false);
