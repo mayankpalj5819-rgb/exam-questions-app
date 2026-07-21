@@ -4,12 +4,12 @@ services:
     runtime: node
     plan: free
     branch: main
-    buildCommand: npx prisma generate && bun install && bun run build
-    startCommand: bun run start
-    healthCheckPath: /api
+    buildCommand: npx prisma generate && npm install && npm run build
+    startCommand: bash render-start.sh
+    healthCheckPath: /
     envVars:
       - key: NODE_VERSION
-        value: "20"
+        value: "20.11.1"
       - key: DATABASE_URL
         value: file:./db/custom.db
         sync: false
