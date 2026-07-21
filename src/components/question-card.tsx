@@ -21,11 +21,12 @@ import {
   XCircle,
   Hash,
   Sparkles,
-  Image as ImageIcon,
   Lightbulb,
   X,
   ZoomIn,
   Send,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,26 @@ const OPTION_COLORS = [
   { bg: "bg-violet-50 dark:bg-violet-950/40", text: "text-violet-700 dark:text-violet-300", border: "border-violet-200 dark:border-violet-800/60" },
   { bg: "bg-sky-50 dark:bg-sky-950/40", text: "text-sky-700 dark:text-sky-300", border: "border-sky-200 dark:border-sky-800/60" },
 ];
+
+// Standard Assertion/Reason options for JEE
+function getAROptions(text: string): string[] {
+  // Detect if question uses "Assertion (A)" / "Reason (R)" format
+  if (/Assertion\s*\(?A?\)?/i.test(text) && /Reason\s*\(?R?\)?/i.test(text)) {
+    return [
+      "Both (A) and (R) are true and (R) is the correct explanation of (A)",
+      "Both (A) and (R) are true but (R) is NOT the correct explanation of (A)",
+      "(A) is true but (R) is false",
+      "(A) is false but (R) is true",
+    ];
+  }
+  // Default: Statement I / Statement II format
+  return [
+    "Both Statement I and Statement II are correct and Statement II is the correct explanation of Statement I",
+    "Both Statement I and Statement II are correct but Statement II is NOT the correct explanation of Statement I",
+    "Statement I is correct but Statement II is incorrect",
+    "Statement I is incorrect but Statement II is correct",
+  ];
+}
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -92,29 +113,63 @@ function getSubjectBorder(subjectSlug?: string): string {
   return "";
 }
 
-function hasFigureReference(text: string): boolean {
-  return /\b(?:figure|diagram|graph|arrangement|setup|configuration|shown below|given figure|following figure|given below)\b/i.test(text);
+/** Detect if the question is Assertion/Reason type */
+function isAssertionReason(text: string): boolean {
+  return /(?:Statement[\s-]?[I1]|Assertion|Reason)\s*[:\-]/i.test(text) &&
+    /(?:Statement[\s-]?[I1Ii]+|Assertion|Reason)\s*[:\-]/i.test(text) &&
+    /(?:In the light of (?:the )?above|choose the correct (?:answer|option) (?:from the options given below|from|given below)|choose the most appropriate)/i.test(text);
 }
 
-function extractInlineOptions(rawText: string): string[] {
-  const text = normalizeText(rawText);
+/**
+ * Extract inline options from question text.
+ * IMPORTANT: Must receive NORMALIZED text (with real \n, not literal \\n)
+ */
+function extractInlineOptions(normalizedText: string): string[] {
+  // Pattern 1: (A) text (B) text (C) text ...
   const parenRegex = /\(([A-E])\)\s*([\s\S]*?)(?=\(([A-E])\)|$)/g;
   const parenExtracted: string[] = [];
   let match;
-  while ((match = parenRegex.exec(text)) !== null) {
+  while ((match = parenRegex.exec(normalizedText)) !== null) {
     let optText = match[2].trim();
     if (optText.length > 500) optText = optText.slice(0, 500) + "…";
     parenExtracted.push(optText);
   }
   if (parenExtracted.length >= 2) return parenExtracted;
+
+  // Pattern 2: A. text \n B. text \n C. text ... (each on its own line)
   const dotRegex = /^[A-E]\.\s+([\s\S]*?)(?=\n[A-E]\.\s|$)/gm;
   const dotExtracted: string[] = [];
-  while ((match = dotRegex.exec(text)) !== null) {
+  while ((match = dotRegex.exec(normalizedText)) !== null) {
     let optText = match[1].trim();
     if (optText.length > 500) optText = optText.slice(0, 500) + "…";
     dotExtracted.push(optText);
   }
   if (dotExtracted.length >= 2) return dotExtracted;
+
+  // Pattern 3: A. text B. text C. text (all inline on same line or mixed)
+  // Handles: "A. Electrostatic field lines... B. The electric field... C. ..."
+  const firstOptMatch = normalizedText.match(/(?:^|[\s:])\s*([A-E])\.\s+/);
+  if (firstOptMatch) {
+    // Find the start position of the first option
+    const firstOptIdx = normalizedText.indexOf(firstOptMatch[0]) + firstOptMatch[0].length - firstOptMatch[0].trimStart().length;
+    const optSection = normalizedText.slice(firstOptIdx).replace(/\s*Choose the correct.*$/is, "").trim();
+    // Split on option boundaries: end of sentence then space then new option letter
+    const segments = optSection.split(/(?<=\.)\s+(?=[A-E]\.\s)/);
+    const inlineExtracted: string[] = [];
+    for (const seg of segments) {
+      const m = seg.match(/^([A-E])\.\s+([\s\S]*)/);
+      if (m) {
+        let optText = m[2].trim();
+        if (optText.length > 2 && optText.length <= 500) {
+          inlineExtracted.push(optText);
+        }
+      }
+    }
+    if (inlineExtracted.length >= 2) {
+      return inlineExtracted;
+    }
+  }
+
   return [];
 }
 
@@ -163,6 +218,10 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [numericalInput, setNumericalInput] = useState("");
 
+  // AI Solve state
+  const [aiSolving, setAiSolving] = useState(false);
+  const [aiSolution, setAiSolution] = useState<string | null>(null);
+
   // UI state
   const [saveLoading, setSaveLoading] = useState(false);
   const [zoomImage, setZoomImage] = useState<string | null>(null);
@@ -172,10 +231,10 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
   const detectedType = detectQuestionType(question);
   const isNumerical = detectedType === "Numerical";
   const subjectBorder = getSubjectBorder(selectedSubject?.slug || question.subject?.slug);
-  const hasFig = hasFigureReference(normalizedRawText);
   const imageUrls = parseImageUrls(question);
 
   const hasAttempted = answerState !== "idle";
+  const isAR = isAssertionReason(normalizedRawText);
 
   // Exam metadata line
   const examMeta = useMemo(() => {
@@ -191,20 +250,35 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
 
   const cleanText = useMemo(() => cleanQuestionText(normalizedRawText), [normalizedRawText]);
 
-  // Parse options from JSON field or inline text
+  // For Assertion/Reason questions, strip the "choose the correct answer" line from display
+  const displayText = useMemo(() => {
+    let text = cleanText;
+    if (isAR) {
+      text = text.replace(/\s*(?:In the light of the above statements?,?\s*choose the correct answer from the options given below\.?|choose the most appropriate answer.*?from the options given below\.?)/gi, "").trim();
+    }
+    return text;
+  }, [cleanText, isAR]);
+
+  // Parse options: JSON field → inline from NORMALIZED text → A/R standard → empty
   const parsedOptions = useMemo(() => {
+    // 1. Try JSON field
     if (question.options && question.options !== "undefined" && question.options !== "null") {
       try {
         const opts = JSON.parse(question.options);
         if (Array.isArray(opts) && opts.length >= 2) return opts;
       } catch { /* ignore */ }
     }
-    if (!isNumerical && question.questionText) {
-      const extracted = extractInlineOptions(question.questionText);
+
+    if (!isNumerical && normalizedRawText) {
+      // 2. Try inline extraction from NORMALIZED text (not raw)
+      const extracted = extractInlineOptions(normalizedRawText);
       if (extracted.length >= 2) return extracted;
+
+      // 3. Assertion/Reason standard options
+      if (isAR) return getAROptions(normalizedRawText);
     }
     return [];
-  }, [question.options, question.questionText, isNumerical]);
+  }, [question.options, normalizedRawText, isNumerical, isAR]);
 
   const hasInlineOptions = parsedOptions.length > 0;
 
@@ -217,14 +291,13 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     return dotCount >= 2 ? "dot" : "none";
   }, [normalizedRawText]);
 
-  // Remove inline options from display text
-  const displayText = useMemo(() => {
-    if (hasInlineOptions) {
-      if (optionFormat === "paren") return cleanText.replace(/\s*\([A-E]\)[\s\S]*$/g, "").replace(/\n{2,}/g, "\n").trim();
-      if (optionFormat === "dot") return cleanText.replace(/\n[A-E]\.\s[\s\S]*$/g, "").replace(/\n{2,}/g, "\n").trim();
-    }
-    return cleanText;
-  }, [cleanText, hasInlineOptions, optionFormat]);
+  // For display text: remove inline options if they were extracted (non-A/R)
+  const finalDisplayText = useMemo(() => {
+    if (isAR || !hasInlineOptions || isAR) return displayText;
+    if (optionFormat === "paren") return displayText.replace(/\s*\([A-E]\)[\s\S]*$/g, "").replace(/\n{2,}/g, "\n").trim();
+    if (optionFormat === "dot") return displayText.replace(/\n[A-E]\.\s[\s\S]*$/g, "").replace(/\n{2,}/g, "\n").trim();
+    return displayText;
+  }, [displayText, hasInlineOptions, optionFormat, isAR]);
 
   // Determine the correct letter for highlighting
   const correctLetter = useMemo(() => {
@@ -238,7 +311,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     return null;
   }, [isNumerical, question.correctAnswer, parsedOptions]);
 
-  const solutionContent = question.solution || question.solutionHtml || null;
+  const solutionContent = question.solution || question.solutionHtml || aiSolution || null;
 
   // ─── Handlers ────────────────────────────────────────────────────────────
 
@@ -254,7 +327,6 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
       const userAns = numericalInput.trim();
       if (!userAns) { toast.error("Enter your answer first"); return; }
       const correctAns = (question.correctAnswer || "").trim();
-      // Normalize both for comparison (remove trailing zeros, etc.)
       const normalizeNum = (s: string) => {
         const n = parseFloat(s);
         return isNaN(n) ? s : String(n);
@@ -272,7 +344,39 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
     setAnswerState("idle");
     setSelectedOption(null);
     setNumericalInput("");
+    setAiSolution(null);
   }, []);
+
+  const handleAiSolve = useCallback(async () => {
+    if (aiSolving || aiSolution) return;
+    setAiSolving(true);
+    try {
+      const res = await fetch("/api/solve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId: question.id,
+          questionText: question.questionText,
+          questionType: detectedType,
+          correctAnswer: question.correctAnswer,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.solution) {
+        setAiSolution(data.solution);
+        // Also update the answer if we didn't have one
+        if (!question.correctAnswer && data.answer) {
+          toast.info(`Answer: ${data.answer}`);
+        }
+      } else {
+        toast.error(data.error || "Failed to generate solution");
+      }
+    } catch {
+      toast.error("Network error. Please try again.");
+    } finally {
+      setAiSolving(false);
+    }
+  }, [aiSolving, aiSolution, question.id, question.questionText, question.correctAnswer, detectedType]);
 
   const handleSaveToggle = useCallback(async () => {
     if (!session?.user) { setAuthModalOpen(true); return; }
@@ -318,6 +422,11 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                 {detectedType}
                 {!isNumerical && <span className="text-[10px] opacity-70 ml-0.5">+4 / -1</span>}
               </Badge>
+              {isAR && (
+                <Badge variant="outline" className="text-[10px] font-medium border-violet-300/60 text-violet-600 dark:text-violet-400 dark:border-violet-700/40">
+                  Assertion / Reason
+                </Badge>
+              )}
             </div>
             <div className="flex items-center gap-1">
               {hasAttempted && (
@@ -353,21 +462,10 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
           <div className="px-5 pb-4">
             {/* Question text */}
             <div className="text-sm leading-7">
-              <MathText text={displayText} />
+              <MathText text={finalDisplayText} />
             </div>
 
-            {/* Figure reference placeholder (no images found) */}
-            {hasFig && imageUrls.length === 0 && (
-              <div className="mt-4 rounded-xl border border-dashed border-amber-300/60 dark:border-amber-700/40 bg-amber-50/50 dark:bg-amber-950/20 p-4 text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 mb-2.5">
-                  <ImageIcon className="h-5 w-5 text-amber-500/60" />
-                </div>
-                <p className="text-sm font-semibold text-amber-700/80 dark:text-amber-400/80 mb-1">Diagram Referenced</p>
-                <p className="text-xs text-muted-foreground leading-relaxed max-w-sm mx-auto">This question references a figure or diagram. Visualize the described arrangement to solve the problem.</p>
-              </div>
-            )}
-
-            {/* Images */}
+            {/* Images (only if we actually have image URLs) */}
             {imageUrls.length > 0 && (
               <div className="mt-4 space-y-2">
                 {imageUrls.map((url, i) => (
@@ -474,9 +572,13 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
               </div>
             )}
 
-            {/* ─── Generic MCQ buttons (no inline options) ────────────────── */}
+            {/* ─── Generic MCQ buttons (no inline options and not A/R) ─────── */}
             {!isNumerical && !hasInlineOptions && (
               <div className="mt-5">
+                <p className="text-xs text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <AlertCircle className="h-3 w-3" />
+                  Options not available in text — select the correct letter
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {OPTION_LETTERS.map((letter) => {
                     const isThisCorrect = correctLetter === letter;
@@ -558,8 +660,22 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
               </div>
             )}
 
-            {/* ─── Submit Button (MCQ) ─────────────────────────────────────── */}
-            {!isNumerical && !hasAttempted && (
+            {/* ─── Submit Button (MCQ with options) ────────────────────────── */}
+            {!isNumerical && hasInlineOptions && !hasAttempted && (
+              <div className="mt-4">
+                <Button
+                  onClick={handleCheckAnswer}
+                  disabled={!selectedOption}
+                  className="w-full h-10 rounded-xl font-semibold text-sm"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit Answer
+                </Button>
+              </div>
+            )}
+
+            {/* ─── Submit Button (MCQ generic letters) ─────────────────────── */}
+            {!isNumerical && !hasInlineOptions && !hasAttempted && (
               <div className="mt-4">
                 <Button
                   onClick={handleCheckAnswer}
@@ -627,6 +743,7 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
                     <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-3 flex items-center gap-1.5">
                       <Lightbulb className="h-3.5 w-3.5" />
                       Solution
+                      {aiSolution && <span className="font-normal normal-case tracking-normal text-[10px] text-muted-foreground ml-1">(AI Generated)</span>}
                     </p>
                     <div className="text-sm leading-7">
                       <MathText text={solutionContent} />
@@ -636,14 +753,29 @@ export function QuestionCard({ question, index, onUnsave }: QuestionCardProps) {
               )}
             </AnimatePresence>
 
-            {/* No solution available message */}
+            {/* No solution available — show AI Solve button */}
             {hasAttempted && !solutionContent && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mt-4 rounded-xl border border-dashed border-muted-foreground/20 bg-muted/30 px-4 py-3 text-center"
+                className="mt-4"
               >
-                <p className="text-xs text-muted-foreground">Solution not available yet for this question</p>
+                <div className="rounded-xl border border-dashed border-muted-foreground/20 bg-muted/30 px-4 py-3 text-center">
+                  <p className="text-xs text-muted-foreground mb-2">Solution not available for this question</p>
+                  <Button
+                    onClick={handleAiSolve}
+                    disabled={aiSolving}
+                    variant="outline"
+                    size="sm"
+                    className="rounded-lg text-xs gap-1.5"
+                  >
+                    {aiSolving ? (
+                      <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Generating Solution...</>
+                    ) : (
+                      <><Sparkles className="h-3.5 w-3.5" /> Get AI Solution</>
+                    )}
+                  </Button>
+                </div>
               </motion.div>
             )}
           </div>
