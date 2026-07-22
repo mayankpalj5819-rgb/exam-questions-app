@@ -10,7 +10,7 @@ export async function GET(req: Request) {
     const exam = searchParams.get("exam") || "jee-main";
     const year = searchParams.get("year");
     const type = searchParams.get("type");
-    const hasSolution = searchParams.get("hasSolution") === "true";
+    const hasSolution = searchParams.get("hasSolution");
     const sort = searchParams.get("sort") || "newest";
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "50");
@@ -44,7 +44,10 @@ export async function GET(req: Request) {
     }
 
     if (hasSolution) {
-      where.solution = { not: null };
+      (where as Record<string, unknown>).OR = [
+        { solution: { not: null } },
+        { solutionHtml: { not: null } },
+      ];
     }
 
     // Build orderBy based on sort parameter

@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 export type ExamType = "jee-main" | "jee-advanced";
 export type ViewType = "landing" | "questions" | "saved" | "analytics";
-export type QuestionTypeFilter = "all" | "MCQ" | "Numerical" | "withSolutions";
+export type QuestionTypeFilter = "all" | "MCQ" | "Numerical" | "with-solution";
 export type SortOrder = "newest" | "oldest";
 export type SavedViewMode = "list" | "grid";
 
@@ -154,7 +154,7 @@ export const useAppState = create<AppState>((set) => ({
   // Exam type
   examType: "jee-main",
   setExamType: (examType) =>
-    set({ examType, view: "landing", selectedChapter: null, selectedSubject: null, viewingAllQuestions: false, questions: [], questionsPage: 1, yearFilter: "", subjects: [] }),
+    set({ examType, selectedChapter: null, selectedSubject: null, viewingAllQuestions: false, questions: [], questionsPage: 1, yearFilter: "", subjects: [], view: "landing" }),
 
   // Subjects
   subjects: [],

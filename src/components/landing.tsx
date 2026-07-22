@@ -106,7 +106,7 @@ function SectionHead({ badge, icon, title, sub }: { badge: string; icon: React.R
 
 export function Landing() {
   const { data: session } = useSession();
-  const { subjects, examType, setExamType, setSelectedSubject, setView, setAuthModalOpen, savedCount } = useAppState();
+  const { subjects, examType, setExamType, setSelectedSubject, setView, setAuthModalOpen, savedCount, setSearchOpen } = useAppState();
 
   const dynamicStats = getDynamicStats(subjects);
   const totalQ = subjects.reduce((s, sub) => s + sub.chapters.reduce((a, c) => a + c.questionCount, 0), 0);
@@ -182,7 +182,8 @@ export function Landing() {
               <div className="relative group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60 group-focus-within:text-amber-500 transition-colors" />
                 <Input placeholder="Search by topic, chapter, or keyword..." readOnly
-                  className="h-12 pl-12 pr-20 rounded-2xl border-border/60 bg-white/80 dark:bg-white/5 backdrop-blur-sm text-base shadow-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-300 dark:focus:border-amber-700 transition-all" />
+                  onClick={() => setSearchOpen(true)}
+                  className="h-12 pl-12 pr-20 rounded-2xl border-border/60 bg-white/80 dark:bg-white/5 backdrop-blur-sm text-base shadow-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-300 dark:focus:border-amber-700 transition-all cursor-pointer" />
                 <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-muted/80 text-[11px] font-medium text-muted-foreground border border-border/50">
                   <span className="text-xs">⌘</span>K
                 </kbd>

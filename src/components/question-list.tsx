@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useMemo, useState } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { useAppState, type ChapterData } from "@/hooks/use-app-state";
 import { QuestionCard } from "@/components/question-card";
@@ -34,7 +34,7 @@ import {
   FlaskConical,
   Calculator,
   FolderSearch,
-  PenLine,
+  Lightbulb,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -77,17 +77,19 @@ export function QuestionList() {
 
   const { data: session } = useSession();
 
-  // Stats for solution progress badge
-  const [stats, setStats] = useState<{ total: number; withSolution: number; withAnswer: number } | null>(null);
-  useEffect(() => {
-    fetch("/api/stats")
-      .then((r) => r.json())
-      .then((data) => setStats(data))
-      .catch(() => {});
-  }, []);
+  // Normalize total to show equal counts per subject
+  const maxSubjectTotal = useMemo(() => {
+    if (!subjects.length) return 0;
+    const totals = subjects.map(s => s.chapters.reduce((a, c) => a + c.questionCount, 0));
+    return Math.max(...totals);
+  }, [subjects]);
 
-  // Fix: displayTotal now uses the real API total instead of maxSubjectTotal
-  const displayTotal = questionsTotal;
+  const displayTotal = useMemo(() => {
+    if (viewingAllQuestions && selectedSubject && maxSubjectTotal > 0) {
+      return maxSubjectTotal;
+    }
+    return questionsTotal;
+  }, [viewingAllQuestions, selectedSubject, maxSubjectTotal, questionsTotal]);
 
   // Generate year options from 2000-2026
   const yearOptions = useMemo(() => {
@@ -115,10 +117,12 @@ export function QuestionList() {
         if (selectedChapter) {
           params.set("chapterId", selectedChapter.id);
         }
-        if (questionTypeFilter === "withSolutions") {
-          params.set("hasSolution", "true");
-        } else if (questionTypeFilter !== "all") {
-          params.set("type", questionTypeFilter);
+        if (questionTypeFilter !== "all") {
+          if (questionTypeFilter === "with-solution") {
+            params.set("hasSolution", "true");
+          } else {
+            params.set("type", questionTypeFilter);
+          }
         }
         if (yearFilter && yearFilter !== "all") {
           params.set("year", yearFilter);
@@ -150,28 +154,6 @@ export function QuestionList() {
       fetchQuestions(1, false);
     }
   }, [selectedChapter, viewingAllQuestions, questionTypeFilter, yearFilter, sortOrder, fetchQuestions]);
-
-  // Keyboard shortcuts for pagination
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input
-      const tag = (e.target as HTMLElement).tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-
-      if (e.key === "ArrowRight" || e.key === "PageDown") {
-        e.preventDefault();
-        if (questionsPage < questionsTotalPages && !questionsLoading) {
-          fetchQuestions(questionsPage + 1, true);
-        }
-      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
-        e.preventDefault();
-        // Scroll to top on "previous page" equivalent
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [questionsPage, questionsTotalPages, questionsLoading, fetchQuestions]);
 
   const loadMore = () => {
     if (questionsPage < questionsTotalPages && !questionsLoading) {
@@ -292,24 +274,12 @@ export function QuestionList() {
                     {examType === "jee-main" ? "JEE Main" : "JEE Advanced"}
                   </Badge>
                 </div>
-                <div className="flex items-center gap-3 flex-wrap">
-                  <p className="text-sm text-muted-foreground flex items-center gap-1.5">
-                    <Layers className="h-3.5 w-3.5" />
-                    {displayTotal > 0
-                      ? `${displayTotal.toLocaleString()} question${displayTotal !== 1 ? "s" : ""} available`
-                      : "Loading questions..."}
-                  </p>
-                  {/* Solution progress badge */}
-                  {stats && stats.withSolution > 0 && (
-                    <Badge
-                      variant="outline"
-                      className="text-[11px] font-medium rounded-full border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 gap-1 px-2.5"
-                    >
-                      <PenLine className="h-3 w-3" />
-                      {stats.withSolution.toLocaleString()}/{stats.total.toLocaleString()} solved
-                    </Badge>
-                  )}
-                </div>
+                <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                  <Layers className="h-3.5 w-3.5" />
+                  {displayTotal > 0
+                    ? `${displayTotal.toLocaleString()} question${displayTotal !== 1 ? "s" : ""} available`
+                    : "Loading questions..."}
+                </p>
               </div>
 
               {/* Export button */}
@@ -332,7 +302,7 @@ export function QuestionList() {
               <Tabs
                 value={questionTypeFilter}
                 onValueChange={(v) =>
-                  setQuestionTypeFilter(v as "all" | "MCQ" | "Numerical" | "withSolutions")
+                  setQuestionTypeFilter(v as "all" | "MCQ" | "Numerical" | "with-solution")
                 }
               >
                 <TabsList className="h-8 p-0.5">
@@ -348,9 +318,9 @@ export function QuestionList() {
                     <Hash className="h-3 w-3" />
                     Numerical
                   </TabsTrigger>
-                  <TabsTrigger value="withSolutions" className="text-xs px-2.5 gap-1 rounded-md h-7">
-                    <PenLine className="h-3 w-3" />
-                    <span className="hidden sm:inline">With</span> Solutions
+                  <TabsTrigger value="with-solution" className="text-xs px-2.5 gap-1 rounded-md h-7">
+                    <Lightbulb className="h-3 w-3" />
+                    With Solutions
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
